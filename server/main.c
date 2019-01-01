@@ -133,7 +133,7 @@ void mng_shutdown() {
  * @brief Start a manager
  */
 void mng_start(int idx) {
-	signal(SIGUSR1, mng_shutdown);
+	// signal(SIGUSR1, mng_shutdown);
 
 	Msg msg;
 
@@ -294,7 +294,7 @@ void sch_try_execute() {
  * @brief Start a scheduler
  */
 void sch_start () {
-	signal(SIGUSR1, sch_shutdown);
+	// signal(SIGUSR1, sch_shutdown);
 
 	Msg msg;
 
