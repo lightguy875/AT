@@ -48,7 +48,7 @@ int main () {
 			break;
 		}
 
-		kill(msg.id, SIGTERM);
+		kill(msg.id, SIGUSR1);
 	}
 
 	return 0;
