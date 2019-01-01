@@ -253,7 +253,7 @@ void sch_msg_error() {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
-	printf("\n\n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s, origin: %d\n\n", msg.type, msg.id, msg.t, msg.delay, msg.s, msg.origin);
+	//printf("\n\n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s, origin: %d\n\n", msg.type, msg.id, msg.t, msg.delay, msg.s, msg.origin);
 
 	if (msg.origin < N) { // message from sons
 		curr_job->node_pid[msg.origin] = msg.id;
