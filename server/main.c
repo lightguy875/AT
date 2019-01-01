@@ -69,7 +69,6 @@ Msg mng_execute(int idx, char *program) {
 	msg.t = elapsed;
 	msg.delay = 0;
 	msg.origin = idx;
-	strcpy(msg.s, "finished");
 
 	return msg;
 }
