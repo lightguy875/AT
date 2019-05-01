@@ -1,10 +1,10 @@
 #include <fat_tree.h>
 
 // Fat Tree Make
-void ft_make(int) {
+void ft_make() {
   for (int i = 0; i < N; i++) {
     ft[i] = -1;
-    ft_vis[i] = false;
+    ft_vis[i] = 0;
   }
 }
 

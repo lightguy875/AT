@@ -2,10 +2,10 @@
 
 T ft[N];
 
-int ft_vis[N];
+bool ft_vis[N];
 
 // Fat Tree Make
-void ft_make(int);
+void ft_make();
 
 // Fat Tree DFS
-void ft_dfs(int);
+void ft_dfs(int idx, int destiny);
