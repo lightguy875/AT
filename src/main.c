@@ -4,41 +4,20 @@
 #include "hypercube.h"
 #include "torus.h"
 
-typedef struct {
-  bool shouldDoThis;
-  char* filename;
-} State;
-
-void make_state (int sz, char *flags[], State* st) {
-  st->shouldDoThis = false;
-  st->filename = "";
-
-  for (int i = 1; i < sz; i++) {
-    if (strcmp(flags[i], "-f")) {
-      st->shouldDoThis = true;
-      
-      continue;
-    }
-    
-    // check if it is "--filename"
-    if (strlen(flags[i]) > 2 && strlen(flags[i]) < 103 && flags[i][0] == '-' && flags[i][1] == '-') {
-      // save the pointer to the name of the file
-      st->filename = flags[i];
-      
-      // remove the "--"
-      st->filename += 2;
-      
-      continue;
-    }
-  }
-}
+#include "job.h"
 
 int main (int argc, char *argv[]) {
-  State st;
+  int seconds = 0;
+
+  List *jobs = list_create();
+
+  if (argc == 3 && try_cast_int(argv[1], &seconds) && argv[2] != NULL) {
+    Job *job = job_create(seconds, argv[2]);
+
+    list_push_back(jobs, job);
+  } 
   
-  make_state(argc, argv, &st);
-  
-  // Do stuff base on state
+  list_destroy(jobs);
   
   return 0;
 }
