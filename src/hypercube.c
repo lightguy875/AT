@@ -18,6 +18,6 @@ void hc_dfs(int idx, int destiny) {
   }
   
   for (int i = 0; i < 4; i++) {
-    dfs(idx ^ nxt[i], destiny);
+    hc_dfs(idx ^ nxt[i], destiny);
   }
 }

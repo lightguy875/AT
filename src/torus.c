@@ -1,9 +1,11 @@
 #include "torus.h"
 
 void tr_make() {
-  for (int i = 0; i < N; i++) {
-    tr[i] = -1;
-    tr_vis[i] = 0;
+  for (int i = 0; i < M; i++) {
+    for (int j = 0; j < M; j++) {
+      tr[i][j] = -1;
+      tr_vis[i][j] = 0;
+    }
   }
 }
 
