@@ -1,6 +1,9 @@
+#pragma once
+
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #define N 16
 #define M 4
@@ -20,3 +23,5 @@
 #define RESET "\033[0m"
 
 #define W(x) cerr << RED << #x << " = " << x << RESET << endl;
+
+bool try_cast_int (char*, int*);
