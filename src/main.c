@@ -1,4 +1,8 @@
-#include <stdio.h>
+#include "util.h"
+
+#include "fat_tree.h"
+#include "hypercube.h"
+#include "torus.h"
 
 typedef struct {
   bool shouldDoThis;

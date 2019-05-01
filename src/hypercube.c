@@ -1,14 +1,23 @@
-#define T int
+#include "hypercube.h"
 
-T* hypercube[N]; // store the pids
+void hc_make() {
+  for (int i = 0; i < N; i++) {
+    hc[i] = -1;
+    hc_vis[i] = 0;
+  }
+}
 
-// do not use, it will never finish its search
-void dfs (int idx, T* hypercube) {
+// Hypercube DFS
+void hc_dfs(int idx, int destiny) {
   static int nxt[] = { 0x0001, 0x0002, 0x0004, 0x0010 };
   
-  int pid = hypercube[idx];
+  if (idx == destiny) {
+    int pid = hc[idx];
+
+    // do something
+  }
   
   for (int i = 0; i < 4; i++) {
-    dfs(idx ^ nxt[i]);
+    dfs(idx ^ nxt[i], destiny);
   }
 }

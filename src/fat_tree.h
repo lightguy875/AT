@@ -1,8 +1,10 @@
-#include <util.h>
+#pragma once
 
-T ft[N];
+#include "util.h"
 
-bool ft_vis[N];
+static int ft[N];
+
+static bool ft_vis[N];
 
 // Fat Tree Make
 void ft_make();
