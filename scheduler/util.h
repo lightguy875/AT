@@ -5,8 +5,16 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include <unistd.h> 
+#include <sys/types.h>
+#include <sys/wait.h>
+
 #define N 16
 #define M 4
+
+#define TREE 1
+#define HYPERCUBE 2
+#define TORUS 3
 
 #define RED "\033[0;31m"
 #define BOLDRED "\033[1;31m"
@@ -22,6 +30,9 @@
 #define BOLDCYAN "\033[1;36m"
 #define RESET "\033[0m"
 
-#define W(x) cerr << RED << #x << " = " << x << RESET << endl;
+#define W(x) printf("%s%s = %s%s\n", RED, #x, x, RESET);
+#define S(x) printf("%s%s%s\n", GREEN, x, RESET);
+#define L(x) printf("%s%s%s\n", YELLOW, x, RESET);
+#define E(x) printf("%s%s%s\n", RED, x, RESET);
 
 bool try_cast_int (char*, int*);
