@@ -8,47 +8,37 @@
 
 // Data
 int topology_type;
+
 List *jobs;
 
-void create_process_vector (int v[N]) {
-  for (int i = 0; i < N; i++) {
-    v[i] = fork();
-
-    if (!v[i]) {
-      break;
-    }
-  }
-}
-
-void create_process_matrix (int v[M][M]) {
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < M; j++) {
-      v[i][j] = fork();
-
-      if (!v[i][j]) {
-        break;
-      }
-    }
-  }
-}
+int structure[N];
 
 void create_process () {
-  switch (topology_type) {
-    case TREE:
-      create_process_vector(ft);
+  for (int i = 0; i < N; i++) {
+    structure[i] = fork();
+
+    if (!structure[i]) {
       break;
-    case HYPERCUBE:
-      create_process_vector(hc);
-      break;
-    case TORUS:
-      create_process_matrix(tr);
-      break;
-    default:
-      E("Wrong topology!");
-      exit(1);
+    }
   }
 }
 
+// void task () {
+//   switch (topology_type) {
+//     case TREE:
+//       ft_task(structure);
+//       break;
+//     case HYPERCUBE:
+//       hc_task(structure);
+//       break;
+//     case TORUS:
+//       tr_task(structure);
+//       break;
+//     default:
+//       E("Wrong topology!");
+//       exit(1);
+//   }
+// }
 
 void on_receive_message (int seconds, char* filename) {
   Job *job = job_create(seconds, filename);

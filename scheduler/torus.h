@@ -2,12 +2,8 @@
 
 #include "util.h"
 
-static int tr[M][M];
-
-static bool tr_vis[M][M];
-
 // Torus Make
-void tr_make();
+void tr_make(int *, int *);
 
 // Torus DFS
-void tr_dfs(int i, int j, int di, int dj);
+void tr_dfs(int *, int, int);

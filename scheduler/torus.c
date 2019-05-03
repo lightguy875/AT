@@ -1,25 +1,38 @@
 #include "torus.h"
 
-void tr_make() {
-  for (int i = 0; i < M; i++) {
-    for (int j = 0; j < M; j++) {
-      tr[i][j] = -1;
-      tr_vis[i][j] = 0;
-    }
+void tr_make(int *tr, int *vis) {
+  for (int i = 0; i < N; i++) {
+    tr[i] = -1;
+    vis[i] = 0;
   }
 }
 
 // Torus DFS
-void tr_dfs(int i, int j, int di, int dj) {
+void tr_dfs(int *tr, int idx, int destiny) {
   static int nxt[] = { 1, 0, -1, 0 };
   
-  if (i == di && j == dj) {
-    int pid = tr[i][j];
+  if (idx == destiny) {
+    int pid = tr[idx];
 
     // do something
   }
   
-  for (int i = 0; i < N; i++) {
-    tr_dfs(i + nxt[i], j + nxt[(i+1)%N], di, dj);
+  for (int i = 0; i < M; i++) {
+    int i = ((idx % M) + nxt[i] + N) % N;
+    int j = ((idx / M) + nxt[(i+1)%N] + N) % N;
+
+    tr_dfs(tr, (j * M) + i, destiny);
   }
+}
+
+// Torus Up
+int tr_up (int idx) {
+  int i = idx % M;
+  int j = idx / M;
+
+  if (i) {
+    return idx - M;
+  }
+
+  return idx - 1;
 }

@@ -2,12 +2,10 @@
 
 #include "util.h"
 
-static int hc[N];
-
-static bool hc_vis[N];
-
 // Hypercube Make
-void hc_make();
+void hc_make(int *, int *);
 
 // Hypercube DFS
-void hc_dfs(int idx, int destiny);
+void hc_dfs(int *, int, int);
+
+int hc_up (int);
