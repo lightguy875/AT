@@ -1,21 +1,4 @@
 #include "list.h"
-#include "job.h"
-
-struct node {
-    Node* prev;
-
-    Node* nxt;
-
-    void* value;
-};
-
-struct list {
-    int sz;
-
-    Node *begin;
-
-    Node *end;
-};
 
 Node* node_create(void* value) {
     Node *node = (Node*) malloc(sizeof(Node));
@@ -95,7 +78,7 @@ void list_destroy(List* list) {
     list = NULL;
 }
 
-int list_min (List* list) {
+Job* list_next_job (List* list) {
     Job *job = NULL;
     Node *curr = list->begin;
 

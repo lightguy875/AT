@@ -1,10 +1,11 @@
 #include "util.h"
 
+#include "job.h"
+#include "list.h"
+
 #include "fat_tree.h"
 #include "hypercube.h"
 #include "torus.h"
-
-#include "job.h"
 
 // Data
 int topology_type;
