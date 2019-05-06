@@ -15,3 +15,5 @@ Node* node_create(void*);
 List* list_create();
 
 void list_destroy(List*);
+
+int list_min(List*);
