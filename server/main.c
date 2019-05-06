@@ -8,17 +8,22 @@
 #include "torus.h"
 
 // Data
+int pid;
+
 int topology_type;
 
-List *jobs;
+// int structure[N];
 
-int structure[N];
+// TODO: make client and server share this
+typedef struct msgbuf {
+  long type;
+  int t;
+  char s[MAX_STRING_SIZE];
+} Msg;
 
 void create_process () {
   for (int i = 0; i < N; i++) {
-    structure[i] = fork();
-
-    if (!structure[i]) {
+    if (!(pid = fork())) {
       break;
     }
   }
@@ -41,7 +46,7 @@ void task () {
   }
 }
 
-void on_receive_message (int seconds, char* filename) {
+void on_receive_message (List* jobs, int seconds, char* filename) {
   Job *job = job_create(seconds, filename);
 
   list_push_back(jobs, job);
@@ -56,16 +61,7 @@ void get_topology (int n, char *v[]) {
   }
 }
 
-void destroy_list () {
-  list_destroy(jobs);
-}
-
-void create_list () {
-  jobs = list_create();
-  S("List created");
-}
-
-Job* next_job () {
+Job* next_job (List* jobs) {
   time_t t = time(NULL);
   Job *job = NULL;
   Node *curr = jobs->begin;
@@ -83,14 +79,41 @@ Job* next_job () {
   return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
+//TODO: add errno to improve error handling
+void schedule () {
+  int key = KEY;
+  int id = msgget(key, IPC_CREAT); // TODO: check if I should send other flag
+
+  if (id < 0) {
+    E("Failed to get queue");
+  } 
+
+  Msg msg;
+
+  while (true) {
+    int res = msgrcv(id, &msg,  sizeof(Msg) /* - sizeof(long) */, N, 0);
+
+    // printf("msg: %s", msg.s);
+
+    if (res < 0) {
+     // E("Failed to receive message");
+    } else {
+      S("Message sent");
+    }
+  }
+}
+
 int main (int argc, char *argv[]) {
   get_topology(argc, argv);
-  create_list();
   create_process();
 
-  // Do something
-  
-  destroy_list();
+  if (pid != 0) { // is the scheduler
+    List *jobs = list_create();
+
+    schedule();
+
+    list_destroy(jobs);
+  }
   
   return 0;
 }

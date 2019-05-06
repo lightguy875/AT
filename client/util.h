@@ -5,6 +5,10 @@
 #include <string.h>
 #include <time.h>
 
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+
 #define RED "\033[0;31m"
 #define BOLDRED "\033[1;31m"
 #define GREEN "\033[0;32m"
@@ -20,5 +24,13 @@
 #define RESET "\033[0m"
 
 #define W(x) printf("%s%s = %s%s\n", RED, #x, x, RESET);
+#define S(x) printf("%s%s%s\n", GREEN, x, RESET);
+#define L(x) printf("%s%s%s\n", YELLOW, x, RESET);
+#define E(x) printf("%s%s%s\n", RED, x, RESET);
+
+#define MAX_STRING_SIZE 1000
+#define N 16
+#define M 4
+#define KEY 15003
 
 bool try_cast_int (char*, int*);

@@ -9,9 +9,8 @@
 #include <unistd.h> 
 #include <sys/types.h>
 #include <sys/wait.h>
-
-#define N 16
-#define M 4
+#include <sys/ipc.h>
+#include <sys/msg.h>
 
 #define TREE 1
 #define HYPERCUBE 2
@@ -37,3 +36,8 @@
 #define E(x) printf("%s%s%s\n", RED, x, RESET);
 
 bool try_cast_int (char*, int*);
+
+#define MAX_STRING_SIZE 1000
+#define KEY 15003
+#define N 16
+#define M 4
