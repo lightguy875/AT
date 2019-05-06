@@ -24,22 +24,22 @@ void create_process () {
   }
 }
 
-// void task () {
-//   switch (topology_type) {
-//     case TREE:
-//       ft_task(structure);
-//       break;
-//     case HYPERCUBE:
-//       hc_task(structure);
-//       break;
-//     case TORUS:
-//       tr_task(structure);
-//       break;
-//     default:
-//       E("Wrong topology!");
-//       exit(1);
-//   }
-// }
+void task () {
+  switch (topology_type) {
+    case TREE:
+      // ft_task(structure);
+      break;
+    case HYPERCUBE:
+      // hc_task(structure);
+      break;
+    case TORUS:
+      // tr_task(structure);
+      break;
+    default:
+      E("Wrong topology!");
+      exit(1);
+  }
+}
 
 void on_receive_message (int seconds, char* filename) {
   Job *job = job_create(seconds, filename);
@@ -63,6 +63,24 @@ void destroy_list () {
 void create_list () {
   jobs = list_create();
   S("List created");
+}
+
+Job* next_job () {
+  time_t t = time(NULL);
+  Job *job = NULL;
+  Node *curr = jobs->begin;
+
+  while (curr != NULL) {
+      Job *aux = (Job*) curr->value;
+
+      if (job == NULL || job->seconds > aux->seconds) {
+          job = aux;
+      }
+
+      curr = curr->nxt;
+  }
+
+  return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
 int main (int argc, char *argv[]) {

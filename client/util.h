@@ -3,6 +3,7 @@
 #include <stdbool.h>
 #include <stdio.h>
 #include <string.h>
+#include <time.h>
 
 #define RED "\033[0;31m"
 #define BOLDRED "\033[1;31m"

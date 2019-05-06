@@ -28,5 +28,3 @@ Node* node_create(void*);
 List* list_create();
 
 void list_destroy(List*);
-
-Job* list_next_job(List*);

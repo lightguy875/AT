@@ -77,20 +77,3 @@ void list_destroy(List* list) {
     free(list);
     list = NULL;
 }
-
-Job* list_next_job (List* list) {
-    Job *job = NULL;
-    Node *curr = list->begin;
-
-    while (curr != NULL) {
-        Job *aux = (Job*) curr->value;
-
-        if (job == NULL || job->seconds > aux->seconds) {
-            job = aux;
-        }
-
-        curr = curr->nxt;
-    }
-
-    return job;
-}
