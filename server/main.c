@@ -93,10 +93,10 @@ void schedule () {
   while (true) {
     int res = msgrcv(id, &msg,  sizeof(Msg) /* - sizeof(long) */, N, 0);
 
-    // printf("msg: %s", msg.s);
+    printf("msg: %s\n", msg.s);
 
     if (res < 0) {
-     // E("Failed to receive message");
+      E("Failed to receive message");
     } else {
       S("Message sent");
     }
