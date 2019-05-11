@@ -23,6 +23,18 @@ $(TARGET): $(OBJECTS)
 	-rm -f *.o
 	-clear
 
+run: default
+	- time ./main 1
+
+run_tree: default
+	- time ./main 1
+
+run_hypercube: default
+	- time ./main 2
+
+run_torus: default
+	- time ./main 3
+
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)

@@ -22,6 +22,9 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall -O2 -o $@	
 	-clear
 
+run: default
+	-time ./main ../prog 
+
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
