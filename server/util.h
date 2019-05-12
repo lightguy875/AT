@@ -40,4 +40,10 @@
 #define N 16
 #define M 4
 
+/*!
+ *  \brief Cast string to int.
+ *  \param num a string with a number.
+ *  \param result a pointer to the result of the convertion.
+ *  \return if it succeeded or not
+ */
 bool try_cast_int (char*, int*);
