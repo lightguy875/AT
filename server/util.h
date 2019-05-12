@@ -7,6 +7,7 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <errno.h>
 #include <sys/types.h>
 #include <sys/wait.h>
 #include <sys/ipc.h>
@@ -44,6 +45,12 @@
  *  \brief Cast string to int.
  *  \param num a string with a number.
  *  \param result a pointer to the result of the convertion.
- *  \return if it succeeded or not
+ *  \return if it succeeded or not.
  */
 bool try_cast_int (char*, int*);
+
+/*!
+ *  \brief Does nothing.
+ *  \return nothing.
+ */
+void dummy ();

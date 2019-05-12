@@ -7,9 +7,10 @@
 #include <time.h>
 #include <unistd.h>
 
+#include <errno.h>
 #include <sys/types.h>
+#include <sys/wait.h>
 #include <sys/ipc.h>
-#include <sys/msg.h>
 #include <sys/msg.h>
 
 #define RED "\033[0;31m"
@@ -36,14 +37,20 @@
 #define E(x) printf("%s%s%s\n", RED, x, RESET);
 
 #define MAX_STRING_SIZE 1000
+#define KEY 15003
 #define N 16
 #define M 4
-#define KEY 15003
 
 /*!
  *  \brief Cast string to int.
  *  \param num a string with a number.
  *  \param result a pointer to the result of the convertion.
- *  \return if it succeeded or not
+ *  \return if it succeeded or not.
  */
 bool try_cast_int (char*, int*);
+
+/*!
+ *  \brief Does nothing.
+ *  \return nothing.
+ */
+void dummy ();
