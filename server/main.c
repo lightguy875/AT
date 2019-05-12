@@ -73,8 +73,15 @@ Job* next_job (List* jobs) {
   return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
+void run (List* jobs) {
+  Job *job = next_job(jobs);
+
+  // TODO: send the processes execute the file
+  //exec(job->filename);
+}
+
 //TODO: add errno to improve error handling
-void schedule () {
+void schedule (List* jobs) {
   int key = KEY;
   int id = msgget(key, IPC_CREAT); // TODO: check if I should send other flag
 
@@ -88,22 +95,71 @@ void schedule () {
     int res = msgrcv(id, &msg,  sizeof(Msg) /* - sizeof(long) */, N, 0);
 
     if (res < 0) {
-      E("Failed to receive message");
+      // Failed to receive a message for some reason
+
+      if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
+        // Checked if the interruption error was caused 
+        // by an alarm (deactivates the alarm in the process)
+
+        run(jobs);
+      } else {
+        // The interruption error was not caused by the alarm or 
+        // failed to receive (no interruption error)
+
+        E("Failed to receive message");
+      }
     } else {
+      // Receive the message succeffuly
+
       S("Message received");
+
       msg_print(&msg);
+      
+      Job *job = job_create(msg.t, msg.s);
+      Job *nxt_job = next_job(jobs);
+
+      list_push_back(jobs, job);
+
+      if (nxt_job == NULL || nxt_job->seconds > job->seconds) {
+        // Checking if we should adjust the alarm for the next job
+        // If there was no next job, create an alarm for it, otherwise
+        // we will be modifying it to reduce the alarm time
+
+        time_t now = time(NULL);
+
+        if (job->seconds - now <= 0) {
+          // Deactivate the alarm and execute if it was
+          // to execute now the file
+
+          alarm(0);
+
+          run(jobs);
+        } else {
+          // Modify the alarm for the new job, since it is 
+          // closer to execute
+
+          alarm(job->seconds - now);
+        }
+      } 
+
+      list_push_back(jobs, job);
     }
   }
 }
 
+void setup () {
+  signal(SIGALRM, *dummy);
+}
+
 int main (int argc, char *argv[]) {
+  setup();
   get_topology(argc, argv);
   create_process();
 
   if (pid != 0) { // is the scheduler
     List *jobs = list_create();
 
-    schedule();
+    schedule(jobs);
 
     list_destroy(jobs);
   }
