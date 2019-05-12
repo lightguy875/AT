@@ -6,9 +6,8 @@ void send (int t, char filename[]) {
   int id = msgget(key, 0); // TODO: check if I should sen other flag
 
   if (id < 0) {
-    W(id);
     E("Failed to get queue");
-  } 
+  }
 
   Msg msg = { N, t, *filename };
 
@@ -18,6 +17,7 @@ void send (int t, char filename[]) {
     E("Failed to send message");
   } else {
     S("Message sent");
+    msg_print(&msg);
   }
 } 
 
