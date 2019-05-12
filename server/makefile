@@ -24,16 +24,16 @@ $(TARGET): $(OBJECTS)
 	-clear
 
 run: default
-	- sudo time ./main 1
+	- sudo ./main 1
 
 run_tree: default
-	- sudo time ./main 1
+	- sudo ./main 1
 
 run_hypercube: default
-	- sudo time ./main 2
+	- sudo ./main 2
 
 run_torus: default
-	- sudo time ./main 3
+	- sudo ./main 3
 
 clean:
 	-rm -f *.o
