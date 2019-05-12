@@ -23,7 +23,7 @@ $(TARGET): $(OBJECTS)
 	-clear
 
 run: default
-	- sudo time ./main ../prog 
+	- sudo time ./main 5 ../prog 
 
 clean:
 	-rm -f *.o

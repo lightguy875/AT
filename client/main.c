@@ -1,11 +1,5 @@
 #include "util.h"
-
-typedef struct msgbuf {
-  long type;
-  int t;
-  char s[MAX_STRING_SIZE];
-} Msg;
-
+#include "message.h"
 
 void send (int t, char filename[]) {
   int key = KEY; // matricula truncada

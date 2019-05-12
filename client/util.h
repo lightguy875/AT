@@ -2,11 +2,14 @@
 
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <time.h>
+#include <unistd.h>
 
 #include <sys/types.h>
 #include <sys/ipc.h>
+#include <sys/msg.h>
 #include <sys/msg.h>
 
 #define RED "\033[0;31m"
@@ -22,6 +25,10 @@
 #define CYAN "\033[0;36m"
 #define BOLDCYAN "\033[1;36m"
 #define RESET "\033[0m"
+
+#define TREE 1
+#define HYPERCUBE 2
+#define TORUS 3
 
 #define W(x) printf("%s%s = %s%s\n", RED, #x, x, RESET);
 #define S(x) printf("%s%s%s\n", GREEN, x, RESET);

@@ -2,6 +2,7 @@
 
 #include "job.h"
 #include "list.h"
+#include "message.h"
 
 #include "fat_tree.h"
 #include "hypercube.h"
@@ -13,13 +14,6 @@ int pid;
 int topology_type;
 
 // int structure[N];
-
-// TODO: make client and server share this
-typedef struct msgbuf {
-  long type;
-  int t;
-  char s[MAX_STRING_SIZE];
-} Msg;
 
 void create_process () {
   for (int i = 0; i < N; i++) {
@@ -93,12 +87,11 @@ void schedule () {
   while (true) {
     int res = msgrcv(id, &msg,  sizeof(Msg) /* - sizeof(long) */, N, 0);
 
-    printf("msg: %s\n", msg.s);
-
     if (res < 0) {
       E("Failed to receive message");
     } else {
-      S("Message sent");
+      S("Message received");
+      msg_print(&msg);
     }
   }
 }
