@@ -3,36 +3,34 @@
 #include "job.h"
 #include "list.h"
 #include "message.h"
+#include "manager.h"
 
 #include "fat_tree.h"
 #include "hypercube.h"
 #include "torus.h"
 
 // Data
-int pid;
-
 int topology_type;
+int id_message;
 
-// int structure[N];
+int structure[N+1];
+int vis[N+1];
 
-void create_process () {
-  for (int i = 0; i < N; i++) {
-    if (!(pid = fork())) {
-      break;
-    }
-  }
-}
+void create_managers () {
+  int idx = create_manager();
+  if (idx >= 0) 
+    to_manage(idx, TREE);
 
-void task () {
   switch (topology_type) {
     case TREE:
-      // ft_task(structure);
+    case 0:
+      ft_make(structure, vis);
       break;
     case HYPERCUBE:
-      // hc_task(structure);
+      hc_make(structure, vis);
       break;
     case TORUS:
-      // tr_task(structure);
+      tr_make(structure, vis);
       break;
     default:
       E("Wrong topology!");
@@ -73,26 +71,33 @@ Job* next_job (List* jobs) {
   return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
-void run (List* jobs) {
+void exec(char *filename, int id) {
+  Msg msg = { 0, 0 };
+  strcpy(msg.s, filename);
+  msgsnd(id, &msg,  sizeof(Msg), 0);
+}
+
+void run (List* jobs, int id) {
   Job *job = next_job(jobs);
 
   // TODO: send the processes execute the file
-  //exec(job->filename);
+  exec(job->filename, id);
 }
 
 //TODO: add errno to improve error handling
 void schedule (List* jobs) {
   int key = KEY;
-  int id = msgget(key, IPC_CREAT); // TODO: check if I should send other flag
+  id_message = msgget(key, IPC_CREAT); // TODO: check if I should send other flag
 
-  if (id < 0) {
+  if (id_message < 0) {
     E("Failed to get queue");
   } 
 
   Msg msg;
+  create_managers();
 
   while (true) {
-    int res = msgrcv(id, &msg,  sizeof(Msg) /* - sizeof(long) */, N, 0);
+    int res = msgrcv(id_message, &msg,  sizeof(Msg) /* - sizeof(long) */, N+1, 0);
 
     if (res < 0) {
       // Failed to receive a message for some reason
@@ -101,7 +106,7 @@ void schedule (List* jobs) {
         // Checked if the interruption error was caused 
         // by an alarm (deactivates the alarm in the process)
 
-        run(jobs);
+        run(jobs, id_message);
       } else {
         // The interruption error was not caused by the alarm or 
         // failed to receive (no interruption error)
@@ -133,7 +138,7 @@ void schedule (List* jobs) {
 
           alarm(0);
 
-          run(jobs);
+          run(jobs, id_message);
         } else {
           // Modify the alarm for the new job, since it is 
           // closer to execute
@@ -151,18 +156,20 @@ void setup () {
   signal(SIGALRM, *dummy);
 }
 
+void destroy(List *jobs) {
+  struct msqid_ds msg;
+  list_destroy(jobs);
+  msgctl(id_message, IPC_RMID, &msg);
+}
+
 int main (int argc, char *argv[]) {
   setup();
   get_topology(argc, argv);
-  create_process();
 
-  if (pid != 0) { // is the scheduler
-    List *jobs = list_create();
+  List *jobs = list_create();
 
-    schedule(jobs);
-
-    list_destroy(jobs);
-  }
+  schedule(jobs);
+  destroy(jobs);
   
   return 0;
 }

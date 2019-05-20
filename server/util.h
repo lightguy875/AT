@@ -12,6 +12,7 @@
 #include <sys/wait.h>
 #include <sys/ipc.h>
 #include <sys/msg.h>
+#include <signal.h>
 
 #define RED "\033[0;31m"
 #define BOLDRED "\033[1;31m"
@@ -27,6 +28,8 @@
 #define BOLDCYAN "\033[1;36m"
 #define RESET "\033[0m"
 
+#define MSG_FLAG 0x123
+
 #define TREE 1
 #define HYPERCUBE 2
 #define TORUS 3
@@ -36,7 +39,6 @@
 #define L(x) printf("%s%s%s\n", YELLOW, x, RESET);
 #define E(x) printf("%s%s%s\n", RED, x, RESET);
 
-#define MAX_STRING_SIZE 1000
 #define KEY 15003
 #define N 16
 #define M 4
@@ -54,3 +56,13 @@ bool try_cast_int (char*, int*);
  *  \return nothing.
  */
 void dummy ();
+
+/*!
+ *  \brief Creation of all management processes.
+ *  \return the process id's.
+ */
+int create_manager ();
+
+int create_worker ();
+
+int get_message_queue ();

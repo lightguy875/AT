@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util.h"
+#define MAX_STRING_SIZE 1000
 
 /*!
  * \brief Message.

@@ -1,4 +1,5 @@
 #include "fat_tree.h"
+#include "manager.h"
 
 // Fat Tree Make
 void ft_make(int *ft, int *vis) {
@@ -14,17 +15,18 @@ void ft_dfs(int *ft, int idx, int destiny) {
     return;
   }
 
-  if (idx == destiny) {
-    // do something
+	int pid;
+  if (idx == destiny){
+  //
   }
   
   int nxt = 2 * idx;
-  int connection = idx < 3 ? 2 : 1;
+  // int connection = idx < 3 ? 2 : 1;
   
-  for (int i = 1; i <= connection; i++) {
-    ft_dfs(ft, nxt+1, destiny);
-    ft_dfs(ft, nxt+2, destiny);
-  }
+  //for (int i = 1; i <= connection; i++) {
+  ft_dfs(ft, nxt+1, destiny);
+  ft_dfs(ft, nxt+2, destiny);
+  //}
 }
 
 // Fat Tree Up

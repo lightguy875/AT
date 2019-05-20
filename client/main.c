@@ -9,8 +9,8 @@ void send (int t, char filename[]) {
     E("Failed to get queue");
   }
 
-  Msg msg = { N, t, *filename };
-
+  Msg msg = { N+1, t };
+  strcpy(msg.s, filename);
   int res = msgsnd(id, &msg, sizeof(Msg) /* - sizeof(long) */, 0); // TODO: check if I should sen other flag
 
   if (res < 0) {
