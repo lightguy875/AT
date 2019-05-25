@@ -23,7 +23,6 @@ void create_managers () {
 
   switch (topology_type) {
     case TREE:
-    case 0:
       ft_make(structure, vis);
       break;
     case HYPERCUBE:
@@ -45,7 +44,9 @@ void on_receive_message (List* jobs, int seconds, char* filename) {
 }
 
 void get_topology (int n, char *v[]) {
+  W(v[1]);
   if (n == 2 && try_cast_int(v[1], &topology_type)) {
+    printf("%d\n", topology_type);
     S("Topology set");
   } else {
     E("Not a valid topology");

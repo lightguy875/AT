@@ -1,7 +1,7 @@
 #include "manager.h"
 #include "util.h"
 #include "message.h"
-#include "fat_tree.h"
+#include "tree.h"
 
 // Data
 int topology_type;

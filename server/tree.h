@@ -2,10 +2,10 @@
 
 #include "util.h"
 
-// Fat Tree Make
+// Tree Make
 void ft_make(int *, int *);
 
-// Fat Tree DFS
+// Tree DFS
 void ft_dfs(int *, int, int);
 
 int ft_up (int);
