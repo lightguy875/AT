@@ -56,13 +56,3 @@ bool try_cast_int (char*, int*);
  *  \return nothing.
  */
 void dummy ();
-
-/*!
- *  \brief Creation of all management processes.
- *  \return the process id's.
- */
-int create_manager ();
-
-int create_worker ();
-
-int get_message_queue ();

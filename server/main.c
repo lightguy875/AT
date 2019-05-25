@@ -10,48 +10,25 @@
 #include "torus.h"
 
 // Data
+int pid;
+
 int topology_type;
 int id_message;
 
+int pids[N+1];
 int structure[N+1];
 int vis[N+1];
 
-void create_managers () {
-  int idx = create_manager();
-  if (idx >= 0) 
-    to_manage(idx, TREE);
-
-  switch (topology_type) {
-    case TREE:
-      ft_make(structure, vis);
-      break;
-    case HYPERCUBE:
-      hc_make(structure, vis);
-      break;
-    case TORUS:
-      tr_make(structure, vis);
-      break;
-    default:
-      E("Wrong topology!");
-      exit(1);
-  }
+void destroy(List *jobs) {
+  struct msqid_ds msg;
+  list_destroy(jobs);
+  msgctl(id_message, IPC_RMID, &msg); // ?
 }
 
 void on_receive_message (List* jobs, int seconds, char* filename) {
   Job *job = job_create(seconds, filename);
 
   list_push_back(jobs, job);
-}
-
-void get_topology (int n, char *v[]) {
-  W(v[1]);
-  if (n == 2 && try_cast_int(v[1], &topology_type)) {
-    printf("%d\n", topology_type);
-    S("Topology set");
-  } else {
-    E("Not a valid topology");
-    exit(1);
-  }
 }
 
 Job* next_job (List* jobs) {
@@ -95,7 +72,6 @@ void schedule (List* jobs) {
   } 
 
   Msg msg;
-  create_managers();
 
   while (true) {
     int res = msgrcv(id_message, &msg,  sizeof(Msg) /* - sizeof(long) */, N+1, 0);
@@ -153,23 +129,66 @@ void schedule (List* jobs) {
   }
 }
 
-void setup () {
+/*!
+ *  \brief Creation of all management processes.
+ *  \return the process id's.
+ */
+void create_managers () {
+	// Setup pids
+	for (int i = 0; i < N; i++) {
+		pids[i] = 0;
+	}
+
+	// Create the processes to manage
+	for (int i = 0; i < N; i++) {
+		pid = fork();
+
+		if (pid == 0) {
+			to_manage(i, TREE);
+		} else {
+			pids[i] = pid;
+		}
+	}
+}
+
+void setup_topology (int n, char *v[]) {
+  if (n == 2 && try_cast_int(v[1], &topology_type)) {
+    switch (topology_type) {
+      case TREE:
+        ft_make(structure, vis);
+        break;
+      case HYPERCUBE:
+        hc_make(structure, vis);
+        break;
+      case TORUS:
+        tr_make(structure, vis);
+        break;
+      default:
+        E("Wrong topology!");
+        exit(1);
+    }
+
+    S("Topology set");
+  } else {
+    E("Not a valid topology");
+    exit(1);
+  }
+}
+
+void setup_alarm () {
   signal(SIGALRM, *dummy);
 }
 
-void destroy(List *jobs) {
-  struct msqid_ds msg;
-  list_destroy(jobs);
-  msgctl(id_message, IPC_RMID, &msg);
-}
-
 int main (int argc, char *argv[]) {
-  setup();
-  get_topology(argc, argv);
+  setup_alarm();
+  setup_topology(argc, argv);
 
   List *jobs = list_create();
 
+  create_managers();
+
   schedule(jobs);
+
   destroy(jobs);
   
   return 0;

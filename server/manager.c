@@ -20,14 +20,14 @@ time_t job_time (time_t start, time_t end) {
 }
 
 Msg execute_job(int idx, char *program) {
-	int status, id_worker, err = 0;
+	int status, pid_worker, err = 0;
 	time_t start, end;
 
 	char path[PATH_SIZE] = PATH;
 	strcat(path, program);
 	
-	id_worker = create_worker();
-	if (if_worker(id_worker)) {
+	pid_worker = fork();
+	if (if_worker(pid_worker)) {
 		start = get_time();
 		err = execl(path, program, (char *) 0);
 	}
@@ -148,6 +148,11 @@ void receive_msg(int idx) {
 		msg = execute_job(idx, msg.s);
 		// broadcast(type, msg, JOB_FINISHED);
 	}
+}
+
+int get_message_queue () {
+    int key = KEY;
+    return msgget(key, MSG_FLAG);
 }
 
 void to_manage(int idx, int topology) {

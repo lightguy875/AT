@@ -23,7 +23,7 @@ $(TARGET): $(OBJECTS)
 	-clear
 
 run: default
-	- sudo ./main 5 ../prog 
+	- sudo ./main 5 prog 
 
 clean:
 	-rm -f *.o
