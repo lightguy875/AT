@@ -5,7 +5,7 @@
 #include "message.h"
 #include "manager.h"
 
-#include "fat_tree.h"
+#include "tree.h"
 #include "hypercube.h"
 #include "torus.h"
 
