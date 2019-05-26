@@ -66,66 +66,18 @@ void send_msg_ft(int idx, Msg msg, int action) {
 	}
 }
 
-void send_msg_hc(int idx, Msg msg, int action) {
-	static int nxt[] = { 0x0001, 0x0002, 0x0004, 0x0010 };
-
-	switch (action) {
-		case NEW_JOB:
-			for (int i = 0; i < 4; i++) {
-				if (idx ^ nxt[i] < N){
-					msg.type = idx ^ nxt[i];
-					msgsnd(id_queue, &msg,  sizeof(Msg), 0);
-				}
-			}
-			break;
-		case JOB_FINISHED:
-			if (idx > 0) {
-				msg.type = idx  - (idx&-idx);
-				msgsnd(id_queue, &msg,  sizeof(Msg), 0);
-			}
-			break;
-		default:
-			E("Wrong message type!");
-	}
-}
-
-void send_msg_to(int idx, Msg msg, int action) {
-	static int nxt[] = { 1, 0, -1, 0 };
-
-	switch (action) {
-		case NEW_JOB:
-			for (int i = 0; i < M; i++) {
-				int i = ((idx % M) + nxt[i] + N) % N;
-				int j = ((idx / M) + nxt[(i+1)%N] + N) % N;
-				if ((j * M) + i < N) {
-					msg.type = (j * M) + i;
-					msgsnd(id_queue, &msg,  sizeof(Msg), 0);
-				}
-			}
-			break;
-		case JOB_FINISHED:
-			if (idx > 0) {
-				msg.type = idx  - (idx&-idx);
-				msgsnd(id_queue, &msg,  sizeof(Msg), 0);
-			}
-			break;
-		default:
-			E("Wrong message type!");
-	}
-}
 
 void broadcast(int idx, Msg msg, int action) {
 	  switch (topology_type) {
     case TREE:
-    case 0:
 			send_msg_ft(idx, msg, action);
       break;
-    case HYPERCUBE:
+/*    case HYPERCUBE:
 			send_msg_hc(idx, msg, action);
       break;
     case TORUS:
 			send_msg_to(idx, msg, action);
-      break;
+      break; */
     default:
       E("Wrong topology!");
       exit(1);

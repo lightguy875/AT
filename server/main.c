@@ -88,7 +88,8 @@ void onError(List* jobs, int msg_id) {
 void check_run (List* jobs, int msg_id) {
 	Job *nxt_job = next_job(jobs);
 	time_t now = time(NULL);
-
+	printf("seconds %d\n", nxt_job->seconds);
+	printf("now: %d\n", now);
 	if (nxt_job->seconds <= now) {
 		// Deactivate the alarm and execute if it was
 		// to execute now the file
