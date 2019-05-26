@@ -2,47 +2,48 @@
 
 // Data
 int topology_type;
-int id_queue; 
+int queue_id;
 
-bool if_worker(int id) {
-	return id == 0;
-}
-
-time_t get_time () {
-	return time(NULL);
-}
-
-time_t job_time (time_t start, time_t end) {
-	return end - start;
+int up(idx) {
+	switch (topology_type) {
+		case TREE:
+			return ft_up(idx);
+		case HYPERCUBE:
+			return hc_up(idx);
+		case TORUS:
+			return tr_up(idx);
+	}
+	
+	return 0;
 }
 
 Msg execute_job(int idx, char *program) {
-	int status, pid_worker, err = 0;
-	time_t start, end;
-
 	char path[PATH_SIZE] = PATH;
 	strcat(path, program);
 	
-	pid_worker = fork();
-	if (if_worker(pid_worker)) {
-		start = get_time();
-		err = execl(path, program, (char *) 0);
+	time_t start = time(NULL);
+	int pid_worker = fork();
+	if (pid_worker == 0) { // child of the fork
+		int err = execl(path, program, (char *) 0);
+	
+		if (err < 0) {
+			E("An error ocurred!");
+			exit(1);
+		}
 	}
 
+	int status;
 	wait(&status);
-	end = get_time();
 
-	fflush (stdout);
-	if (err < 0)
-		E("An error ocurred!");
+	time_t elapsed = time(NULL) - start;
 
-	int p_manager = ft_up(idx);
-	time_t job_t = job_time(start, end);
+	printf("\n[%d] tempo do job: %ld\n", idx, elapsed); fflush (stdout);
 
-	printf("\n[%d] tempo do job: %.5f\n", idx, (float) job_t);
-
-	Msg msg = { p_manager, job_t };
-	return msg;
+	return (Msg) { 
+		up(idx), 
+		elapsed,
+		""
+	};
 }
 
 void send_msg_ft(int idx, Msg msg, int action) {
@@ -50,15 +51,15 @@ void send_msg_ft(int idx, Msg msg, int action) {
 		case NEW_JOB:
 			if ((2 * idx + 2) < N) {
 				msg.type = 2 * idx + 1;
-				msgsnd(id_queue, &msg,  sizeof(Msg), 0);
+				msgsnd(queue_id, &msg,  sizeof(Msg), 0);
 				msg.type = 2 * idx + 2;
-				msgsnd(id_queue, &msg,  sizeof(Msg), 0);
+				msgsnd(queue_id, &msg,  sizeof(Msg), 0);
 			}
 			break;
 		case JOB_FINISHED:
 			if (idx > 0) {
 				msg.type = idx / 2;
-				msgsnd(id_queue, &msg,  sizeof(Msg), 0);
+				msgsnd(queue_id, &msg,  sizeof(Msg), 0);
 			}
 			break;
 		default:
@@ -68,44 +69,49 @@ void send_msg_ft(int idx, Msg msg, int action) {
 
 
 void broadcast(int idx, Msg msg, int action) {
-	  switch (topology_type) {
-    case TREE:
+	switch (topology_type) {
+		case TREE:
 			send_msg_ft(idx, msg, action);
-      break;
-/*    case HYPERCUBE:
-			send_msg_hc(idx, msg, action);
-      break;
-    case TORUS:
-			send_msg_to(idx, msg, action);
-      break; */
-    default:
-      E("Wrong topology!");
-      exit(1);
-  }
+			break;
+		case HYPERCUBE:
+			//send_msg_hc(idx, msg, action);
+			break;
+		case TORUS:
+			//send_msg_to(idx, msg, action);
+			break;
+		default:
+			E("Wrong topology!");
+			exit(1);
+	}
+}
+
+void mng_on_error() {
+	E("Failed to receive message");
+	exit(1);
+}
+
+void mng_on_success(int idx, Msg msg) {
+	broadcast(idx, msg, NEW_JOB);
+	msg = execute_job(idx, msg.s);
+	// broadcast(type, msg, JOB_FINISHED);
 }
 
 void receive_msg(int idx) {
 	Msg msg;
 
 	while (true) {
-		int res = msgrcv(id_queue, &msg,  sizeof(Msg), idx, 0);
+		int res = msgrcv(queue_id, &msg,  sizeof(Msg), idx, 0);
 
-		if (res < 0)
-			E("Failed to receive message");
-
-		broadcast(idx, msg, NEW_JOB);
-		msg = execute_job(idx, msg.s);
-		// broadcast(type, msg, JOB_FINISHED);
+		if (res < 0) {
+			mng_on_error();
+		} else {
+			mng_on_success(idx, msg);
+		}
 	}
 }
 
-int get_message_queue () {
-	int key = KEY;
-	return msgget(key, MSG_FLAG);
-}
-
 void to_manage(int idx, int topology) {
-	id_queue = get_message_queue();
+	queue_id = queue_retrieve(KEY);
 	topology_type = topology;
 
 	receive_msg(idx);
