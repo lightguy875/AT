@@ -1,7 +1,4 @@
 #include "manager.h"
-#include "util.h"
-#include "message.h"
-#include "tree.h"
 
 // Data
 int topology_type;

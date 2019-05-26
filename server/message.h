@@ -26,4 +26,4 @@ typedef struct msgbuf {
  */
 void msg_print(Msg*);
 
-int msg_get(int);
+int msg_create(int);

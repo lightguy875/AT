@@ -17,10 +17,11 @@ int pids[N+1];
 int structure[N+1];
 int vis[N+1];
 
-void destroy(List *jobs) {
-  struct msqid_ds msg;
+void destroy(List *jobs, int msg_id) {
   list_destroy(jobs);
-  msgctl(id_message, IPC_RMID, &msg); // ?
+
+	struct msqid_ds msg;
+  msgctl(msg_id, IPC_RMID, &msg);
 }
 
 void remove_next_job (List* jobs, int id) {
@@ -57,7 +58,7 @@ Job* next_job (List* jobs) {
 	return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
-void run (Job* job, int id) {
+void run (Job* job, int msg_id) {
 	// Send message to node 0 to start execution
 	Msg msg;
 
@@ -65,16 +66,17 @@ void run (Job* job, int id) {
 	msg.type = 0; // To send message to node 0
 	strcpy(msg.s, job->filename);
 
-	msgsnd(id, &msg,  sizeof(Msg), 0);
+	msgsnd(msg_id, &msg,  sizeof(Msg), 0);
 	// TODO: wait for message sent by node 0
 }
 
-void onError(List* jobs, int id) {
+void onError(List* jobs, int msg_id) {
 	if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
 		// Checked if the interruption error was caused 
 		// by an alarm (deactivates the alarm in the process)
 
-		run(jobs, id);
+		Job *nxt_job = next_job(jobs);
+		run(nxt_job, msg_id);
 	} else {
 		// The interruption error was not caused by the alarm or 
 		// failed to receive (no interruption error)
@@ -83,7 +85,7 @@ void onError(List* jobs, int id) {
 	}
 }
 
-void check_run (List* jobs, int id) {
+void check_run (List* jobs, int msg_id) {
 	Job *nxt_job = next_job(jobs);
 	time_t now = time(NULL);
 
@@ -93,8 +95,8 @@ void check_run (List* jobs, int id) {
 
 		alarm(0);
 		remove_next_job(jobs, nxt_job->id);
-		run(nxt_job, id);
-		check_run(jobs, id);
+		run(nxt_job, msg_id);
+		check_run(jobs, msg_id);
 	} else {
 		// Modify the alarm for the new job, since it is 
 		// closer to execute
@@ -103,26 +105,28 @@ void check_run (List* jobs, int id) {
 	}
 }
 
-void onSuccess(Msg msg, List* jobs, int id) {
+void onSuccess(Msg msg, List* jobs, int msg_id) {
 	msg_print(&msg);
 	list_push_back(jobs, job_create(msg.t, msg.s));
-	check_run(jobs, id);
+	check_run(jobs, msg_id);
 }
 
 void schedule (List* jobs) {
-	int id_message = msg_create(KEY);
+	int msg_id = msg_create(KEY);
 	Msg msg;
 
 	while (true) {
 		int virtual_id = N+1;
-		int res = msgrcv(id_message, &msg,  sizeof(Msg) /* - sizeof(long) */, virtual_id, 0);
+		int res = msgrcv(msg_id, &msg,  sizeof(Msg) /* - sizeof(long) */, virtual_id, 0);
 
 		if (res < 0) {
-			onError(jobs, id_message);
+			onError(jobs, msg_id);
 		} else {
-			onSuccess(msg, jobs, id_message);
+			onSuccess(msg, jobs, msg_id);
 		}
 	}
+
+	destroy(jobs, msg_id);
 }
 
 /*!
@@ -184,8 +188,6 @@ int main (int argc, char *argv[]) {
 	create_managers();
 
 	schedule(jobs);
-
-	destroy(jobs);
 
 	return 0;
 }
