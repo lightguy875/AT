@@ -25,3 +25,5 @@ typedef struct msgbuf {
  *  \return nothing.
  */
 void msg_print(Msg*);
+
+int msg_get(int);

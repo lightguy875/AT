@@ -151,8 +151,8 @@ void receive_msg(int idx) {
 }
 
 int get_message_queue () {
-    int key = KEY;
-    return msgget(key, MSG_FLAG);
+	int key = KEY;
+	return msgget(key, MSG_FLAG);
 }
 
 void to_manage(int idx, int topology) {

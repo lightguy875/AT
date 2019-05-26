@@ -6,6 +6,7 @@ Job* job_create(int seconds, char* filename) {
     job->id = ++nxt;
     job->seconds = seconds;
     job->filename = filename;
+    job->done = false;
 
     return job;
 }

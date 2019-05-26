@@ -11,9 +11,7 @@
 
 // Data
 int pid;
-
 int topology_type;
-int id_message;
 
 int pids[N+1];
 int structure[N+1];
@@ -25,108 +23,106 @@ void destroy(List *jobs) {
   msgctl(id_message, IPC_RMID, &msg); // ?
 }
 
-void on_receive_message (List* jobs, int seconds, char* filename) {
-  Job *job = job_create(seconds, filename);
-
-  list_push_back(jobs, job);
-}
-
-Job* next_job (List* jobs) {
+void remove_next_job (List* jobs, int id) {
   time_t t = time(NULL);
-  Job *job = NULL;
   Node *curr = jobs->begin;
 
   while (curr != NULL) {
       Job *aux = (Job*) curr->value;
 
-      if (job == NULL || job->seconds > aux->seconds) {
-          job = aux;
-      }
+	  if (aux != NULL && aux->id == id) {
+		  aux->done = true;
+		  break;
+	  }
 
-      curr = curr->nxt;
+	  curr = curr->nxt;
   }
-
-  return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
-void exec(char *filename, int id) {
-  Msg msg = { 0, 0 };
-  strcpy(msg.s, filename);
-  msgsnd(id, &msg,  sizeof(Msg), 0);
+Job* next_job (List* jobs) {
+	time_t t = time(NULL);
+	Job *job = NULL;
+	Node *curr = jobs->begin;
+
+	while (curr != NULL) {
+		Job *aux = (Job*) curr->value;
+
+		if (job == NULL || job->seconds > aux->seconds) {
+			job = aux;
+		}
+
+		curr = curr->nxt;
+	}
+
+	return (job != NULL && job->seconds <= t) ? job : NULL;
 }
 
-void run (List* jobs, int id) {
-  Job *job = next_job(jobs);
+void run (Job* job, int id) {
+	// Send message to node 0 to start execution
+	Msg msg;
 
-  // TODO: send the processes execute the file
-  exec(job->filename, id);
+	msg.t = 0;
+	msg.type = 0; // To send message to node 0
+	strcpy(msg.s, job->filename);
+
+	msgsnd(id, &msg,  sizeof(Msg), 0);
+	// TODO: wait for message sent by node 0
 }
 
-//TODO: add errno to improve error handling
+void onError(List* jobs, int id) {
+	if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
+		// Checked if the interruption error was caused 
+		// by an alarm (deactivates the alarm in the process)
+
+		run(jobs, id);
+	} else {
+		// The interruption error was not caused by the alarm or 
+		// failed to receive (no interruption error)
+
+		E("Failed to receive message");
+	}
+}
+
+void check_run (List* jobs, int id) {
+	Job *nxt_job = next_job(jobs);
+	time_t now = time(NULL);
+
+	if (nxt_job->seconds <= now) {
+		// Deactivate the alarm and execute if it was
+		// to execute now the file
+
+		alarm(0);
+		remove_next_job(jobs, nxt_job->id);
+		run(nxt_job, id);
+		check_run(jobs, id);
+	} else {
+		// Modify the alarm for the new job, since it is 
+		// closer to execute
+
+		alarm(nxt_job->seconds - now);
+	}
+}
+
+void onSuccess(Msg msg, List* jobs, int id) {
+	msg_print(&msg);
+	list_push_back(jobs, job_create(msg.t, msg.s));
+	check_run(jobs, id);
+}
+
 void schedule (List* jobs) {
-  int key = KEY;
-  id_message = msgget(key, IPC_CREAT); // TODO: check if I should send other flag
+	int id_message = msg_create(KEY);
+	Msg msg;
 
-  if (id_message < 0) {
-    E("Failed to get queue");
-  } 
+	while (true) {
+		int virtual_id = N+1;
+		int res = msgrcv(id_message, &msg,  sizeof(Msg) /* - sizeof(long) */, virtual_id, 0);
 
-  Msg msg;
-
-  while (true) {
-    int res = msgrcv(id_message, &msg,  sizeof(Msg) /* - sizeof(long) */, N+1, 0);
-
-    if (res < 0) {
-      // Failed to receive a message for some reason
-
-      if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
-        // Checked if the interruption error was caused 
-        // by an alarm (deactivates the alarm in the process)
-
-        run(jobs, id_message);
-      } else {
-        // The interruption error was not caused by the alarm or 
-        // failed to receive (no interruption error)
-
-        E("Failed to receive message");
-      }
-    } else {
-      // Receive the message succeffuly
-
-      S("Message received");
-
-      msg_print(&msg);
-      
-      Job *job = job_create(msg.t, msg.s);
-      Job *nxt_job = next_job(jobs);
-
-      list_push_back(jobs, job);
-
-      if (nxt_job == NULL || nxt_job->seconds > job->seconds) {
-        // Checking if we should adjust the alarm for the next job
-        // If there was no next job, create an alarm for it, otherwise
-        // we will be modifying it to reduce the alarm time
-
-        time_t now = time(NULL);
-
-        if (job->seconds - now <= 0) {
-          // Deactivate the alarm and execute if it was
-          // to execute now the file
-
-          alarm(0);
-
-          run(jobs, id_message);
-        } else {
-          // Modify the alarm for the new job, since it is 
-          // closer to execute
-
-          alarm(job->seconds - now);
-        }
-      } 
-
-      list_push_back(jobs, job);
-    }
-  }
+		if (res < 0) {
+			onError(jobs, id_message);
+		} else {
+			onSuccess(msg, jobs, id_message);
+		}
+	}
 }
 
 /*!
@@ -152,44 +148,44 @@ void create_managers () {
 }
 
 void setup_topology (int n, char *v[]) {
-  if (n == 2 && try_cast_int(v[1], &topology_type)) {
-    switch (topology_type) {
-      case TREE:
-        ft_make(structure, vis);
-        break;
-      case HYPERCUBE:
-        hc_make(structure, vis);
-        break;
-      case TORUS:
-        tr_make(structure, vis);
-        break;
-      default:
-        E("Wrong topology!");
-        exit(1);
-    }
+	if (n != 2 || !try_cast_int(v[1], &topology_type)) {
+		E("Not a valid topology");
+		exit(1);
+	}
 
-    S("Topology set");
-  } else {
-    E("Not a valid topology");
-    exit(1);
-  }
+	switch (topology_type) {
+		case TREE:
+			ft_make(structure, vis);
+			break;
+		case HYPERCUBE:
+			hc_make(structure, vis);
+			break;
+		case TORUS:
+			tr_make(structure, vis);
+			break;
+		default:
+			E("Wrong topology!");
+			exit(1);
+	}
+
+	S("Topology set");
 }
 
 void setup_alarm () {
-  signal(SIGALRM, *dummy);
+	signal(SIGALRM, *dummy);
 }
 
 int main (int argc, char *argv[]) {
-  setup_alarm();
-  setup_topology(argc, argv);
+	setup_alarm();
+	setup_topology(argc, argv);
 
-  List *jobs = list_create();
+	List *jobs = list_create();
 
-  create_managers();
+	create_managers();
 
-  schedule(jobs);
+	schedule(jobs);
 
-  destroy(jobs);
-  
-  return 0;
+	destroy(jobs);
+
+	return 0;
 }

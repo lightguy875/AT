@@ -6,6 +6,7 @@ typedef struct job {
     int id;
     int seconds;
     char* filename;
+    bool done;
 } Job;
 
 static int nxt;
