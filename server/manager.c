@@ -13,7 +13,7 @@ int up(idx) {
 		case TORUS:
 			return tr_up(idx);
 	}
-	
+
 	return 0;
 }
 
@@ -58,7 +58,7 @@ void send_msg_ft(int idx, Msg msg, int action) {
 			break;
 		case JOB_FINISHED:
 			if (idx > 0) {
-				msg.type = idx / 2;
+				msg.type = up(idx);
 				msgsnd(queue_id, &msg,  sizeof(Msg), 0);
 			}
 			break;
