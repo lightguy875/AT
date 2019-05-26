@@ -116,3 +116,11 @@ void to_manage(int idx, int topology) {
 
 	receive_msg(idx);
 }
+int kill_p(int * pid_array)
+{
+	int i;
+	for(i = 0; i <= N; i++)
+	{
+		kill(pid_array[i],SIGTERM);
+	}
+}
