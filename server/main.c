@@ -65,8 +65,9 @@ void run (Job* job, int queue_id) {
 	msg.t = 0;
 	msg.type = 1; // To send message to node 0
 	strcpy(msg.s, job->filename);
-
-	msgsnd(queue_id, &msg,  sizeof(Msg), 0);
+	
+	fflush(stdout);
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
 	// TODO: wait for message sent by node 0
 }
 
@@ -74,7 +75,7 @@ void onError(List* jobs, int queue_id) {
 	if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
 		// Checked if the interruption error was caused 
 		// by an alarm (deactivates the alarm in the process)
-
+		
 		Job *nxt_job = next_job(jobs);
 		run(nxt_job, queue_id);
 	} else {
@@ -97,11 +98,10 @@ void check_run (List* jobs, int queue_id) {
 		alarm(0);
 		remove_next_job(jobs, nxt_job->id);
 		run(nxt_job, queue_id);
-		check_run(jobs, queue_id);
+		// check_run(jobs, queue_id);
 	} else {
 		// Modify the alarm for the new job, since it is 
 		// closer to execute
-
 		alarm(nxt_job->seconds - now);
 	}
 }
@@ -114,13 +114,13 @@ void onSuccess(Msg msg, List* jobs, int queue_id) {
 
 void schedule (List* jobs, int queue_id) {
 	Msg msg;
-	printf("FILA: %d\n", queue_id);
-
+	
+	int virtual_id = N+1;
 	while (true) {
-		int virtual_id = N+1;
-		int res = msgrcv(queue_id, &msg,  sizeof(Msg) /* - sizeof(long) */, virtual_id, 0);
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
+
 		if (!strcmp(msg.s, "finished")) {
-			printf("...Escalonador recebeu...\n");
+			S("...The scheduler received a new message from the topology... ");
 		} else {
 			if (res < 0) {
 				onError(jobs, queue_id);

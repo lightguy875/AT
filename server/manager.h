@@ -5,7 +5,7 @@
 // #include "hypercube.h"
 // #include "torus.h"
 
-#define PATH "../prog/prog"
+#define PATH "../prog/"
 
 int topology_type;
 

@@ -7,9 +7,12 @@ int queue_id;
 Msg execute_job(int idx, char *program) {
 
 	time_t start = time(NULL);
+
 	int pid_worker = fork();
 	if (pid_worker == 0) { // child of the fork
-		int err = execl(PATH, program, (char *) 0);
+		char path[100] = PATH;
+		strcat(path, program);		
+		int err = execl(path, program, (char *) 0);
 	
 		if (err < 0) {
 			E("An error ocurred!");
@@ -21,7 +24,7 @@ Msg execute_job(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-	printf("[%d]Job executado: %ld\n", idx, elapsed);
+	printf("Process %d: job done in %d sec.\n", idx, elapsed);
 	return (Msg) { 
 		0, 
 		elapsed,
@@ -30,11 +33,11 @@ Msg execute_job(int idx, char *program) {
 }
 
 int ft_down (int idx, Msg msg) {
-	if ((2 * idx + 1) < 4) {
+	if ((2 * idx + 1) <= N) {
 		msg.type = 2 * idx;
-		msgsnd(queue_id, &msg,  sizeof(Msg), 0);
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 		msg.type = 2 * idx + 1;
-		msgsnd(queue_id, &msg,  sizeof(Msg), 0);
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 	}
 }
 
@@ -53,24 +56,24 @@ int ft_up (int idx, Msg msg) {
 
 	if (idx > 1) {
 		msg.type = idx / 2;
-		msgsnd(queue_id, &msg,  sizeof(Msg), 0);
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 	} else {
 		msg.type = N + 1;
-		msgsnd(queue_id, &msg, sizeof(Msg), 0);
+		msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 	}
 }
 
 int tr_up (int idx, Msg msg) {
-	int i = idx % M;
-  int j = idx / M;
+	// int i = idx % M;
+  // int j = idx / M;
 
-  if (i) {
-    msg.type = idx - M;
-  } else {
-		msg.type = idx - 1;
-	}
+  // if (i) {
+  //   msg.type = idx - M;
+  // } else {
+	// 	msg.type = idx - 1;
+	// }
 
-	msgsnd(queue_id, &msg,  sizeof(Msg), 0);
+	// msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
 int br_down(int idx, Msg msg) {
@@ -101,10 +104,9 @@ int br_up(int idx, Msg msg) {
 
 void mng_on_success(int idx, Msg msg) {
 
-	if (strcmp(msg.s, "finished")) {
+	if (strcmp(msg.s, "finished")) { // if ins't a new message
 		br_down(idx, msg);
 		msg = execute_job(idx, msg.s);
-		printf("[%d] %s.\n", idx, msg.s);
 	}
 
 	br_up(idx, msg);
@@ -112,7 +114,7 @@ void mng_on_success(int idx, Msg msg) {
 
 void mng_on_error() {
 	E("Failed to receive message");
-	printf("morrendo\n");
+	printf("A process was killed...\n");
 	fflush(stdout);
 	exit(1);
 }
@@ -121,8 +123,8 @@ void receive_msg(int idx) {
 	Msg msg;
 
 	while (true) {
-
-		int res = msgrcv(queue_id, &msg, sizeof(Msg), idx, 0);
+	
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
 
 		if (res < 0) {
 			mng_on_error();
@@ -137,6 +139,7 @@ void to_manage(int idx, int topology) {
 
 	topology_type = topology;
 	receive_msg(idx);
+	exit(1);
 }
 
 // int kill_p(int * pid_array)
