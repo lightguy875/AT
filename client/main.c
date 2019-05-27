@@ -21,17 +21,22 @@ void send (int t, char filename[]) {
   }
 } 
 
+void destroy() {
+	struct msqid_ds msg;
+  msgctl(65536, IPC_RMID, &msg);
+}
+
 int main (int argc, char *argv[]) {
   int seconds = 0;
+  destroy();
+  // if (argc == 3 && try_cast_int(argv[1], &seconds) && argv[2] != NULL) {
+  //   char filename[MAX_STRING_SIZE];
+  //   time_t t = time(NULL) + seconds;
 
-  if (argc == 3 && try_cast_int(argv[1], &seconds) && argv[2] != NULL) {
-    char filename[MAX_STRING_SIZE];
-    time_t t = time(NULL) + seconds;
+  //   strcpy(filename, argv[2]);
 
-    strcpy(filename, argv[2]);
-
-    send(t, filename);
-  }
+  //   send(t, filename);
+  // }
   
   return 0;
 }

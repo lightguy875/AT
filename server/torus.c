@@ -26,13 +26,13 @@ void tr_dfs(int *tr, int idx, int destiny) {
 }
 
 // Torus Up
-int tr_up (int idx) {
-  int i = idx % M;
-  int j = idx / M;
+// int tr_up (int idx) {
+//   int i = idx % M;
+//   int j = idx / M;
 
-  if (i) {
-    return idx - M;
-  }
+//   if (i) {
+//     return idx - M;
+//   }
 
-  return idx - 1;
-}
+//   return idx - 1;
+// }

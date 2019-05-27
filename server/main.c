@@ -63,7 +63,7 @@ void run (Job* job, int queue_id) {
 	Msg msg;
 
 	msg.t = 0;
-	msg.type = 0; // To send message to node 0
+	msg.type = 1; // To send message to node 0
 	strcpy(msg.s, job->filename);
 
 	msgsnd(queue_id, &msg,  sizeof(Msg), 0);
@@ -82,14 +82,14 @@ void onError(List* jobs, int queue_id) {
 		// failed to receive (no interruption error)
 
 		E("Failed to receive message");
+		exit(1);
 	}
 }
 
 void check_run (List* jobs, int queue_id) {
 	Job *nxt_job = next_job(jobs);
 	time_t now = time(NULL);
-	printf("seconds %d\n", nxt_job->seconds);
-	printf("now: %ld\n", now);
+
 	if (nxt_job->seconds <= now) {
 		// Deactivate the alarm and execute if it was
 		// to execute now the file
@@ -107,23 +107,26 @@ void check_run (List* jobs, int queue_id) {
 }
 
 void onSuccess(Msg msg, List* jobs, int queue_id) {
-	msg_print(&msg);
+	// msg_print(&msg);
 	list_push_back(jobs, job_create(msg.t, msg.s));
 	check_run(jobs, queue_id);
 }
 
-void schedule (List* jobs) {
-	int queue_id = queue_create(KEY);
+void schedule (List* jobs, int queue_id) {
 	Msg msg;
+	printf("FILA: %d\n", queue_id);
 
 	while (true) {
 		int virtual_id = N+1;
 		int res = msgrcv(queue_id, &msg,  sizeof(Msg) /* - sizeof(long) */, virtual_id, 0);
-
-		if (res < 0) {
-			onError(jobs, queue_id);
+		if (!strcmp(msg.s, "finished")) {
+			printf("...Escalonador recebeu...\n");
 		} else {
-			onSuccess(msg, jobs, queue_id);
+			if (res < 0) {
+				onError(jobs, queue_id);
+			} else {
+				onSuccess(msg, jobs, queue_id);
+			}
 		}
 	}
 
@@ -136,12 +139,12 @@ void schedule (List* jobs) {
  */
 void create_managers () {
 	// Setup pids
-	for (int i = 0; i < N; i++) {
+	for (int i = 1; i <= N; i++) {
 		pids[i] = 0;
 	}
 
 	// Create the processes to manage
-	for (int i = 0; i < N; i++) {
+	for (int i = 1; i <= N; i++) {
 		pid = fork();
 
 		if (pid == 0) {
@@ -184,11 +187,13 @@ int main (int argc, char *argv[]) {
 	setup_alarm();
 	setup_topology(argc, argv);
 
+	int queue_id = queue_create(KEY);
+
 	List *jobs = list_create();
 
 	create_managers();
 
-	schedule(jobs);
+	schedule(jobs, queue_id);
 
 	return 0;
 }

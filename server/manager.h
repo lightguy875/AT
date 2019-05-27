@@ -1,14 +1,11 @@
 #include "util.h"
 #include "message.h"
 
-#include "tree.h"
-#include "hypercube.h"
-#include "torus.h"
+// #include "tree.h"
+// #include "hypercube.h"
+// #include "torus.h"
 
-#define PATH "../prog/"
-#define PATH_SIZE 50
-#define JOB_FINISHED 1
-#define NEW_JOB 2
+#define PATH "../prog/prog"
 
 int topology_type;
 

@@ -27,6 +27,6 @@ void ft_dfs(int *ft, int idx, int destiny) {
 }
 
 // Tree Up
-int ft_up (int idx) {
-  return idx / 2;
-}
+// int ft_up (int idx) {
+//   return idx / 2;
+// }
