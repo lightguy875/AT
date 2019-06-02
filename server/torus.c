@@ -1,38 +1,41 @@
 #include "torus.h"
 
-void tr_make(int *tr, int *vis) {
-  for (int i = 0; i < N; i++) {
-    tr[i] = -1;
-    vis[i] = 0;
-  }
+void tr_make(int *tr) {
+	for (int i = 0; i < N; i++) {
+		tr[i] = -1;
+	}
 }
 
-// Torus DFS
-void tr_dfs(int *tr, int idx, int destiny) {
-  static int nxt[] = { 1, 0, -1, 0 };
-  
-  if (idx == destiny) {
-    int pid = tr[idx];
-
-    // do something
-  }
-  
-  for (int i = 0; i < M; i++) {
-    int i = ((idx % M) + nxt[i] + N) % N;
-    int j = ((idx / M) + nxt[(i+1)%N] + N) % N;
-
-    tr_dfs(tr, (j * M) + i, destiny);
-  }
+/* Structure: root node 1
+13 14 15 16  
+9  10 11 12
+5  6  7  8
+1  2  3  4   // First line
+*/
+int tr_up (int idx) {
+	if (idx > 1) { // if isn't the root node
+		if(idx > M * 3) {// if top line, send to first line
+			return (idx + M) % N; 
+		} else if (idx % M == 0) { // if last right column, send to first column
+			return (idx - M + 1); 
+		} else if (idx % M == 1) { // if first column, send to the below node
+			return idx - M;
+		} else { // if first line or mid, go to the previous left node
+			return idx - 1;
+		}
+	} else { // if root node, send to scheduler
+		return N + 1;
+	}
 }
 
-// Torus Up
-// int tr_up (int idx) {
-//   int i = idx % M;
-//   int j = idx / M;
+void tr_down(int idx, int ans[]) {
+	int n = sizeof(*ans) / sizeof(int);
 
-//   if (i) {
-//     return idx - M;
-//   }
+	if (idx < M) { // first send to node 2, 3 and 4
+		ans[0] = idx + 1;
+	}
 
-//   return idx - 1;
-// }
+	if (idx <= N - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
+		ans[0] = idx + M;
+	}
+}

@@ -14,7 +14,6 @@ int topology_type;
 
 int pids[N+1];
 int structure[N+1];
-int vis[N+1];
 
 int cont = 0;
 int queue_id;
@@ -49,101 +48,44 @@ Msg execute_job(int idx, char *program) {
 	};
 }
 
-void ft_down (int idx, Msg msg) {
-	if ((2 * idx + 1) <= N) {
-		msg.type = 2 * idx;
-		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-		msg.type = 2 * idx + 1;
-		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	}
-}
-
-void hc_down (int idx, Msg msg) {
-
-}
-
-void tr_down (int idx, Msg msg) {
-
-	if (idx < M) { // first send to node 2, 3 and 4
-		msg.type = idx + 1;
-		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	}
-
-	if (idx <= N - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
-		msg.type = idx + M;
-		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	}
-}
-
-void ft_up (int idx, Msg msg) {
-
-	if (idx > 1) {
-		msg.type = idx / 2;
-		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	} else {
-		msg.type = N + 1;
-		msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	}
-}
-
-void hc_up (int idx, Msg msg) {
-
-}
-
-/* Structure: root node 1
-13 14 15 16  
-9  10 11 12
-5  6  7  8
-1  2  3  4   // First line
-*/
-void tr_up (int idx, Msg msg) {
-
-	int up;
-	if (idx > 1) { // if isn't the root node
-
-		if(idx > M * 3) {// if top line, send to first line
-			up = (idx + M) % N; 
-		} else if (idx % M == 0) { // if last right column, send to first column
-			up = (idx - M + 1); 
-		} else if (idx % M == 1) { // if first column, send to the below node
-			up = idx - M;
-		} else { // if first line or mid, go to the previous left node
-			up = idx - 1;
-		}
-
-	}	else { // if root node, send to scheduler
-		up = N + 1;
-	}
-		msg.type = up;
-		msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-}
-
 void br_down(int idx, Msg msg) {
+	int arr[4] = { -1, -1, -1, -1 };
+
 	switch (topology_type) {
 		case TREE:
-			ft_down(idx, msg);
+			ft_down(idx, arr);
 			break;
 		case HYPERCUBE:
-			hc_down(idx, msg);
+			hc_down(idx, arr);
 			break;
 		case TORUS:
-			tr_down(idx, msg);
+			tr_down(idx, arr);
 			break;
+	}
+
+	for (int i = 0; i < 4; i++) {
+		if (arr[i] != -1) {
+			msg.type = arr[i];
+			
+			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+		}
 	}
 }
 
 void br_up(int idx, Msg msg) {
 	switch (topology_type) {
 		case TREE:
-			ft_up(idx, msg);
+			msg.type = ft_up(idx);
 			break;
 		case HYPERCUBE:
-			hc_up(idx, msg);
+			msg.type = hc_up(idx);
 			break;
 		case TORUS:
-			tr_up(idx, msg);
+			msg.type = tr_up(idx);
 			break;
 	}
+
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
 void itoa(int i, char b[]){
@@ -373,13 +315,13 @@ void setup_topology (int n, char *v[]) {
 
 	switch (topology_type) {
 		case TREE:
-			ft_make(structure, vis);
+			ft_make(structure);
 			break;
 		case HYPERCUBE:
-			hc_make(structure, vis);
+			hc_make(structure);
 			break;
 		case TORUS:
-			tr_make(structure, vis);
+			tr_make(structure);
 			break;
 		default:
 			E("Wrong topology!");

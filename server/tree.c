@@ -1,31 +1,23 @@
 #include "tree.h"
 
-// Tree Make
-void ft_make(int *ft, int *vis) {
+void ft_make(int *ft) {
   for (int i = 0; i < N; i++) {
     ft[i] = -1;
-    vis[i] = 0;
   }
 }
 
-// Tree DFS
-void ft_dfs(int *ft, int idx, int destiny) {
-  if (idx >= N) {
-    return;
+int ft_up (int idx) {
+  if (idx > 1) {
+    return idx / 2;
   }
 
-  int pid;
-  if (idx == destiny){
-    // got on destiny
-  }
-  
-  int nxt = 2 * idx;
-	
-  ft_dfs(ft, nxt+1, destiny);
-  ft_dfs(ft, nxt+2, destiny);
+  return N+1;
 }
 
-// Tree Up
-// int ft_up (int idx) {
-//   return idx / 2;
-// }
+void ft_down(int idx, int ans[]) {
+	int n = sizeof(*ans) / sizeof(int);
+
+	for (int i = 0; i < n; i++) {
+		ans[i] = (i < 2) ? 2 * idx + i + 1 : -1;
+	}
+}
