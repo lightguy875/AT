@@ -36,26 +36,11 @@ typedef struct list {
 } List;
 
 /*!
- *  \brief Add node to the end of the list.
- *  \param list a list.
- *  \param value a value to be stored in the node.
- *  \return nothing.
- */
-void list_push_back(List*, void*);
-
-/*!
- *  \brief Remove last node.
- *  \param list a list.
- *  \return pointer to the value of the returned
- */
-void* list_pop_back(List*);
-
-/*!
  *  \brief Create a node.
  *  \param value a void pointer to the value.
  *  \return a pointer to the node
  */
-Node* node_create(void*);
+Node* node_create(void* value);
 
 /*!
  *  \brief Create a list.
@@ -64,8 +49,21 @@ Node* node_create(void*);
 List* list_create();
 
 /*!
+ *  \brief Add node to the end of the list.
+ *  \param list a list.
+ *  \param value a value to be stored in the node.
+ */
+void list_push_back(List* list, void* value);
+
+/*!
+ *  \brief Remove last node.
+ *  \param list a list.
+ *  \return pointer to the value of the returned
+ */
+void* list_pop_back(List* list);
+
+/*!
  *  \brief Destroy and free everything in the list.
  *  \param list a list.
- *  \return nothing
  */
-void list_destroy(List*);
+void list_destroy(List* list);
