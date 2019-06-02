@@ -1,6 +1,7 @@
 #pragma once
 
 #include "util.h"
+#define MAX_STRING_SIZE 1000
 
 /*!
  * \brief Message.
@@ -21,6 +22,5 @@ typedef struct msgbuf {
 /*!
  *  \brief Prints the content of message.
  *  \param msg a message.
- *  \return nothing.
  */
-void msg_print(Msg*);
+void msg_print(Msg* msg);
