@@ -19,7 +19,13 @@ int cont = 0;
 int queue_id;
 
 char traces[1000];
-
+/**
+ * @brief 
+ * 
+ * @param idx 
+ * @param program 
+ * @return Msg 
+ */
 Msg execute_job(int idx, char *program) {
 	time_t start = time(NULL);
 
@@ -245,11 +251,12 @@ void schedule (List* jobs, int queue_id) {
 
 	destroy(jobs, queue_id);
 }
-
-/*!
- *  \brief Creation of all management processes.
- *  \return the process id's.
+/**
+ * @brief Creation of all management processes.
+ * Return the process id's.
+ * 
  */
+
 void create_managers () {
 	// Setup pids
 	int total = topology_type == TREE ? N - 1 : N;
@@ -269,7 +276,12 @@ void create_managers () {
 		}
 	}
 }
-
+/**
+ * @brief Set the up topology object
+ * 
+ * @param n 
+ * @param v 
+ */
 void setup_topology (int n, char *v[]) {
 	if (n != 2 || !try_cast_int(v[1], &topology_type)) {
 		E("Not a valid topology");
@@ -293,11 +305,20 @@ void setup_topology (int n, char *v[]) {
 
 	S("Topology set");
 }
-
+/**
+ * @brief Set the up alarm object
+ * 
+ */
 void setup_alarm () {
 	signal(SIGALRM, *dummy);
 }
-
+/**
+ * @brief Executa o programa principal
+ * 
+ * @param argc 
+ * @param argv 
+ * @return int 
+ */
 int main (int argc, char *argv[]) {
 	setup_alarm();
 	setup_topology(argc, argv);
