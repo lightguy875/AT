@@ -7,11 +7,7 @@ void ft_make(int *ft) {
 }
 
 int ft_up (int idx) {
-	if (idx > 1) {
-		return idx / 2;
-	}
-
-	return N+1;
+	return (idx - 1) / 2;
 }
 
 void ft_down(int idx, int ans[]) {

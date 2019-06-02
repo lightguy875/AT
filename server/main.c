@@ -88,7 +88,7 @@ void broadcast_up(int idx, Msg msg) {
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
-void to_manage(int idx) {
+void manager(int idx) {
 	Msg msg;
 
 	queue_id = queue_retrieve(KEY);
@@ -263,7 +263,7 @@ void create_managers () {
 		pid = fork();
 
 		if (pid == 0) {
-			to_manage(i);
+			manager(i);
 		} else {
 			pids[i] = pid;
 		}
