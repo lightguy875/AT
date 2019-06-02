@@ -22,6 +22,6 @@ void hc_dfs(int *hc, int idx, int destiny) {
   }
 }
 
-int hc_up (int idx) {
-  return idx  - (idx&-idx);
-}
+// int hyc_up (int idx) {
+//   return idx  - (idx&-idx);
+// }

@@ -43,6 +43,8 @@
 #define N 16
 #define M 4
 
+#define PATH "../prog/"
+
 /*!
  *  \brief Cast string to int.
  *  \param num a string with a number.

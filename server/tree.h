@@ -8,4 +8,4 @@ void ft_make(int *, int *);
 // Tree DFS
 void ft_dfs(int *, int, int);
 
-int ft_up (int);
+// int ft_up (int);

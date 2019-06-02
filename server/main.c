@@ -3,7 +3,6 @@
 #include "job.h"
 #include "list.h"
 #include "message.h"
-#include "manager.h"
 
 #include "tree.h"
 #include "hypercube.h"
@@ -16,6 +15,202 @@ int topology_type;
 int pids[N+1];
 int structure[N+1];
 int vis[N+1];
+
+int cont = 0;
+int queue_id;
+
+char traces[1000];
+
+Msg execute_job(int idx, char *program) {
+
+	time_t start = time(NULL);
+
+	int pid_worker = fork();
+	if (pid_worker == 0) { // child of the fork
+		char path[100] = PATH;
+		strcat(path, program);		
+		int err = execl(path, program, (char *) 0);
+		
+		if (err < 0) {
+			E("An error ocurred!");
+			exit(1);
+		}
+	}
+
+	int status;
+	wait(&status);
+
+	time_t elapsed = time(NULL) - start;
+	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
+	return (Msg) { 
+		0, 
+		elapsed,
+		"finished"
+	};
+}
+
+void ft_down (int idx, Msg msg) {
+	if ((2 * idx + 1) <= N) {
+		msg.type = 2 * idx;
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+		msg.type = 2 * idx + 1;
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	}
+}
+
+void hc_down (int idx, Msg msg) {
+
+}
+
+void tr_down (int idx, Msg msg) {
+  static int nxt[] = { 1, 0, -1, 0 };
+
+  for (int i = 1, j = 1; i < M + 1; i++) {
+    int i = ((idx % M) + nxt[i-1] + N) % N;
+    int j = ((idx / M) + nxt[i%M] + N) % N;
+	
+		if ((j * M) + i <= N) {
+			msg.type = (j * M) + i;
+			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+		}
+  }
+}
+
+void ft_up (int idx, Msg msg) {
+
+	if (idx > 1) {
+		msg.type = idx / 2;
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	} else {
+		msg.type = N + 1;
+		msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	}
+}
+
+void hc_up (int idx, Msg msg) {
+
+}
+
+/* Structure: root node 1
+13 14 15 16  
+9  10 11 12
+5  6  7  8
+1  2  3  4   // First line
+*/
+void tr_up (int idx, Msg msg) {
+	int up;
+	if (idx > 1) { // if isn't the root node
+
+		if(idx > M * 3) {// if top line, send to first line
+			up = (idx + M) % N; 
+		} else if (idx % M == 0) { // if last right column, send to first column
+			up = (idx - M - 1); 
+		} else if (idx % M == 1) { // if first column, send to the below node
+			up = idx - M;
+		} else { // if first line or mid, go to the previous left node
+			up = idx - 1;
+		}
+
+	}	else { // if root node, send to scheduler
+		up = N + 1;
+	}
+
+		msg.type = up;
+		msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+}
+
+void br_down(int idx, Msg msg) {
+	switch (topology_type) {
+		case TREE:
+			ft_down(idx, msg);
+			break;
+		case HYPERCUBE:
+			hc_down(idx, msg);
+			break;
+		case TORUS:
+			tr_down(idx, msg);
+			break;
+	}
+}
+
+void br_up(int idx, Msg msg) {
+	switch (topology_type) {
+		case TREE:
+			ft_up(idx, msg);
+			break;
+		case HYPERCUBE:
+			hc_up(idx, msg);
+			break;
+		case TORUS:
+			tr_up(idx, msg);
+			break;
+	}
+}
+
+void itoa(int i, char b[]){
+    char const digit[] = "0123456789";
+    char* p = b;
+    if(i<0){
+        *p++ = '-';
+        i *= -1;
+    }
+    int shifter = i;
+    do{ //Move to where representation ends
+        ++p;
+        shifter = shifter/10;
+    }while(shifter);
+    *p = '\0';
+    do{ //Move back, inserting digits as u go
+        *--p = digit[i%10];
+        i = i/10;
+    }while(i);
+}
+
+void mng_on_success(int idx, Msg msg) {
+
+//	if (strcmp(msg.s, "finished")) { // if ins't a new message
+	if (strstr (msg.s, "finished") == NULL) {
+		br_down(idx, msg);
+		msg = execute_job(idx, msg.s);
+	}
+
+		char temp[12] = "\0";
+		itoa(idx, temp);
+		strcat(msg.s, "->");
+		strcat(msg.s, temp);
+
+	br_up(idx, msg);
+}
+
+void mng_on_error() {
+	E("Failed to receive message");
+	printf("A process was killed...\n");
+	fflush(stdout);
+	exit(1);
+}
+
+void receive_msg(int idx) {
+	Msg msg;
+
+	while (true) {
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
+
+		if (res < 0) {
+			mng_on_error();
+		} else {
+			mng_on_success(idx, msg);
+		}
+	}
+}
+
+void to_manage(int idx) {
+	queue_id = queue_retrieve(KEY);
+
+	receive_msg(idx);
+	exit(1);
+}
+
+// -------------- End of Managers
 
 void destroy(List *jobs, int queue_id) {
   list_destroy(jobs);
@@ -118,9 +313,23 @@ void schedule (List* jobs, int queue_id) {
 	int virtual_id = N+1;
 	while (true) {
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
+	//	printf("cont: %d\n", cont);
+//		if (!strcmp(msg.s, "finished")) {
+		if (strstr (msg.s, "finished") != NULL) {
+			cont++;
+			strcat(traces, msg.s);
+			strcat(traces, "->schedule.\n");
+			strcpy(msg.s, traces);
+			if ((cont == N && topology_type != TREE) || (cont == N - 1 && topology_type == TREE)) {
+				S("...Job finished... ");
+				printf("\n=> Traces\n%s\n", msg.s);
+				cont = 0;
+			} 
 
-		if (!strcmp(msg.s, "finished")) {
-			S("...The scheduler received a new message from the topology... ");
+			if (cont >= N) {
+				cont = 0;
+			}
+
 		} else {
 			if (res < 0) {
 				onError(jobs, queue_id);
@@ -139,16 +348,18 @@ void schedule (List* jobs, int queue_id) {
  */
 void create_managers () {
 	// Setup pids
-	for (int i = 1; i <= N; i++) {
+	int total = topology_type == TREE ? N - 1 : N;
+
+	for (int i = 1; i <= total; i++) {
 		pids[i] = 0;
 	}
 
 	// Create the processes to manage
-	for (int i = 1; i <= N; i++) {
+	for (int i = 1; i <= total; i++) {
 		pid = fork();
 
 		if (pid == 0) {
-			to_manage(i, topology_type);
+			to_manage(i);
 		} else {
 			pids[i] = pid;
 		}

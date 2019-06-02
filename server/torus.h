@@ -8,4 +8,4 @@ void tr_make(int *, int *);
 // Torus DFS
 void tr_dfs(int *, int, int);
 
-int tr_up(int);
+// int tr_up(int);

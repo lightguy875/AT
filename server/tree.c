@@ -1,5 +1,4 @@
 #include "tree.h"
-#include "manager.h"
 
 // Tree Make
 void ft_make(int *ft, int *vis) {
