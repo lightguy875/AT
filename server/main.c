@@ -94,7 +94,7 @@ void broadcast_up(int idx, Msg msg) {
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
-void to_manage(int idx) {
+void manager(int idx) {
 	Msg msg;
 
 	queue_id = queue_retrieve(KEY);
@@ -160,7 +160,9 @@ Job* next_job (List* jobs) {
 		curr = curr->nxt;
 	}
 
-	return (job != NULL && job->seconds <= time(NULL)) ? job : NULL;
+	time_t now = time(NULL);
+
+	return (job != NULL && job->seconds <= now) ? job : NULL;
 }
 
 void run (Job* job, int queue_id) {
@@ -182,7 +184,10 @@ void onError(List* jobs, int queue_id) {
 		// by an alarm (deactivates the alarm in the process)
 		
 		Job *nxt_job = next_job(jobs);
-		run(nxt_job, queue_id);
+
+		if (nxt_job != NULL) {
+			run(nxt_job, queue_id);
+		}
 	} else {
 		// The interruption error was not caused by the alarm or 
 		// failed to receive (no interruption error)
@@ -196,7 +201,7 @@ void check_run (List* jobs, int queue_id) {
 	Job *nxt_job = next_job(jobs);
 	time_t now = time(NULL);
 
-	if (nxt_job->seconds <= now) {
+	if (nxt_job != NULL && nxt_job->seconds <= now) {
 		// Deactivate the alarm and execute if it was
 		// to execute now the file
 
@@ -270,7 +275,7 @@ void create_managers () {
 		pid = fork();
 
 		if (pid == 0) {
-			to_manage(i);
+			manager(i);
 		} else {
 			pids[i] = pid;
 		}

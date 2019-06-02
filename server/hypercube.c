@@ -7,7 +7,10 @@ void hc_make(int *hc) {
 }
 
 int hc_up (int idx) {
-	// TODO: test
+	if (idx < 1) {
+		return N+1;
+	}
+
   	return idx  - (idx&-idx);
 }
 
@@ -22,10 +25,13 @@ int hc_up (int idx) {
                         1110 -> 1111
 */
 void hc_down(int idx, int ans[]) {
-	// TODO: test
 	int n = sizeof(*ans) / sizeof(int);
 
-	for (int i = 0; i < n && i < 4; i++) {
+	for (int i = 0; i < n; i++) {
+		ans[i] = -1;
+	}
+
+	for (int i = 0; i < 4; i++) {
 		if (idx & (1 << i)) {
 			ans[i] = idx | (1 << i);
 		} else {
