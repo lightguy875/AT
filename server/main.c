@@ -63,17 +63,16 @@ void hc_down (int idx, Msg msg) {
 }
 
 void tr_down (int idx, Msg msg) {
-  static int nxt[] = { 1, 0, -1, 0 };
 
-  for (int i = 1, j = 1; i < M + 1; i++) {
-    int i = ((idx % M) + nxt[i-1] + N) % N;
-    int j = ((idx / M) + nxt[i%M] + N) % N;
-	
-		if ((j * M) + i <= N) {
-			msg.type = (j * M) + i;
-			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-		}
-  }
+	if (idx < M) { // first send to node 2, 3 and 4
+		msg.type = idx + 1;
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	}
+
+	if (idx <= N - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
+		msg.type = idx + M;
+		msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	}
 }
 
 void ft_up (int idx, Msg msg) {
@@ -98,13 +97,14 @@ void hc_up (int idx, Msg msg) {
 1  2  3  4   // First line
 */
 void tr_up (int idx, Msg msg) {
+
 	int up;
 	if (idx > 1) { // if isn't the root node
 
 		if(idx > M * 3) {// if top line, send to first line
 			up = (idx + M) % N; 
 		} else if (idx % M == 0) { // if last right column, send to first column
-			up = (idx - M - 1); 
+			up = (idx - M + 1); 
 		} else if (idx % M == 1) { // if first column, send to the below node
 			up = idx - M;
 		} else { // if first line or mid, go to the previous left node
@@ -114,7 +114,6 @@ void tr_up (int idx, Msg msg) {
 	}	else { // if root node, send to scheduler
 		up = N + 1;
 	}
-
 		msg.type = up;
 		msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
