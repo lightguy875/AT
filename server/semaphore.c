@@ -18,7 +18,7 @@ void P (Semaphore* sem) {
     int res = semop(sem->id, sem->def, 2);
 
     if (res < 0) {
-        printf("erro no p=%d\n", errno);
+        printf("Erro no p=%d\n", errno);
     }
 }
 
@@ -28,6 +28,6 @@ void V (Semaphore* sem) {
     int res = semop(sem->id, sem->def, 2);
 
     if (res < 0) {
-        printf("erro no p=%d\n", errno);
+        printf("Erro no p=%d\n", errno);
     }
 }

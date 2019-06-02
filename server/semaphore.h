@@ -9,8 +9,24 @@
 
 typedef struct semaphore Semaphore;
 
-void sem_op (Semaphore*, int, int, int, int);
+/*!
+ *  \brief Get the index of the father of the node at the given index.
+ *  \param sem the semaphore.
+ *  \param idx the index.
+ *  \param num the number of operations.
+ *  \param op the operation.
+ *  \param flag the flag.
+ */
+void sem_op (Semaphore* sem, int idx, int num, int op, int flag);
 
-void P();
+/*!
+ *  \brief Increase the semaphore
+ *  \param sem the semaphore.
+ */
+void P(Semaphore* sem);
 
-void V();
+/*!
+ *  \brief Decrease the semaphore
+ *  \param sem the semaphore.
+ */
+void V(Semaphore* sem);

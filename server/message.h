@@ -22,10 +22,19 @@ typedef struct msgbuf {
 /*!
  *  \brief Prints the content of message.
  *  \param msg a message.
- *  \return nothing.
  */
-void msg_print(Msg*);
+void msg_print(Msg* msg);
 
-int queue_create(int);
+/*!
+ *  \brief Create a queue.
+ *  \param key the key to que queue.
+ *  \return The queue id.
+ */
+int queue_create(int key);
 
-int queue_retrieve(int);
+/*!
+ *  \brief Prints the content of message.
+ *  \param key the key to que queue.
+ *  \return The queue id.
+ */
+int queue_retrieve(int key);

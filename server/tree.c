@@ -1,17 +1,17 @@
 #include "tree.h"
 
 void ft_make(int *ft) {
-  for (int i = 0; i < N; i++) {
-    ft[i] = -1;
-  }
+	for (int i = 0; i < N; i++) {
+		ft[i] = -1;
+	}
 }
 
 int ft_up (int idx) {
-  if (idx > 1) {
-    return idx / 2;
-  }
+	if (idx > 1) {
+		return idx / 2;
+	}
 
-  return N+1;
+	return N+1;
 }
 
 void ft_down(int idx, int ans[]) {

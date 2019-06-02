@@ -21,7 +21,6 @@ int queue_id;
 char traces[1000];
 
 Msg execute_job(int idx, char *program) {
-
 	time_t start = time(NULL);
 
 	int pid_worker = fork();
@@ -41,6 +40,7 @@ Msg execute_job(int idx, char *program) {
 
 	time_t elapsed = time(NULL) - start;
 	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
+
 	return (Msg) { 
 		0, 
 		elapsed,
@@ -48,7 +48,7 @@ Msg execute_job(int idx, char *program) {
 	};
 }
 
-void br_down(int idx, Msg msg) {
+void broadcast_down(int idx, Msg msg) {
 	int arr[4] = { -1, -1, -1, -1 };
 
 	switch (topology_type) {
@@ -72,7 +72,7 @@ void br_down(int idx, Msg msg) {
 	}
 }
 
-void br_up(int idx, Msg msg) {
+void broadcast_up(int idx, Msg msg) {
 	switch (topology_type) {
 		case TREE:
 			msg.type = ft_up(idx);
@@ -88,66 +88,31 @@ void br_up(int idx, Msg msg) {
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
-void itoa(int i, char b[]){
-    char const digit[] = "0123456789";
-    char* p = b;
-    if(i<0){
-        *p++ = '-';
-        i *= -1;
-    }
-    int shifter = i;
-    do{ //Move to where representation ends
-        ++p;
-        shifter = shifter/10;
-    }while(shifter);
-    *p = '\0';
-    do{ //Move back, inserting digits as u go
-        *--p = digit[i%10];
-        i = i/10;
-    }while(i);
-}
-
-void mng_on_success(int idx, Msg msg) {
-
-//	if (strcmp(msg.s, "finished")) { // if ins't a new message
-	if (strstr (msg.s, "finished") == NULL) {
-		br_down(idx, msg);
-		msg = execute_job(idx, msg.s);
-	}
-
-		char temp[12] = "\0";
-		itoa(idx, temp);
-		strcat(msg.s, "->");
-		strcat(msg.s, temp);
-
-	br_up(idx, msg);
-}
-
-void mng_on_error() {
-	E("Failed to receive message");
-	printf("A process was killed...\n");
-	fflush(stdout);
-	exit(1);
-}
-
-void receive_msg(int idx) {
+void to_manage(int idx) {
 	Msg msg;
+
+	queue_id = queue_retrieve(KEY);
 
 	while (true) {
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
 
 		if (res < 0) {
-			mng_on_error();
+			E("Failed to receive message. A process was killed...");
+			break;
 		} else {
-			mng_on_success(idx, msg);
+			// TODO: identify what is this
+			//	if (strcmp(msg.s, "finished")) { // if ins't a new message
+			if (strstr (msg.s, "finished") == NULL) {
+				broadcast_down(idx, msg);
+				msg = execute_job(idx, msg.s);
+			}
+
+			sprintf(msg.s, "%s -> %d", msg.s, idx);
+
+			broadcast_up(idx, msg);
 		}
 	}
-}
 
-void to_manage(int idx) {
-	queue_id = queue_retrieve(KEY);
-
-	receive_msg(idx);
 	exit(1);
 }
 
@@ -161,11 +126,10 @@ void destroy(List *jobs, int queue_id) {
 }
 
 void remove_next_job (List* jobs, int id) {
-  time_t t = time(NULL);
   Node *curr = jobs->begin;
 
   while (curr != NULL) {
-      Job *aux = (Job*) curr->value;
+		Job *aux = (Job*) curr->value;
 
 	  if (aux != NULL && aux->id == id) {
 		  aux->done = true;
@@ -177,7 +141,6 @@ void remove_next_job (List* jobs, int id) {
 }
 
 Job* next_job (List* jobs) {
-	time_t t = time(NULL);
 	Job *job = NULL;
 	Node *curr = jobs->begin;
 
@@ -191,7 +154,7 @@ Job* next_job (List* jobs) {
 		curr = curr->nxt;
 	}
 
-	return (job != NULL && job->seconds <= t) ? job : NULL;
+	return (job != NULL && job->seconds <= time(NULL)) ? job : NULL;
 }
 
 void run (Job* job, int queue_id) {
