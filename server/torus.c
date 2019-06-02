@@ -31,11 +31,17 @@ int tr_up (int idx) {
 void tr_down(int idx, int ans[]) {
 	int n = sizeof(*ans) / sizeof(int);
 
-	if (idx < M) { // first send to node 2, 3 and 4
-		ans[0] = idx + 1;
-	}
+	for (int i = 0; i < n; i++) {
+		if (i) {
+			ans[i] = -1;
+		} else {
+			if (idx < M) { // first send to node 2, 3 and 4
+				ans[0] = idx + 1;
+			}
 
-	if (idx <= N - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
-		ans[0] = idx + M;
+			if (idx <= N - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
+				ans[0] = idx + M;
+			}
+		}
 	}
 }
