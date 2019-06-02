@@ -15,7 +15,6 @@ int topology_type;
 
 int pids[N+1];
 int structure[N+1];
-int vis[N+1];
 
 void destroy(List *jobs, int queue_id) {
   list_destroy(jobs);
@@ -160,13 +159,13 @@ void setup_topology (int n, char *v[]) {
 
 	switch (topology_type) {
 		case TREE:
-			ft_make(structure, vis);
+			ft_make(structure);
 			break;
 		case HYPERCUBE:
-			hc_make(structure, vis);
+			hc_make(structure);
 			break;
 		case TORUS:
-			tr_make(structure, vis);
+			tr_make(structure);
 			break;
 		default:
 			E("Wrong topology!");
