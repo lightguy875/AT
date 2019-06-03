@@ -7,11 +7,11 @@ void hc_make(int *hc) {
 }
 
 int hc_up (int idx) {
-	if (idx < 1) {
-		return N+1;
+	if (idx) {
+  		return idx  - (idx&-idx);
 	}
 
-  	return idx  - (idx&-idx);
+	return N;
 }
 
 /*
