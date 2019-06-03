@@ -10,8 +10,8 @@ int ft_up (int idx) {
 	return (idx - 1) / 2;
 }
 
-void ft_down(int idx, int ans[]) {
-	int n = sizeof(*ans) / sizeof(int);
+void ft_down(int idx, int *ans) {
+	int n = sizeof(ans) / sizeof(ans[0]);
 
 	for (int i = 0; i < n; i++) {
 		ans[i] = (i < 2) ? 2 * idx + i + 1 : -1;
