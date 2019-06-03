@@ -12,40 +12,27 @@
 #define SCHEDULER 666
 
 int topology_type;
-char process[300];
-char pidlength[20];
+
 int structure[N];
 
 int queue_id;
 
 bool topology_free;
 
-int pids[N];
-
 List* jobs;
 
 Job* curr_job;
 
-void shutdown() {
-    
-//	int i;
-//	for (i = 0;i < N; i++)
-//	 {
-//		 sprintf(pidlength,"%d",pids[i]);
-//		 strcat(process,pidlength);
-//		 strcat(process," -o pid=pid,comm=arquivo_executavel,etimes=tempo_de_cpu,bsdstart=tempo_de_inicio \n");
-//		 system(process);
-//	}	
+void shutdown() {	
 	Node *node = jobs->begin;
 
 	while (node != NULL) {
 		Job *job = (Job*)node->value;
 
 		if(job->done) {
-			printf("\n Processo já executado \n");
-			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
+			printf("[DONE] job: %d, file: %s, submission: %d\n", job->id, job->filename, job->submission);
 		} else{
-			printf(" \n O processo: %d não será executado \n", job->id,job->filename, job->seconds);
+			printf("[CANCELLED] job: %d, file: %s\n", job->id, job->filename);
 		}
 
 		node = node->nxt;
@@ -190,8 +177,6 @@ void mng_create (int n) {
 
 		if (!pid) {
 			mng_start(i);
-		} else {
-			pids[i] = pid;
 		}
 	}
 }
@@ -299,6 +284,8 @@ void sch_start () {
 	int virtual_id = N+1; //> the virtual queue id
 	char traces[1000];
 
+	topology_free = true;
+
 	while (true) {
 		Msg msg;
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, IPC_NOWAIT);
@@ -359,10 +346,9 @@ int main (int argc, char *argv[]) {
 
 	S("Topology set");
 
-	topology_free = true;
 	mng_create(N);
 	S("Create Managers");
-	kill(getpid(),SIGUSR1);
+
 	sch_start();
 
 	return 0;
