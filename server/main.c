@@ -54,10 +54,7 @@ Msg execute_job(int idx, char *program) {
 		"finished"
 	};
 }
-void shutdown_setup()
-{
-	signal(SIGUSR1,*shutdown);
-}
+
 void shutdown(List* jobs)
 {
 	Job* Processo;
@@ -76,6 +73,10 @@ void shutdown(List* jobs)
 	   
 	}
 	kill(0,SIGTERM);
+}
+void shutdown_setup()
+{
+	signal(SIGUSR1,*shutdown);
 }
 void broadcast_down(int idx, Msg msg) {
 	int arr[4] = { -1, -1, -1, -1 };

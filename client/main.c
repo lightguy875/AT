@@ -10,7 +10,7 @@
 #include "message.h"
 
 #define KEY 15003
-#define N 16
+#define N 15
 
 #define S(x) printf("\033[0;32m%s\033[0m\n", x); // Output is green
 #define E(x) printf("\033[0;31m%s\033[0m\n", x); // Output is red
