@@ -27,8 +27,6 @@ int pids[N];
 
 List* jobs;
 
-char buffer[33];
-
 void shutdown() {
 	Node *node = jobs->begin;
 
@@ -164,9 +162,6 @@ void mng_start(int idx) {
 			mng_broadcast_down(idx, msg);
 			msg = mng_execute(idx, msg.s);
 		}
-		
-		sprintf(buffer, " -> %d", idx + 1);
-		strcat(msg.s, buffer);
 
 		mng_broadcast_up(idx, msg);
 	}
