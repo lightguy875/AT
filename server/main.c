@@ -12,13 +12,14 @@
 int pid;
 int topology_type;
 
-int pids[N+1];
-int structure[N+1];
+int pids[N];
+int structure[N];
 
 int cont = 0;
 int queue_id;
 
 char traces[1000];
+
 /**
  * @brief 
  * 
@@ -89,9 +90,10 @@ void broadcast_down(int idx, Msg msg) {
 	}
 
 	for (int i = 0; i < 4; i++) {
+		// printf("idx: %d - arr: %d\n", idx, arr[i]);
 		if (arr[i] != -1) {
-			msg.type = arr[i];
-			
+			printf("%d:%ld\n", idx + 1, msg.type);
+			msg.type = arr[i] + 1;
 			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 		}
 	}
@@ -110,6 +112,7 @@ void broadcast_up(int idx, Msg msg) {
 			break;
 	}
 
+	msg.type++;
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
@@ -131,8 +134,11 @@ void to_manage(int idx) {
 				broadcast_down(idx, msg);
 				msg = execute_job(idx, msg.s);
 			}
-
-			sprintf(msg.s, "%s -> %d", msg.s, idx);
+			
+			char buffer[33];
+			
+			sprintf(buffer, " -> %d", idx);
+			strcat(msg.s, buffer);
 
 			broadcast_up(idx, msg);
 		}
@@ -278,14 +284,12 @@ void schedule (List* jobs, int queue_id) {
 
 void create_managers () {
 	// Setup pids
-	int total = topology_type == TREE ? N - 1 : N;
-
-	for (int i = 1; i <= total; i++) {
+	for (int i = 0; i < N; i++) {
 		pids[i] = 0;
 	}
 
 	// Create the processes to manage
-	for (int i = 1; i <= total; i++) {
+	for (int i = 0; i < N; i++) {
 		pid = fork();
 
 		if (pid == 0) {

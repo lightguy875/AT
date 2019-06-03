@@ -24,12 +24,8 @@ int hc_up (int idx) {
                 1100 -> 1101
                         1110 -> 1111
 */
-void hc_down(int idx, int ans[]) {
+void hc_down(int idx, int* ans) {
 	int n = sizeof(*ans) / sizeof(int);
-
-	for (int i = 0; i < n; i++) {
-		ans[i] = -1;
-	}
 
 	for (int i = 0; i < 4; i++) {
 		if (idx & (1 << i)) {
@@ -37,5 +33,9 @@ void hc_down(int idx, int ans[]) {
 		} else {
 			break;
 		}
+	}
+
+	for (int i = 0; i < 4; i++) {
+		ans[i] = (ans[i] < N) ? ans[i] : -1;
 	}
 }

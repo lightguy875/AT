@@ -20,4 +20,4 @@ int hc_up (int idx);
  *  \param idx the index.
  *  \param ans the output, it should be at least 2, the rest will be filled with -1.
  */
-void hc_down(int idx, int ans[]);
+void hc_down(int idx, int* ans);

@@ -7,13 +7,13 @@ void ft_make(int *ft) {
 }
 
 int ft_up (int idx) {
-	return (idx - 1) / 2;
+  if (idx)
+	  return (idx - 1) / 2;
+  
+  return N;
 }
 
-void ft_down(int idx, int ans[]) {
-	int n = sizeof(*ans) / sizeof(int);
-
-	for (int i = 0; i < n; i++) {
-		ans[i] = (i < 2) ? 2 * idx + i + 1 : -1;
-	}
+void ft_down(int idx, int *ans) {
+	ans[0] = (2 * idx + 1 < N) ? 2 * idx + 1 : -1;
+	ans[1] = (2 * idx + 2 < N) ? 2 * idx + 2 : -1;
 }

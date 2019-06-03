@@ -21,7 +21,8 @@ HEADERS = $(wildcard *.h)
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall -O2 -o $@	
 	-rm -f *.o
-	-clear
+	
+	-pwd
 
 run: default
 	- sudo ./main 1
@@ -40,4 +41,4 @@ clean:
 	-rm -f $(TARGET)
 
 clear:
-	-clear
+	-pwd
