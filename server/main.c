@@ -268,6 +268,8 @@ void sch_msg_error() {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
+	printf("\n\n%s> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s\n\n%s", YELLOW, msg.id, msg.type, msg.t, msg.delay, msg.s, RESET);
+
 	static int count = 0;
 
 	if (msg.origin < N) { // message from sons
