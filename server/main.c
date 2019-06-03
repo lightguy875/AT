@@ -285,15 +285,15 @@ void sch_msg_success(Msg msg) {
 void sch_start () {
 	int cont = 0;
 	int virtual_id = N+1; //> the virtual queue id
-
-	char traces[1000];
-
+	
 	while (true) {
 		Msg msg;
 
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
 
 		if (strstr(msg.s, "finished") != NULL) {
+			char traces[1000];
+
 			strcat(traces, msg.s);
 			strcat(traces, " -> SCHEDULER\n");
 			strcpy(msg.s, traces);
