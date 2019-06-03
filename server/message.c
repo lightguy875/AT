@@ -1,7 +1,7 @@
 #include "message.h"
 
 void msg_print(Msg* msg) {
-    printf("%sMessage Content:\n\tType: %ld\n\tSeconds: %d (Since 70's)\n\tMessage: %s\n%s", GREEN, msg->type, msg->t, msg->s, RESET);
+    printf("%sMessage Content:\n\tType: %ld\n\tSeconds: %d (Since 70's)\n\tMessage: %s\n%s", YELLOW, msg->type, msg->t, msg->s, RESET);
 }
 
 int queue_create(int key) {

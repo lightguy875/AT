@@ -216,7 +216,7 @@ Job* sch_get_next_job () {
 		curr = curr->nxt;
 	}
 
-	return (job != NULL && job->seconds <= time(NULL)) ? job : NULL;
+	return job;
 }
 
 /**
