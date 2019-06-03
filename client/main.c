@@ -54,7 +54,7 @@ void send (int seconds, char filename[]) {
 		S("Got the queue");
 	}
 
-	srand(time(NULL));
+	srand(time(NULL) + getpid() + clock());
 
 	Msg msg = { N+1, rand(), t, seconds, N+1 };
 
