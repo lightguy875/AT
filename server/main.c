@@ -143,7 +143,7 @@ void msn_start(int idx) {
 	while (true) {
 		Msg msg;
 
-		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx + 1, 0);
 
 		if (res < 0) {
 			E("Failed to receive message. A process was killed...");
