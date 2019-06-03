@@ -11,6 +11,9 @@ typedef struct msgbuf {
   ///> The type of the message
   long type;
 
+  ///> The job identifier
+  long id;
+
   ///> The time in seconds since 70s
   int t;
 
