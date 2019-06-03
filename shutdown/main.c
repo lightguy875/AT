@@ -1,3 +1,15 @@
+/**
+ * @file main.c
+ * @author Luís Eduardo Luz Sila - 15/0137885
+ * @author Claudio Segala Rodrigues Filho 15/0032552
+ * @author Yan Victor dos Santos 14/0033599
+ * @brief 
+ * @version 0.1
+ * @date 2019-06-03
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>

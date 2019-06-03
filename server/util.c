@@ -13,5 +13,3 @@ bool try_cast_int (char *num, int *result) {
 
     return true;
 }
-
-void dummy () { }

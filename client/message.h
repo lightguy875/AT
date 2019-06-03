@@ -1,12 +1,11 @@
 #pragma once
 
 #define MAX_STRING_SIZE 1000
-
-/*!
- * \brief Message.
- *
+/**
+ * @brief Message
  * The structure of the message that will be sent between client and server
  */
+
 typedef struct msgbuf {
   ///> The type of the message
   long type;

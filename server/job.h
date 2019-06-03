@@ -1,11 +1,21 @@
 #pragma once
+/**
+ * @file job.h
+ * @author Luís Eduardo Luz Sila - 15/0137885
+ * @author Claudio Segala Rodrigues Filho 15/0032552
+ * @author Yan Victor dos Santos 14/0033599
+ * @brief 
+ * @version 0.1
+ * @date 2019-06-03
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 
 #include "util.h"
-
-/*!
- * \brief A Job.
- *
- * An struct that holds the informations of job.
+/**
+ * @brief Um job com toda a estrutura que compõe o job
+ * 
  */
 typedef struct job {
     int id;
@@ -28,12 +38,6 @@ typedef struct job {
  * @param filename 
  * @param delay 
  * @return Job* a pointer to the node
- */
-/*!
- *  \brief Create a job.
- *  \param seconds the time in which should be executed.
- *  \param filename the file path to the program.
- *  \return a pointer to the node
  */
 
 Job* job_create(int id, int seconds, char* filename, int delay);

@@ -1,5 +1,16 @@
 #pragma once
-
+/**
+ * @file util.h
+ * @author Luís Eduardo Luz Sila - 15/0137885
+ * @author Claudio Segala Rodrigues Filho 15/0032552
+ * @author Yan Victor dos Santos 14/0033599
+ * @brief 
+ * @version 0.1
+ * @date 2019-06-03
+ * 
+ * @copyright Copyright (c) 2019
+ * 
+ */
 #include <stdbool.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -33,17 +44,10 @@
 #define M 4
 
 #define PATH "../prog/"
-
-/*!
- *  \brief Cast string to int.
- *  \param num a string with a number.
- *  \param result a pointer to the result of the convertion.
- *  \return if it succeeded or not.
+/**
+ * @brief Converte char em string
+ * 
+ * @param string passa a string para ser transformada em inteiro
+ * @param inteiro  passa o inteiro que receberá a string
  */
-bool try_cast_int (char*, int*);
-
-/*!
- *  \brief Does nothing.
- *  \return nothing.
- */
-void dummy ();
+y_cast_int (char* string, int* inteiro);
