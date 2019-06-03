@@ -1,5 +1,6 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <time.h>
@@ -61,8 +62,7 @@ void send (int seconds, char filename[]) {
 	if (res < 0) {
 		E("Failed to send messages");
 	} else {
-		S("Message sent");
-		msg_print(&msg);
+		printf("\n> job=%ld, arquivo=%s, delay=%ds\n", msg.id, msg.s, msg.delay);
 	}
 } 
 

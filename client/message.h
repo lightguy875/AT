@@ -26,9 +26,3 @@ typedef struct msgbuf {
   ///> The path to the executables
   char s[MAX_STRING_SIZE];
 } Msg;
-
-/*!
- *  \brief Prints the content of message.
- *  \param msg a message.
- */
-void msg_print(Msg* msg);

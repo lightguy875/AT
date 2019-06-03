@@ -206,8 +206,7 @@ void sch_mark_job_done (int id) {
 			aux->done = true;
 			aux->makespan = (int) time(NULL) - t_init;
 
-			printf("\n> Job Report\n");
-			printf("Job=%d, Arquivo=%s, Delay=%ds, Makespan: %ds\n", aux->id, aux->filename, aux->delay, aux->makespan);
+			printf("\n> Job=%d Arquivo=%s Delay=%ds Makespan: %ds\n", aux->id, aux->filename, aux->delay, aux->makespan);
 		  	break;
 	  	}
 
