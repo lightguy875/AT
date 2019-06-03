@@ -8,17 +8,13 @@
 #include "hypercube.h"
 #include "torus.h"
 
-// Data
-int pid;
 int topology_type;
 
-int pids[N];
 int structure[N];
 
-int cont = 0;
 int queue_id;
 
-char traces[1000];
+List* jobs;
 
 /**
  * @brief 
@@ -55,7 +51,7 @@ Msg execute_job(int idx, char *program) {
 	};
 }
 
-void shutdown(List* jobs) {
+void shutdown() {
 	Node *node = jobs->begin;
 
 	while (node != NULL) {
@@ -151,16 +147,27 @@ void to_manage(int idx) {
 	exit(1);
 }
 
+/**
+ * @brief Creation of all management processes.
+ */
+void mng_create (int n) {
+	for (int i = 0; i < n; i++) {
+		if (!fork()) {
+			to_manage(i);
+		}
+	}
+}
+
 // -------------- End of Managers
 
-void destroy(List *jobs, int queue_id) {
+void destroy() {
   list_destroy(jobs);
 
 	struct msqid_ds msg;
   msgctl(queue_id, IPC_RMID, &msg);
 }
 
-void remove_next_job (List* jobs, int id) {
+void remove_next_job (int id) {
   Node *curr = jobs->begin;
 
   while (curr != NULL) {
@@ -175,7 +182,7 @@ void remove_next_job (List* jobs, int id) {
   }
 }
 
-Job* next_job (List* jobs) {
+Job* next_job () {
 	Job *job = NULL;
 	Node *curr = jobs->begin;
 
@@ -205,12 +212,12 @@ void run (Job* job, int queue_id) {
 	// TODO: wait for message sent by node 0
 }
 
-void onError(List* jobs, int queue_id) {
+void onError() {
 	if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
 		// Checked if the interruption error was caused 
 		// by an alarm (deactivates the alarm in the process)
 		
-		Job *nxt_job = next_job(jobs);
+		Job *nxt_job = next_job();
 		run(nxt_job, queue_id);
 	} else {
 		// The interruption error was not caused by the alarm or 
@@ -221,8 +228,8 @@ void onError(List* jobs, int queue_id) {
 	}
 }
 
-void check_run (List* jobs, int queue_id) {
-	Job *nxt_job = next_job(jobs);
+void check_run () {
+	Job *nxt_job = next_job();
 	time_t now = time(NULL);
 
 	if (nxt_job->seconds <= now) {
@@ -230,9 +237,9 @@ void check_run (List* jobs, int queue_id) {
 		// to execute now the file
 
 		alarm(0);
-		remove_next_job(jobs, nxt_job->id);
+		remove_next_job(nxt_job->id);
 		run(nxt_job, queue_id);
-		// check_run(jobs, queue_id);
+		// check_run(queue_id);
 	} else {
 		// Modify the alarm for the new job, since it is 
 		// closer to execute
@@ -240,83 +247,67 @@ void check_run (List* jobs, int queue_id) {
 	}
 }
 
-void onSuccess(Msg msg, List* jobs, int queue_id) {
+void onSuccess(Msg msg) {
 	// msg_print(&msg);
 	list_push_back(jobs, job_create(msg.t, msg.s));
-	check_run(jobs, queue_id);
+	check_run();
 }
 
-void schedule (List* jobs, int queue_id) {
-	Msg msg;
-	
-	int virtual_id = N+1;
+void scheduler () {
+	int cont = 0;
+	int virtual_id = N+1; //> the virtual queue id
+
+	char traces[1000];
+
 	while (true) {
+		Msg msg;
+
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
-		if (strstr (msg.s, "finished") != NULL) {
-			cont++;
+
+		if (strstr(msg.s, "finished") != NULL) {
 			strcat(traces, msg.s);
 			strcat(traces, " -> SCHEDULER\n");
 			strcpy(msg.s, traces);
 
-			if (cont == N+1) {
+			if (cont == N) {
 				S("...Job finished... ");
 				printf("\n=> Traces\n%s\n", msg.s);
-				cont = 0;
 			} 
 
-			if (cont >= N) {
-				cont = 0;
-			}
-
+			cont = (cont + 1) % N;
 		} else {
 			if (res < 0) {
-				onError(jobs, queue_id);
+				onError();
 			} else {
-				onSuccess(msg, jobs, queue_id);
+				onSuccess(msg);
 			}
 		}
 	}
 
-	destroy(jobs, queue_id);
+	destroy();
 }
 
-/**
- * @brief Creation of all management processes.
- * Return the process id's.
+/*`*
+ * @brief Setup everything, create the managers and start the scheduler
  * 
+ * @param argc The number of arguments
+ * @param argv The array of arguments
+ * @return int If there was an error
  */
-void create_managers () {
-	// Setup pids
-	for (int i = 0; i < N; i++) {
-		pids[i] = 0;
-	}
-
-	// Create the processes to manage
-	for (int i = 0; i < N; i++) {
-		pid = fork();
-
-		if (pid == 0) {
-			to_manage(i);
-		} else {
-			pids[i] = pid;
-		}
-	}
-}
-
-/**
- * @brief Set the up topology object
- * 
- * @param n 
- * @param v 
- */
-void setup (int n, char *v[]) {
+int main (int argc, char *argv[]) {
 	signal(SIGALRM, *dummy);
 	S("Alarm signal set");
 
 	signal(SIGUSR1,*shutdown);
 	S("Shutdown signal set");
 
-	if (n != 2 || !try_cast_int(v[1], &topology_type)) {
+	queue_id = queue_create(KEY);
+	S("Queue set");
+
+	jobs = list_create();
+	S("List of jobs set");
+
+	if (argc != 2 || !try_cast_int(argv[1], &topology_type)) {
 		E("Not a valid topology");
 		exit(1);
 	}
@@ -337,25 +328,11 @@ void setup (int n, char *v[]) {
 	}
 
 	S("Topology set");
-}
 
-/**
- * @brief Executa o programa principal
- * 
- * @param argc 
- * @param argv 
- * @return int 
- */
-int main (int argc, char *argv[]) {
-	setup(argc, argv);
+	mng_create(N);
+	S("Create Managers");
 
-	int queue_id = queue_create(KEY);
-
-	List *jobs = list_create();
-
-	create_managers();
-
-	schedule(jobs, queue_id);
+	scheduler();
 
 	return 0;
 }
