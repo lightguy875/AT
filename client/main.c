@@ -6,6 +6,7 @@
 #include <unistd.h>
 
 #include <sys/msg.h>
+#include <sys/stat.h>
 
 #include "message.h"
 
@@ -41,9 +42,8 @@ bool try_cast_int (char *num, int *result) {
  *  \param filename the path of the file to be executed.
  */
 void send (int seconds, char filename[]) {
-	
 	int key = KEY; // matricula truncada
-	int id = msgget(key, 0 | 0777);
+	int id = msgget(key, S_IWUSR);
 
 	time_t t = time(NULL) + seconds;
 
