@@ -27,9 +27,9 @@ int hc_up (int idx) {
 void hc_down(int idx, int* ans) {
 	for (int i = 0; i < 4; i++) {
 		if (idx & (1 << i)) {
-			ans[i] = idx | (1 << i);
-		} else {
 			break;
+		} else {
+			ans[i] = idx | (1 << i);
 		}
 	}
 
