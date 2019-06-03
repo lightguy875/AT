@@ -10,11 +10,15 @@
 typedef struct job {
     int id;
     int seconds;
-    int makespan;
     int delay;
     char* filename;
     bool done;
-    char* report;
+    int submission;
+    int start;
+    int finish;
+    int completed;
+    int node_time[N];
+    int node_pid[N];
 } Job;
 
 /*!

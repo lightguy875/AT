@@ -1,3 +1,4 @@
+#include "util.h"
 #include "job.h"
 
 Job* job_create(int id, int seconds, char* filename, int delay) {
@@ -5,11 +6,18 @@ Job* job_create(int id, int seconds, char* filename, int delay) {
 
     job->id = id;
     job->seconds = seconds;
-    job->makespan = 0;
     job->delay = delay;
     job->filename = filename;
     job->done = false;
-    job->report = (char *) malloc(1000);
+    job->submission = time(NULL);
+    job->start = 0;
+    job->finish = 0;
+    job->completed = 0;
+
+    for (int i = 0; i < N; i++) {
+        job->node_time[i] = -1;
+        job->node_pid[i] = -1;
+    }
 
     return job;
 }
