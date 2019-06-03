@@ -46,7 +46,7 @@ Msg execute_job(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-	printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
+	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
 
 	return (Msg) { 
 		0, 
@@ -74,6 +74,10 @@ void shutdown(List* jobs) {
 	kill(0,SIGTERM);
 }
 
+void shutdown_setup() {
+	
+}
+
 void broadcast_down(int idx, Msg msg) {
 	int arr[4] = { -1, -1, -1, -1 };
 
@@ -92,7 +96,7 @@ void broadcast_down(int idx, Msg msg) {
 	for (int i = 0; i < 4; i++) {
 		// printf("idx: %d - arr: %d\n", idx, arr[i]);
 		if (arr[i] != -1) {
-			// printf("%d:%ld\n", idx + 1, msg.type);
+			printf("%d:%ld\n", idx + 1, msg.type);
 			msg.type = arr[i] + 1;
 			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 		}
@@ -112,8 +116,7 @@ void broadcast_up(int idx, Msg msg) {
 			break;
 	}
 
-	msg.type += 1;
-	// printf("idx: %d - type: %ld\n", idx + 1, msg.type);
+	msg.type++;
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
@@ -123,7 +126,7 @@ void to_manage(int idx) {
 	queue_id = queue_retrieve(KEY);
 
 	while (true) {
-		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx + 1, 0);
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
 
 		if (res < 0) {
 			E("Failed to receive message. A process was killed...");
@@ -138,10 +141,8 @@ void to_manage(int idx) {
 			
 			char buffer[33];
 			
-			sprintf(buffer, " -> %d", idx + 1);
+			sprintf(buffer, " -> %d", idx);
 			strcat(msg.s, buffer);
-
-			// printf("msg: %s\n", msg.s);
 
 			broadcast_up(idx, msg);
 		}
@@ -278,12 +279,12 @@ void schedule (List* jobs, int queue_id) {
 
 	destroy(jobs, queue_id);
 }
+
 /**
  * @brief Creation of all management processes.
  * Return the process id's.
  * 
  */
-
 void create_managers () {
 	// Setup pids
 	for (int i = 0; i < N; i++) {
@@ -301,13 +302,20 @@ void create_managers () {
 		}
 	}
 }
+
 /**
  * @brief Set the up topology object
  * 
  * @param n 
  * @param v 
  */
-void setup_topology (int n, char *v[]) {
+void setup (int n, char *v[]) {
+	signal(SIGALRM, *dummy);
+	S("Alarm signal set");
+
+	signal(SIGUSR1,*shutdown);
+	S("Shutdown signal set");
+
 	if (n != 2 || !try_cast_int(v[1], &topology_type)) {
 		E("Not a valid topology");
 		exit(1);
@@ -330,12 +338,7 @@ void setup_topology (int n, char *v[]) {
 
 	S("Topology set");
 }
-/**
- * @brief Set the up alarm object
- */
-void setup_alarm () {
-	signal(SIGALRM, *dummy);
-}
+
 /**
  * @brief Executa o programa principal
  * 
@@ -344,8 +347,7 @@ void setup_alarm () {
  * @return int 
  */
 int main (int argc, char *argv[]) {
-	setup_alarm();
-	setup_topology(argc, argv);
+	setup(argc, argv);
 
 	int queue_id = queue_create(KEY);
 
