@@ -36,7 +36,7 @@ void shutdown() {
 		if(job->done) {
 			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
 		} else{
-			printf(" \n O processo: %d não será executado \n", job->id,job->filename, job->seconds);
+			printf(" \n O processo: %d não será executado \n", job->id);
 		}
 
 		node = node->nxt;

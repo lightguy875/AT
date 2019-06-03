@@ -49,6 +49,8 @@ void send (int seconds, char filename[]) {
 
 	if (id < 0) {
 		E("Failed to get queue");
+	} else {
+		S("Got the queue");
 	}
 
 	Msg msg = { N+1, t , seconds };
