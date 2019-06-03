@@ -46,7 +46,7 @@ Msg execute_job(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-//	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
+	printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
 
 	return (Msg) { 
 		0, 
@@ -258,7 +258,7 @@ void schedule (List* jobs, int queue_id) {
 			strcat(traces, msg.s);
 			strcat(traces, "->schedule.\n");
 			strcpy(msg.s, traces);
-			if ((cont == N && topology_type != TREE) || (cont == N - 1 && topology_type == TREE)) {
+			if ((cont == N + 1 && topology_type != TREE) || (cont == N && topology_type == TREE)) {
 				S("...Job finished... ");
 				printf("\n=> Traces\n%s\n", msg.s);
 				cont = 0;
