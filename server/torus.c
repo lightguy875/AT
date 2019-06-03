@@ -14,13 +14,9 @@ void tr_make(int *tr) {
 */
 int tr_up (int idx) {
 	if (idx) { // if isn't the root node
-		if(idx >= M * 3) {// if top line, send to first line
-			return idx % M; 
-		} else if (idx % M == 3) { // if last right column, send to first column
-			return (idx - M + 1); 
-		} else if (idx % M == 0) { // if first column, send to the below node
-			return idx - M;
-		} else { // if first line or mid, go to the previous left node
+		if(idx > M) {// if top line, send to first line
+			return idx - M; 
+		} else {
 			return idx - 1;
 		}
 	} else { // if root node, send to scheduler
