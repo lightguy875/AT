@@ -282,7 +282,7 @@ void sch_msg_error() {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
-	printf("\n\n%s> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s\n\n%s", YELLOW, msg.id, msg.type, msg.t, msg.delay, msg.s, RESET);
+	printf("\n\n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s\n\n", msg.type, msg.id, msg.t, msg.delay, msg.s);
 
 	static int count = 0;
 
