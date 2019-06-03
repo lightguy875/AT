@@ -237,6 +237,7 @@ Job* sch_get_next_job () {
  * @param job The job to be executed
  */
 void sch_execute (Job* job) {
+	topology_free = false;
 	printf("[SCHEDULER] Executing the Job %d...\n\n", job->id);
 
 	Msg msg;
@@ -248,8 +249,7 @@ void sch_execute (Job* job) {
 	job_executed = job->id;
 	t_init = time(NULL);
 
-	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	topology_free = false;
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
 }
 
 /**
@@ -273,6 +273,7 @@ void sch_msg_success(Msg msg) {
 	if (msg.origin < N) { // message from sons
 
 		if (count == N - 1) {
+			printf("\n====chegou\n");
 			sch_mark_job_done(job_executed);
 		} 
 
