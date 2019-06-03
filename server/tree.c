@@ -13,7 +13,7 @@ int ft_up (int idx) {
   return N;
 }
 
-void ft_down(int idx, int *ans, int sz) {
-	ans[0] = (2 * idx + 1 < sz) ? 2 * idx + 1 : -1;
-	ans[1] = (2 * idx + 2 < sz) ? 2 * idx + 2 : -1;
+void ft_down(int idx, int *ans) {
+	ans[0] = (2 * idx + 1 < N) ? 2 * idx + 1 : -1;
+	ans[1] = (2 * idx + 2 < N) ? 2 * idx + 2 : -1;
 }

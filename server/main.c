@@ -63,10 +63,10 @@ void broadcast_down(int idx, Msg msg) {
 			ft_down(idx, arr, N);
 			break;
 		case HYPERCUBE:
-			hc_down(idx, arr);
+			hc_down(idx, arr, N);
 			break;
 		case TORUS:
-			tr_down(idx, arr);
+			tr_down(idx, arr, N);
 			break;
 	}
 

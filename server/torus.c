@@ -28,7 +28,7 @@ int tr_up (int idx) {
 	}
 }
 
-void tr_down(int idx, int ans[]) {
+void tr_down(int idx, int* ans) {
 	int n = sizeof(*ans) / sizeof(int);
 
 	for (int i = 0; i < n; i++) {
