@@ -22,23 +22,23 @@ $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall -O2 -o $@	
 	-rm -f *.o
 	
-	-pwd
+	-clear
 
 run: default
-	- sudo ./main 1
+	- ./main 1
 
 run_tree: default
-	- sudo ./main 1
+	- ./main 1
 
 run_hypercube: default
-	- sudo ./main 2
+	- ./main 2
 
 run_torus: default
-	- sudo ./main 3
+	- ./main 3
 
 clean:
 	-rm -f *.o
 	-rm -f $(TARGET)
 
 clear:
-	-pwd
+	-clear

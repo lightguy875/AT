@@ -11,18 +11,18 @@ typedef struct msgbuf {
   ///> The type of the message
   long type;
 
+  ///> The job identifier
+  long id;
+
   ///> The time in seconds since 70s
   int t;
 
   ///> The delay in seconds
   int delay;
 
+  //> The id of the sender
+  int origin;
+
   ///> The path to the executables
   char s[MAX_STRING_SIZE];
 } Msg;
-
-/*!
- *  \brief Prints the content of message.
- *  \param msg a message.
- */
-void msg_print(Msg* msg);

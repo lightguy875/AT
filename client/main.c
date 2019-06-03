@@ -1,11 +1,13 @@
 #include <stdbool.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 
 #include <time.h>
 #include <unistd.h>
 
 #include <sys/msg.h>
+#include <sys/stat.h>
 
 #include "message.h"
 
@@ -41,17 +43,20 @@ bool try_cast_int (char *num, int *result) {
  *  \param filename the path of the file to be executed.
  */
 void send (int seconds, char filename[]) {
-	
 	int key = KEY; // matricula truncada
-	int id = msgget(key, 0);
+	int id = msgget(key, S_IWUSR);
 
 	time_t t = time(NULL) + seconds;
 
 	if (id < 0) {
 		E("Failed to get queue");
+	} else {
+		S("Got the queue");
 	}
 
-	Msg msg = { N+1, t , seconds };
+	srand(time(NULL) + getpid() + clock());
+
+	Msg msg = { N+1, rand(), t, seconds, N+1 };
 
 	strcpy(msg.s, filename);
 	int res = msgsnd(id, &msg, sizeof(Msg) - sizeof(long), 0);
@@ -59,8 +64,7 @@ void send (int seconds, char filename[]) {
 	if (res < 0) {
 		E("Failed to send messages");
 	} else {
-		S("Message sent");
-		msg_print(&msg);
+		printf("\n> job=%ld, arquivo=%s, delay=%ds\n", msg.id, msg.s, msg.delay);
 	}
 } 
 
