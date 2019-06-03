@@ -85,14 +85,16 @@ Msg mng_execute(int idx, char *program) {
 	wait(&status);
 	time_t elapsed = time(NULL) - start;
 
-	return (Msg) {
-		0, 
-		0,
-		elapsed,
-		0,
-		idx,
-		"finished"
-	};
+	Msg msg;
+
+	msg.type = 0;
+	msg.id = 0;
+	msg.t = elapsed;
+	msg.delay = 0;
+	msg.origin = idx;
+	strcpy(msg.s, "finished");
+
+	return msg;
 }
 
 /**
@@ -259,8 +261,10 @@ void sch_execute (Job* job) {
 
 	Msg msg;
 
-	msg.t = 0;
 	msg.type = 1;
+	msg.id = job->id;
+	msg.t = job->seconds;
+	msg.delay = job->delay;
 	msg.origin = SCHEDULER;
 	strcpy(msg.s, job->filename);
 
