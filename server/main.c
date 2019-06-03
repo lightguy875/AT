@@ -15,6 +15,8 @@ int topology_type;
 
 int structure[N];
 
+int node_time[N];
+
 int queue_id;
 
 int job_executed;
@@ -185,6 +187,18 @@ void mng_create (int n) {
 }
 
 /**
+ * @brief Print statistics
+ * 
+ * @param job The statistics of the job
+ */
+void sch_print_statitic (Job* job) {
+	printf("\n> Job=%d Arquivo=%s Delay=%ds Makespan: %ds\n", job->id, job->filename, job->delay, job->makespan);
+	for (int i = 0; i < N; i++) {
+		printf("   Node %d took %d seconds", i, node_time[i]);
+	}
+}
+
+/**
  * @brief Mark a job as done given an id and generate a report about it
  * 
  * @param id The id of the job
@@ -201,7 +215,7 @@ void sch_mark_job_done (int id) {
 			aux->done = true;
 			aux->makespan = (int) time(NULL) - t_init;
 
-			printf("\n> Job=%d Arquivo=%s Delay=%ds Makespan: %ds\n", aux->id, aux->filename, aux->delay, aux->makespan);
+			sch_print_statitic(aux);
 		  	break;
 	  	}
 
@@ -273,9 +287,14 @@ void sch_msg_success(Msg msg) {
 	static int count = 0;
 
 	if (msg.origin < N) { // message from sons
+		node_time[msg.origin] = msg.t;
 
 		if (count == N - 1) {
 			sch_mark_job_done(job_executed);
+			
+			for (int i = 0; i < N; i++) {
+				node_time[i] = -1;
+			}
 		} 
 
 		count = (count + 1) % N;
@@ -329,6 +348,10 @@ void sch_start () {
  * @return int If there was an error
  */
 int main (int argc, char *argv[]) {
+	for (int i = 0; i < N; i++) {
+		node_time[i] = -1;
+	}
+	
 	signal(SIGUSR1, shutdown);
 	S("Shutdown signal set");
 
