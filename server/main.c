@@ -251,14 +251,13 @@ void schedule (List* jobs, int queue_id) {
 	int virtual_id = N+1;
 	while (true) {
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
-		// printf("cont: %d\n", cont);
-//		if (!strcmp(msg.s, "finished")) {
 		if (strstr (msg.s, "finished") != NULL) {
 			cont++;
 			strcat(traces, msg.s);
-			strcat(traces, "->schedule.\n");
+			strcat(traces, " -> SCHEDULER\n");
 			strcpy(msg.s, traces);
-			if ((cont == N + 1 && topology_type != TREE) || (cont == N && topology_type == TREE)) {
+
+			if (cont == N+1) {
 				S("...Job finished... ");
 				printf("\n=> Traces\n%s\n", msg.s);
 				cont = 0;
@@ -333,7 +332,6 @@ void setup_topology (int n, char *v[]) {
 }
 /**
  * @brief Set the up alarm object
- * 
  */
 void setup_alarm () {
 	signal(SIGALRM, *dummy);
