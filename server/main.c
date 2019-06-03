@@ -54,9 +54,12 @@ Msg execute_job(int idx, char *program) {
 		"finished"
 	};
 }
+void shutdown_setup()
+{
+	signal(SIGUSR1,*shutdown);
+}
 void shutdown(List* jobs)
 {
-	int  i;
 	Job* Processo;
 	Node* job_list = jobs->begin;
 	for(job_list = jobs->begin,Processo = (Job * ) job_list->value; job_list->nxt == NULL; job_list = job_list->nxt,Processo = (Job * ) job_list->value)
