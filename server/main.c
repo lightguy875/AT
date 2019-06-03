@@ -46,7 +46,7 @@ Msg execute_job(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
+//	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
 
 	return (Msg) { 
 		0, 
@@ -73,7 +73,7 @@ void broadcast_down(int idx, Msg msg) {
 	for (int i = 0; i < 4; i++) {
 		// printf("idx: %d - arr: %d\n", idx, arr[i]);
 		if (arr[i] != -1) {
-			printf("%d:%ld\n", idx + 1, msg.type);
+			// printf("%d:%ld\n", idx + 1, msg.type);
 			msg.type = arr[i] + 1;
 			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 		}
@@ -93,7 +93,8 @@ void broadcast_up(int idx, Msg msg) {
 			break;
 	}
 
-	msg.type++;
+	msg.type += 1;
+	// printf("idx: %d - type: %ld\n", idx + 1, msg.type);
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
@@ -103,7 +104,7 @@ void manager(int idx) {
 	queue_id = queue_retrieve(KEY);
 
 	while (true) {
-		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx + 1, 0);
 
 		if (res < 0) {
 			E("Failed to receive message. A process was killed...");
@@ -118,8 +119,10 @@ void manager(int idx) {
 			
 			char buffer[33];
 			
-			sprintf(buffer, " -> %d", idx);
+			sprintf(buffer, " -> %d", idx + 1);
 			strcat(msg.s, buffer);
+
+			// printf("msg: %s\n", msg.s);
 
 			broadcast_up(idx, msg);
 		}
@@ -234,7 +237,7 @@ void schedule (List* jobs, int queue_id) {
 	int virtual_id = N+1;
 	while (true) {
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
-	//	printf("cont: %d\n", cont);
+		// printf("cont: %d\n", cont);
 //		if (!strcmp(msg.s, "finished")) {
 		if (strstr (msg.s, "finished") != NULL) {
 			cont++;
