@@ -21,6 +21,8 @@ int job_executed;
 
 int t_init;
 
+bool topology_free;
+
 List* jobs;
 
 void shutdown() {
@@ -253,8 +255,9 @@ void sch_execute (Job* job) {
 
 	job_executed = job->id;
 	t_init = time(NULL);
+
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
-	
+	topology_free = false;
 }
 
 /**
@@ -275,7 +278,7 @@ void sch_msg_error() {
  */
 void sch_check_and_run () {
 	Job *nxt_job = sch_get_next_job();
-	if (nxt_job) {
+	if (nxt_job && topology_free) {
 		time_t now = time(NULL);
 		int delay = nxt_job->seconds - now;
 		
@@ -302,7 +305,6 @@ void sch_msg_success(Msg msg) {
 	Job *job = job_create(msg.t, msg.s, msg.delay);
 
 	list_push_back(jobs, job);
-
 	sch_check_and_run();
 }
 
@@ -330,6 +332,7 @@ void sch_start () {
 				// printf("\n=> Traces\n%s\n", msg.s);
 				int makespan = (int) time(NULL) - t_init;
 				sch_mark_job_done(job_executed, makespan);
+				topology_free = true;
 				sch_check_and_run();
 			} 
 
@@ -388,6 +391,8 @@ int main (int argc, char *argv[]) {
 
 	S("Topology set");
 
+	topology_free = true;
+	
 	mng_create(N);
 	S("Create Managers");
 
