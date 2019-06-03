@@ -4,6 +4,6 @@
 
 int main () {
     sleep(1);
-    // printf("Hello World!");
+    printf("Hello World!");
     return 0;
 }

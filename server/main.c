@@ -1,3 +1,6 @@
+//	TODO: shutdown, estatística, verificar pedido de múltiplos jobs
+
+
 #include "util.h"
 
 #include "job.h"
@@ -13,6 +16,10 @@ int topology_type;
 int structure[N];
 
 int queue_id;
+
+int job_executed;
+
+int t_init;
 
 List* jobs;
 
@@ -69,13 +76,12 @@ Msg mng_execute(int idx, char *program) {
 
 	int status;
 	wait(&status);
-
 	time_t elapsed = time(NULL) - start;
-	printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
 
 	return (Msg) { 
 		0, 
 		elapsed,
+		0,
 		"finished"
 	};
 }
@@ -142,13 +148,11 @@ void msn_start(int idx) {
 		Msg msg;
 
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx + 1, 0);
-
+		
 		if (res < 0) {
 			E("Failed to receive message. A process was killed...");
 			break;
 		} else {
-			// TODO: identify what is this
-			//	if (strcmp(msg.s, "finished")) { // if ins't a new message
 			if (strstr (msg.s, "finished") == NULL) {
 				mng_broadcast_down(idx, msg);
 				msg = mng_execute(idx, msg.s);
@@ -178,22 +182,38 @@ void mng_create (int n) {
 }
 
 /**
+ * @brief Generates a report about the job executed
+ * 
+ * @param job The job executed
+ */
+char * sch_create_report(Job * job) {
+	char * report = (char *) malloc(100);
+
+	sprintf(report, "job=%d, arquivo=%s, delay=%d segundo(s), makespan: %d segundo(s)", job->id, job->filename, job->delay, job->makespan);
+	return report;
+}
+
+/**
  * @brief Mark a job as done given an id
  * 
  * @param id The id of the job
  */
-void sch_mark_job_done (int id) {
-  Node *curr = jobs->begin;
+void sch_mark_job_done (int id, int makespan) {
+	Node *curr = jobs->begin;
 
-  while (curr != NULL) {
+  	while (curr != NULL) {
 		Job *aux = (Job*) curr->value;
 
-	  if (aux != NULL && aux->id == id) {
-		  aux->done = true;
-		  break;
-	  }
+		if (aux != NULL && aux->id == id) {
+			aux->done = true;
+			aux->makespan = makespan;
+			 
+			strcpy(aux->report, sch_create_report(aux));
+			printf("\n*** Report ***\n%s\n\n", aux->report);
+		  	break;
+	  	}
 
-	  curr = curr->nxt;
+	  	curr = curr->nxt;
   }
 }
 
@@ -209,7 +229,7 @@ Job* sch_get_next_job () {
 	while (curr != NULL) {
 		Job *aux = (Job*) curr->value;
 
-		if (job == NULL || job->seconds > aux->seconds) {
+		if ((job == NULL || job->seconds > aux->seconds) && !aux->done) {
 			job = aux;
 		}
 
@@ -230,9 +250,11 @@ void sch_execute (Job* job) {
 	msg.t = 0;
 	msg.type = 1;
 	strcpy(msg.s, job->filename);
-	
+
+	job_executed = job->id;
+	t_init = time(NULL);
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
-	// TODO: wait for message sent by node 0
+	
 }
 
 /**
@@ -253,16 +275,21 @@ void sch_msg_error() {
  */
 void sch_check_and_run () {
 	Job *nxt_job = sch_get_next_job();
-	time_t now = time(NULL);
+	if (nxt_job) {
+		time_t now = time(NULL);
+		int delay = nxt_job->seconds - now;
+		
+		if (delay < 0)
+			delay = 0;
 
-	if (nxt_job->seconds <= now) { // Deactivate the alarm and execute if it was to execute now the file
-		// TODO: check what happens if we sent a program to execute during another execution
-		alarm(0);
-		sch_mark_job_done(nxt_job->id);
-		sch_execute(nxt_job);
-		// check_run(queue_id);
-	} else { // Modify the alarm for the new job, since it is closer to execute
-		alarm(nxt_job->seconds - now);
+		printf("[SCHEDULER] %d seconds to execute the Job %d...\n\n", delay, nxt_job->id);
+
+		if (nxt_job->seconds <= now) { // Deactivate the alarm and execute if it was to execute now the file
+			alarm(0);
+			sch_execute(nxt_job);
+		} else { // Modify the alarm for the new job, since it is closer to execute
+			alarm(delay);
+		}
 	}
 }
 
@@ -272,7 +299,7 @@ void sch_check_and_run () {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
-	Job *job = job_create(msg.t, msg.s);
+	Job *job = job_create(msg.t, msg.s, msg.delay);
 
 	list_push_back(jobs, job);
 
@@ -285,22 +312,25 @@ void sch_msg_success(Msg msg) {
 void sch_start () {
 	int cont = 0;
 	int virtual_id = N+1; //> the virtual queue id
-	
+	char traces[1000];
+
 	while (true) {
 		Msg msg;
 
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
-
 		if (strstr(msg.s, "finished") != NULL) {
-			char traces[1000];
 
 			strcat(traces, msg.s);
 			strcat(traces, " -> SCHEDULER\n");
 			strcpy(msg.s, traces);
-	
+
 			if (cont == N - 1) {
-				S("...Job finished... ");
-				printf("\n=> Traces\n%s\n", msg.s);
+				S("\n...Job finished... ");
+				strcpy(traces, "");
+				// printf("\n=> Traces\n%s\n", msg.s);
+				int makespan = (int) time(NULL) - t_init;
+				sch_mark_job_done(job_executed, makespan);
+				sch_check_and_run();
 			} 
 
 			cont = (cont + 1) % N;

@@ -14,6 +14,9 @@ typedef struct msgbuf {
   ///> The time in seconds since 70s
   int t;
 
+  ///> The delay in seconds
+  int delay;
+
   ///> The path to the executables
   char s[MAX_STRING_SIZE];
 } Msg;

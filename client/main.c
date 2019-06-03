@@ -40,17 +40,21 @@ bool try_cast_int (char *num, int *result) {
  *  \param t the time in which the job should be executed.
  *  \param filename the path of the file to be executed.
  */
-void send (int t, char filename[]) {
+void send (int seconds, char filename[]) {
+	
 	int key = KEY; // matricula truncada
-	int id = msgget(key, 0); // TODO: check if I should sen other flag
+	int id = msgget(key, 0);
+
+	time_t t = time(NULL) + seconds;
 
 	if (id < 0) {
 		E("Failed to get queue");
 	}
 
-	Msg msg = { N+1, t };
+	Msg msg = { N+1, t , seconds };
+
 	strcpy(msg.s, filename);
-	int res = msgsnd(id, &msg, sizeof(Msg) - sizeof(long), 0); // TODO: check if I should sen other flag
+	int res = msgsnd(id, &msg, sizeof(Msg) - sizeof(long), 0);
 
 	if (res < 0) {
 		E("Failed to send messages");
@@ -74,18 +78,16 @@ void destroy() {
 int main (int argc, char *argv[]) {
 	int seconds = 0;
 
-	// TODO: verify if it should be this way
 	if (argc == 1) {
 		destroy();
 	}
 
 	if (argc == 3 && try_cast_int(argv[1], &seconds) && argv[2] != NULL) {
 		char filename[MAX_STRING_SIZE];
-		time_t t = time(NULL) + seconds;
 
 		strcpy(filename, argv[2]);
 
-		send(t, filename);
+		send(seconds, filename);
 	}
 
 	return 0;

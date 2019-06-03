@@ -10,8 +10,11 @@
 typedef struct job {
     int id;
     int seconds;
+    int makespan;
+    int delay;
     char* filename;
     bool done;
+    char* report;
 } Job;
 
 /*!
@@ -27,4 +30,4 @@ static int nxt;
  *  \param filename the file path to the program.
  *  \return a pointer to the node
  */
-Job* job_create(int seconds, char* filename);
+Job* job_create(int seconds, char* filename, int delay);

@@ -1,11 +1,11 @@
 #include "message.h"
 
 void msg_print(Msg* msg) {
-    printf("%sMessage Content:\n\tType: %ld\n\tSeconds: %d (Since 70's)\n\tMessage: %s\n%s", YELLOW, msg->type, msg->t, msg->s, RESET);
+    printf("%sMessage Content:\n\tType: %ld\n\tSeconds: %d (Since 70's)\n\tDelay: %ds\n\tMessage: %s\n%s", YELLOW, msg->type, msg->t, msg->delay, msg->s, RESET);
 }
 
 int queue_create(int key) {
-    int queue_id = msgget(key, IPC_CREAT); // TODO: check if I should send other flag
+    int queue_id = msgget(key, IPC_CREAT);
 
     if (queue_id < 0) {
         E("Failed to get queue");
