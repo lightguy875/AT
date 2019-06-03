@@ -60,13 +60,13 @@ void broadcast_down(int idx, Msg msg) {
 
 	switch (topology_type) {
 		case TREE:
-			ft_down(idx, arr, N);
+			ft_down(idx, arr);
 			break;
 		case HYPERCUBE:
-			hc_down(idx, arr, N);
+			hc_down(idx, arr);
 			break;
 		case TORUS:
-			tr_down(idx, arr, N);
+			tr_down(idx, arr);
 			break;
 	}
 
