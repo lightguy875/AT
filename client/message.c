@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "message.h"
 
 void msg_print(Msg* msg) {

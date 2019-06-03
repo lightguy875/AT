@@ -84,9 +84,10 @@ Msg mng_execute(int idx, char *program) {
 	time_t elapsed = time(NULL) - start;
 
 	return (Msg) { 
-		0, 
+		0,
 		elapsed,
 		0,
+		idx+1,
 		"finished"
 	};
 }
@@ -191,9 +192,10 @@ void mng_create (int n) {
  * @brief Mark a job as done given an id and generate a report about it
  * 
  * @param id The id of the job
- * @param makespan The span of the job
  */
-void sch_mark_job_done (int id, int makespan) {
+void sch_mark_job_done (int id) {
+	topology_free = true;
+
 	Node *curr = jobs->begin;
 
   	while (curr != NULL) {
@@ -201,7 +203,7 @@ void sch_mark_job_done (int id, int makespan) {
 
 		if (aux != NULL && aux->id == id) {
 			aux->done = true;
-			aux->makespan = makespan;
+			aux->makespan = (int) time(NULL) - t_init;
 
 			printf("\n> Job Report\n");
 			printf("Job=%d, Arquivo=%s, Delay=%ds, Makespan: %ds\n", aux->id, aux->filename, aux->delay, aux->makespan);
@@ -240,6 +242,8 @@ Job* sch_get_next_job () {
  * @param job The job to be executed
  */
 void sch_execute (Job* job) {
+	printf("[SCHEDULER] Executing the Job %d...\n\n", job->id);
+
 	Msg msg;
 
 	msg.t = 0;
@@ -257,33 +261,9 @@ void sch_execute (Job* job) {
  * @brief Try to treat error that might be caused by alarm
  */
 void sch_msg_error() {
-	if (errno == EINTR && alarm(0) == 0) { // Checked if the interruption error was caused by an alarm (deactivates the alarm in the process)
-		Job *nxt_job = sch_get_next_job();
-		sch_execute(nxt_job);
-	} else { // The interruption error was not caused by the alarm or failed to receive (no interruption error)
+	if (errno != ENOMSG) {
 		E("Failed to receive message");
 		exit(1);
-	}
-}
-
-/**
- * @brief Check if should execute any program and if necessary, it will execute.
- */
-void sch_check_and_run () {
-	Job *nxt_job = sch_get_next_job();
-	if (nxt_job && topology_free) {
-		time_t now = time(NULL);
-
-		if (nxt_job->seconds <= now) { // Deactivate the alarm and execute if it was to execute now the file
-			printf("[SCHEDULER] Executing the Job %d...\n\n", nxt_job->id);
-			alarm(0);
-			sch_execute(nxt_job);
-		} else { // Modify the alarm for the new job, since it is closer to execute
-			printf("[SCHEDULER] %ld seconds to execute the Job %d\n\n", nxt_job->seconds - now, nxt_job->id);
-			alarm(nxt_job->seconds - now);
-			signal(SIGALRM, *dummy);
-			S("Alarm signal set");
-		}
 	}
 }
 
@@ -295,22 +275,27 @@ void sch_check_and_run () {
 void sch_msg_success(Msg msg) {
 	static int count = 0;
 
-	if (strstr(msg.s, "finished") != NULL) {
+	if (msg.origin < N) { // message from sons
 		if (count == N - 1) {
-			S("\n...Job finished... ");
-			// printf("\n=> Traces\n%s\n", msg.s);
-			int makespan = (int) time(NULL) - t_init;
-			sch_mark_job_done(job_executed, makespan);
-			topology_free = true;
-			sch_check_and_run();
+			sch_mark_job_done(job_executed);
 		} 
 
 		count = (count + 1) % N;
-	} else {
+	} else { // message from clients
 		Job *job = job_create(msg.t, msg.s, msg.delay);
 
 		list_push_back(jobs, job);
-		sch_check_and_run();
+	}
+}
+
+void sch_try_execute() {
+	if (topology_free) {
+		Job *nxt_job = sch_get_next_job();
+		time_t now = time(NULL);
+
+		if (nxt_job && nxt_job->seconds <= now) {
+			sch_execute(nxt_job);
+		}
 	}
 }
 
@@ -324,13 +309,15 @@ void sch_start () {
 
 	while (true) {
 		Msg msg;
-		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, IPC_NOWAIT);
 
 		if (res < 0) {
 			sch_msg_error();
 		} else {
 			sch_msg_success(msg);
 		}
+
+		sch_try_execute();
 	}
 
 	destroy();
@@ -344,9 +331,6 @@ void sch_start () {
  * @return int If there was an error
  */
 int main (int argc, char *argv[]) {
-	signal(SIGALRM, dummy);
-	S("Alarm signal set");
-
 	signal(SIGUSR1, shutdown);
 	S("Shutdown signal set");
 

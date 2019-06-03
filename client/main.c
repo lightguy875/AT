@@ -53,7 +53,7 @@ void send (int seconds, char filename[]) {
 		S("Got the queue");
 	}
 
-	Msg msg = { N+1, t , seconds };
+	Msg msg = { N+1, t, seconds, N+1 };
 
 	strcpy(msg.s, filename);
 	int res = msgsnd(id, &msg, sizeof(Msg) - sizeof(long), 0);
