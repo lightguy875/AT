@@ -83,11 +83,12 @@ Msg mng_execute(int idx, char *program) {
 	wait(&status);
 	time_t elapsed = time(NULL) - start;
 
-	return (Msg) { 
+	return (Msg) {
+		0, 
 		0,
 		elapsed,
 		0,
-		idx+1,
+		idx,
 		"finished"
 	};
 }
@@ -276,13 +277,14 @@ void sch_msg_success(Msg msg) {
 	static int count = 0;
 
 	if (msg.origin < N) { // message from sons
+
 		if (count == N - 1) {
 			sch_mark_job_done(job_executed);
 		} 
 
 		count = (count + 1) % N;
 	} else { // message from clients
-		Job *job = job_create(msg.t, msg.s, msg.delay);
+		Job *job = job_create(msg.id, msg.t, msg.s, msg.delay);
 
 		list_push_back(jobs, job);
 	}

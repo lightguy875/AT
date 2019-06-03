@@ -18,16 +18,9 @@ typedef struct job {
 } Job;
 
 /*!
- * \brief A counter for ids.
- *
- * Static counter to give the jobs an unique id.
- */
-static int nxt;
-
-/*!
  *  \brief Create a job.
  *  \param seconds the time in which should be executed.
  *  \param filename the file path to the program.
  *  \return a pointer to the node
  */
-Job* job_create(int seconds, char* filename, int delay);
+Job* job_create(int id, int seconds, char* filename, int delay);
