@@ -1,0 +1,130 @@
+\hypertarget{hypercube_8h}{}\section{server/hypercube.h File Reference}
+\label{hypercube_8h}\index{server/hypercube.\+h@{server/hypercube.\+h}}
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{hypercube_8h_ad82f64d618defbe01be13826e20795ec}{hc\+\_\+make} (int $\ast$hc)
+\begin{DoxyCompactList}\small\item\em Initializa the structure. \end{DoxyCompactList}\item 
+int \hyperlink{hypercube_8h_aa461836d4b970fa732bbe32f24afbd0d}{hc\+\_\+up} (int idx)
+\begin{DoxyCompactList}\small\item\em Get the index of the father of the node at the given index. \end{DoxyCompactList}\item 
+void \hyperlink{hypercube_8h_a352b3cfff201544f6ee6f12076ac5cf2}{hc\+\_\+down} (int idx, int $\ast$ans)
+\begin{DoxyCompactList}\small\item\em Get the index of the sons of the node at the given index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Luís Eduardo Luz Sila -\/ 15/0137885 
+
+Claudio Segala Rodrigues Filho 15/0032552 
+
+Yan Victor dos Santos 14/0033599 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2019-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2019 
+\end{DoxyCopyright}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{hypercube_8h_a352b3cfff201544f6ee6f12076ac5cf2}\label{hypercube_8h_a352b3cfff201544f6ee6f12076ac5cf2}} 
+\index{hypercube.\+h@{hypercube.\+h}!hc\+\_\+down@{hc\+\_\+down}}
+\index{hc\+\_\+down@{hc\+\_\+down}!hypercube.\+h@{hypercube.\+h}}
+\subsubsection{\texorpdfstring{hc\+\_\+down()}{hc\_down()}}
+{\footnotesize\ttfamily void hc\+\_\+down (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{int $\ast$}]{ans }\end{DoxyParamCaption})}
+
+
+
+Get the index of the sons of the node at the given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & the index. \\
+\hline
+{\em ans} & the output, it should be at least 2, the rest will be filled with -\/1. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 27 of file hypercube.\+c.
+
+
+\begin{DoxyCode}
+27                                 \{
+28     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 4; i++) \{
+29         \textcolor{keywordflow}{if} (idx & (1 << i)) \{
+30             \textcolor{keywordflow}{break};
+31         \} \textcolor{keywordflow}{else} \{
+32             ans[i] = idx | (1 << i);
+33         \}
+34     \}
+35 
+36     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 4; i++) \{
+37         ans[i] = (ans[i] < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}) ? ans[i] : -1;
+38     \}
+39 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{hypercube_8h_ad82f64d618defbe01be13826e20795ec}\label{hypercube_8h_ad82f64d618defbe01be13826e20795ec}} 
+\index{hypercube.\+h@{hypercube.\+h}!hc\+\_\+make@{hc\+\_\+make}}
+\index{hc\+\_\+make@{hc\+\_\+make}!hypercube.\+h@{hypercube.\+h}}
+\subsubsection{\texorpdfstring{hc\+\_\+make()}{hc\_make()}}
+{\footnotesize\ttfamily void hc\+\_\+make (\begin{DoxyParamCaption}\item[{int $\ast$}]{hc }\end{DoxyParamCaption})}
+
+
+
+Initializa the structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em hc} & an array to store the structure. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 3 of file hypercube.\+c.
+
+
+\begin{DoxyCode}
+3                       \{
+4     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}; i++) \{
+5         hc[i] = -1;
+6     \}
+7 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{hypercube_8h_aa461836d4b970fa732bbe32f24afbd0d}\label{hypercube_8h_aa461836d4b970fa732bbe32f24afbd0d}} 
+\index{hypercube.\+h@{hypercube.\+h}!hc\+\_\+up@{hc\+\_\+up}}
+\index{hc\+\_\+up@{hc\+\_\+up}!hypercube.\+h@{hypercube.\+h}}
+\subsubsection{\texorpdfstring{hc\+\_\+up()}{hc\_up()}}
+{\footnotesize\ttfamily int hc\+\_\+up (\begin{DoxyParamCaption}\item[{int}]{idx }\end{DoxyParamCaption})}
+
+
+
+Get the index of the father of the node at the given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & the index. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int The index of the father 
+\end{DoxyReturn}
+
+
+Definition at line 9 of file hypercube.\+c.
+
+
+\begin{DoxyCode}
+9                     \{
+10     \textcolor{keywordflow}{if} (idx) \{
+11         \textcolor{keywordflow}{return} idx  - (idx&-idx);
+12     \}
+13 
+14     \textcolor{keywordflow}{return} \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N};
+15 \}
+\end{DoxyCode}

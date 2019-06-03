@@ -1,0 +1,725 @@
+\hypertarget{server_2main_8c}{}\section{server/main.c File Reference}
+\label{server_2main_8c}\index{server/main.\+c@{server/main.\+c}}
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}job.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}list.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}message.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}tree.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}hypercube.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}torus.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{server_2main_8c_a1b3f65587b48bff0583fb85181991b01}{S\+C\+H\+E\+D\+U\+L\+ER}~200
+\item 
+\#define \hyperlink{server_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}{S\+H\+U\+T\+D\+O\+WN}~201
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{server_2main_8c_a3a80b6032f86a56bec74609034b3246f}{destroy} ()
+\begin{DoxyCompactList}\small\item\em Destroy the list of jobs and the queue. \end{DoxyCompactList}\item 
+\hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg} \hyperlink{server_2main_8c_a3925a40d0dbce8600f69fff525e8079b}{mng\+\_\+execute} (int idx, char $\ast$program)
+\begin{DoxyCompactList}\small\item\em Execute a program. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_ac5da6be581473f762bd94a630fddeddc}{mng\+\_\+broadcast\+\_\+down} (int idx, \hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg} msg)
+\begin{DoxyCompactList}\small\item\em Send message down the structure. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_a1a70b6871ced7c61fb3cfc98453742f6}{mng\+\_\+broadcast\+\_\+up} (int idx, \hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg} msg)
+\begin{DoxyCompactList}\small\item\em Send message up the structure. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_afcd8bbcf79046e0c981959902f39c8d6}{mng\+\_\+shutdown} ()
+\item 
+void \hyperlink{server_2main_8c_a11f58633d789e95213caad92b4e7f910}{mng\+\_\+start} (int idx)
+\begin{DoxyCompactList}\small\item\em Start a manager. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_ae00a4006eca0f4aa8d7b885eb93d407a}{mng\+\_\+create} (int n)
+\begin{DoxyCompactList}\small\item\em Creation of all management processes. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_a1b0444671f9f73442a8c297c25084ab3}{sch\+\_\+shutdown} ()
+\item 
+\hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job} $\ast$ \hyperlink{server_2main_8c_a88b91c9f0ca8e84c89db2d2ddb6a5502}{sch\+\_\+get\+\_\+next\+\_\+job} ()
+\begin{DoxyCompactList}\small\item\em Retrieves the oldest job that wasn\textquotesingle{}t executed. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_a99449691300a4ad53683f1719a2cad59}{sch\+\_\+execute} ()
+\begin{DoxyCompactList}\small\item\em Send message to node 0 to start execution. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_acdecb64cd445bc7b2c4ec4f38bf59ef7}{sch\+\_\+msg\+\_\+error} ()
+\begin{DoxyCompactList}\small\item\em Try to treat error that might be caused by alarm. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_af1816fe22f5d16f0eb889072a539f622}{sch\+\_\+msg\+\_\+success} (\hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg} msg)
+\begin{DoxyCompactList}\small\item\em Treat a successfull message coming. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_a231f9b911541bb3df53edf5c4d742ced}{sch\+\_\+try\+\_\+execute} ()
+\begin{DoxyCompactList}\small\item\em Verify if the topology is executing a job and then get the next job to execute. \end{DoxyCompactList}\item 
+void \hyperlink{server_2main_8c_ad10e2d4290a1cb82c180c69a8ffd39e4}{sch\+\_\+start} ()
+\begin{DoxyCompactList}\small\item\em Start a scheduler. \end{DoxyCompactList}\item 
+int \hyperlink{server_2main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Setup everything, create the managers and start the scheduler. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Variables}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{server_2main_8c_adffae9764a3188be8313113eda3e4b36}{topology\+\_\+type}
+\item 
+int \hyperlink{server_2main_8c_ae1768a5abe0e7f0315fbb9a50f0ae4ac}{structure} \mbox{[}\hyperlink{shutdown_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}\mbox{]}
+\item 
+int \hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\+\_\+id}
+\item 
+bool \hyperlink{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}{topology\+\_\+free}
+\item 
+\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$ \hyperlink{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}{jobs}
+\item 
+\hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job} $\ast$ \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\+\_\+job}
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{server_2main_8c_a1b3f65587b48bff0583fb85181991b01}\label{server_2main_8c_a1b3f65587b48bff0583fb85181991b01}} 
+\index{server/main.\+c@{server/main.\+c}!S\+C\+H\+E\+D\+U\+L\+ER@{S\+C\+H\+E\+D\+U\+L\+ER}}
+\index{S\+C\+H\+E\+D\+U\+L\+ER@{S\+C\+H\+E\+D\+U\+L\+ER}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{S\+C\+H\+E\+D\+U\+L\+ER}{SCHEDULER}}
+{\footnotesize\ttfamily \#define S\+C\+H\+E\+D\+U\+L\+ER~200}
+
+
+
+Definition at line 12 of file main.\+c.
+
+\mbox{\Hypertarget{server_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}\label{server_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}} 
+\index{server/main.\+c@{server/main.\+c}!S\+H\+U\+T\+D\+O\+WN@{S\+H\+U\+T\+D\+O\+WN}}
+\index{S\+H\+U\+T\+D\+O\+WN@{S\+H\+U\+T\+D\+O\+WN}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{S\+H\+U\+T\+D\+O\+WN}{SHUTDOWN}}
+{\footnotesize\ttfamily \#define S\+H\+U\+T\+D\+O\+WN~201}
+
+
+
+Definition at line 13 of file main.\+c.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{server_2main_8c_a3a80b6032f86a56bec74609034b3246f}\label{server_2main_8c_a3a80b6032f86a56bec74609034b3246f}} 
+\index{server/main.\+c@{server/main.\+c}!destroy@{destroy}}
+\index{destroy@{destroy}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{destroy()}{destroy()}}
+{\footnotesize\ttfamily void destroy (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroy the list of jobs and the queue. 
+
+
+
+Definition at line 30 of file main.\+c.
+
+
+\begin{DoxyCode}
+30                \{
+31     \hyperlink{list_8c_ad720671a4abc61ed689060cacc592565}{list\_destroy}(\hyperlink{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}{jobs});
+32 
+33     \textcolor{keyword}{struct }msqid\_ds msg;
+34     msgctl(\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id}, IPC\_RMID, &msg);
+35 
+36     exit(0);
+37 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{server_2main_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{server/main.\+c@{server/main.\+c}!main@{main}}
+\index{main@{main}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Setup everything, create the managers and start the scheduler. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em argc} & The number of arguments \\
+\hline
+{\em argv} & The array of arguments \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int If there was an error 
+\end{DoxyReturn}
+
+
+Definition at line 335 of file main.\+c.
+
+
+\begin{DoxyCode}
+335                                   \{
+336     \hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id} = msgget(\hyperlink{client_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}{KEY}, IPC\_CREAT | 0777);
+337 
+338     \textcolor{keywordflow}{if} (\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id} < 0) \{
+339         \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to get queue"});
+340     \} \textcolor{keywordflow}{else} \{
+341         \hyperlink{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(\textcolor{stringliteral}{"Queue set"});
+342     \}
+343 
+344     \hyperlink{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}{jobs} = \hyperlink{list_8c_a0ae9f0f842f635774a6670ab93809fb2}{list\_create}();
+345     \hyperlink{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(\textcolor{stringliteral}{"List of jobs set"});
+346 
+347     \textcolor{keywordflow}{if} (argc != 2 || !\hyperlink{client_2main_8c_ab0467b7c6f115d85cb5108b2bc3cda37}{try\_cast\_int}(argv[1], &\hyperlink{server_2main_8c_adffae9764a3188be8313113eda3e4b36}{topology\_type})) \{
+348         \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Not a valid topology"});
+349         exit(1);
+350     \}
+351 
+352     \textcolor{keywordflow}{switch} (\hyperlink{server_2main_8c_adffae9764a3188be8313113eda3e4b36}{topology\_type}) \{
+353         \textcolor{keywordflow}{case} \hyperlink{util_8h_abf5b8fbbeb8255336e401a15a80214a8}{TREE}:
+354             \hyperlink{tree_8c_ab0b61eccd46e38d01122850aa889ec8b}{ft\_make}(\hyperlink{server_2main_8c_ae1768a5abe0e7f0315fbb9a50f0ae4ac}{structure});
+355             \textcolor{keywordflow}{break};
+356         \textcolor{keywordflow}{case} \hyperlink{util_8h_aa023412eb2b8e6b3f7cda19ff54e7813}{HYPERCUBE}:
+357             \hyperlink{hypercube_8c_ad82f64d618defbe01be13826e20795ec}{hc\_make}(\hyperlink{server_2main_8c_ae1768a5abe0e7f0315fbb9a50f0ae4ac}{structure});
+358             \textcolor{keywordflow}{break};
+359         \textcolor{keywordflow}{case} \hyperlink{util_8h_aa20dd2cef76114dea8976ed59c86908c}{TORUS}:
+360             \hyperlink{torus_8c_a9540dca4df3b1305b1751f01889cf5f5}{tr\_make}(\hyperlink{server_2main_8c_ae1768a5abe0e7f0315fbb9a50f0ae4ac}{structure});
+361             \textcolor{keywordflow}{break};
+362         \textcolor{keywordflow}{default}:
+363             \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Wrong topology!"});
+364             exit(1);
+365     \}
+366 
+367     \hyperlink{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(\textcolor{stringliteral}{"Topology set"});
+368 
+369     \hyperlink{server_2main_8c_ae00a4006eca0f4aa8d7b885eb93d407a}{mng\_create}(\hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N});
+370     \hyperlink{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(\textcolor{stringliteral}{"Create Managers"});
+371 
+372     \hyperlink{server_2main_8c_ad10e2d4290a1cb82c180c69a8ffd39e4}{sch\_start}();
+373 
+374     \textcolor{keywordflow}{return} 0;
+375 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_ac5da6be581473f762bd94a630fddeddc}\label{server_2main_8c_ac5da6be581473f762bd94a630fddeddc}} 
+\index{server/main.\+c@{server/main.\+c}!mng\+\_\+broadcast\+\_\+down@{mng\+\_\+broadcast\+\_\+down}}
+\index{mng\+\_\+broadcast\+\_\+down@{mng\+\_\+broadcast\+\_\+down}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{mng\+\_\+broadcast\+\_\+down()}{mng\_broadcast\_down()}}
+{\footnotesize\ttfamily void mng\+\_\+broadcast\+\_\+down (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{\hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg}}]{msg }\end{DoxyParamCaption})}
+
+
+
+Send message down the structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & The current index \\
+\hline
+{\em msg} & The message to be sent \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 82 of file main.\+c.
+
+
+\begin{DoxyCode}
+82                                           \{
+83     \textcolor{keywordtype}{int} arr[4] = \{ -1, -1, -1, -1 \};
+84 
+85     \textcolor{keywordflow}{switch} (\hyperlink{server_2main_8c_adffae9764a3188be8313113eda3e4b36}{topology\_type}) \{
+86         \textcolor{keywordflow}{case} \hyperlink{util_8h_abf5b8fbbeb8255336e401a15a80214a8}{TREE}:
+87             \hyperlink{tree_8c_a58ddef16457786db1cb0aa9862480d90}{ft\_down}(idx, arr);
+88             \textcolor{keywordflow}{break};
+89         \textcolor{keywordflow}{case} \hyperlink{util_8h_aa023412eb2b8e6b3f7cda19ff54e7813}{HYPERCUBE}:
+90             \hyperlink{hypercube_8c_a352b3cfff201544f6ee6f12076ac5cf2}{hc\_down}(idx, arr);
+91             \textcolor{keywordflow}{break};
+92         \textcolor{keywordflow}{case} \hyperlink{util_8h_aa20dd2cef76114dea8976ed59c86908c}{TORUS}:
+93             \hyperlink{torus_8c_a7e6b27c8db4e4b0a440ce31d24027111}{tr\_down}(idx, arr);
+94             \textcolor{keywordflow}{break};
+95     \}
+96 
+97     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < 4; i++) \{
+98         \textcolor{keywordflow}{if} (arr[i] != -1) \{
+99             msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type} = arr[i] + 1;
+100             msgsnd(\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id}, &msg,  \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), IPC\_NOWAIT);
+101         \}
+102     \}
+103 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a1a70b6871ced7c61fb3cfc98453742f6}\label{server_2main_8c_a1a70b6871ced7c61fb3cfc98453742f6}} 
+\index{server/main.\+c@{server/main.\+c}!mng\+\_\+broadcast\+\_\+up@{mng\+\_\+broadcast\+\_\+up}}
+\index{mng\+\_\+broadcast\+\_\+up@{mng\+\_\+broadcast\+\_\+up}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{mng\+\_\+broadcast\+\_\+up()}{mng\_broadcast\_up()}}
+{\footnotesize\ttfamily void mng\+\_\+broadcast\+\_\+up (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{\hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg}}]{msg }\end{DoxyParamCaption})}
+
+
+
+Send message up the structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & The current index \\
+\hline
+{\em msg} & The message to be sent \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 111 of file main.\+c.
+
+
+\begin{DoxyCode}
+111                                         \{
+112     \textcolor{keywordflow}{switch} (\hyperlink{server_2main_8c_adffae9764a3188be8313113eda3e4b36}{topology\_type}) \{
+113         \textcolor{keywordflow}{case} \hyperlink{util_8h_abf5b8fbbeb8255336e401a15a80214a8}{TREE}:
+114             msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type} = \hyperlink{tree_8c_acbd6abfeadedf195ad06a95233dede47}{ft\_up}(idx);
+115             \textcolor{keywordflow}{break};
+116         \textcolor{keywordflow}{case} \hyperlink{util_8h_aa023412eb2b8e6b3f7cda19ff54e7813}{HYPERCUBE}:
+117             msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type} = \hyperlink{hypercube_8c_aa461836d4b970fa732bbe32f24afbd0d}{hc\_up}(idx);
+118             \textcolor{keywordflow}{break};
+119         \textcolor{keywordflow}{case} \hyperlink{util_8h_aa20dd2cef76114dea8976ed59c86908c}{TORUS}:
+120             msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type} = \hyperlink{torus_8c_ac1e9c9daa1de6239a5a3db3af75b61c0}{tr\_up}(idx);
+121             \textcolor{keywordflow}{break};
+122     \}
+123 
+124     msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type}++;
+125     msgsnd(\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id}, &msg, \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), IPC\_NOWAIT);
+126 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_ae00a4006eca0f4aa8d7b885eb93d407a}\label{server_2main_8c_ae00a4006eca0f4aa8d7b885eb93d407a}} 
+\index{server/main.\+c@{server/main.\+c}!mng\+\_\+create@{mng\+\_\+create}}
+\index{mng\+\_\+create@{mng\+\_\+create}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{mng\+\_\+create()}{mng\_create()}}
+{\footnotesize\ttfamily void mng\+\_\+create (\begin{DoxyParamCaption}\item[{int}]{n }\end{DoxyParamCaption})}
+
+
+
+Creation of all management processes. 
+
+
+
+Definition at line 169 of file main.\+c.
+
+
+\begin{DoxyCode}
+169                         \{
+170     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < n; i++) \{
+171         pid\_t pid = fork();
+172 
+173         \textcolor{keywordflow}{if} (!pid) \{
+174             \hyperlink{server_2main_8c_a11f58633d789e95213caad92b4e7f910}{mng\_start}(i);
+175         \}
+176     \}
+177 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a3925a40d0dbce8600f69fff525e8079b}\label{server_2main_8c_a3925a40d0dbce8600f69fff525e8079b}} 
+\index{server/main.\+c@{server/main.\+c}!mng\+\_\+execute@{mng\+\_\+execute}}
+\index{mng\+\_\+execute@{mng\+\_\+execute}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{mng\+\_\+execute()}{mng\_execute()}}
+{\footnotesize\ttfamily \hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg} mng\+\_\+execute (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{char $\ast$}]{program }\end{DoxyParamCaption})}
+
+
+
+Execute a program. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & The current index \\
+\hline
+{\em program} & The name of the program \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Msg Message with the elapsed time 
+\end{DoxyReturn}
+
+
+Definition at line 46 of file main.\+c.
+
+
+\begin{DoxyCode}
+46                                         \{
+47     time\_t start = time(NULL);
+48 
+49     \textcolor{keywordtype}{int} pid\_worker = fork();
+50     \textcolor{keywordflow}{if} (pid\_worker == 0) \{ \textcolor{comment}{// child of the fork}
+51         \textcolor{keywordtype}{char} path[100] = \hyperlink{util_8h_ab0139008fdda107456f13f837872b410}{PATH};
+52         strcat(path, program);      
+53         \textcolor{keywordtype}{int} err = execl(path, program, (\textcolor{keywordtype}{char} *) 0);
+54         
+55         \textcolor{keywordflow}{if} (err < 0) \{
+56             \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"An error ocurred!"});
+57             exit(1);
+58         \}
+59     \}
+60 
+61     \textcolor{keywordtype}{int} status;
+62     wait(&status);
+63     time\_t elapsed = time(NULL) - start;
+64 
+65     \hyperlink{structmsgbuf}{Msg} msg;
+66 
+67     msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type} = 0;
+68     msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id} = getpid();
+69     msg.\hyperlink{structmsgbuf_ac310d9181e916ba43604099aee272c71}{t} = elapsed;
+70     msg.\hyperlink{structmsgbuf_a6f1be1f780ff54ec75b41451cd4d90bd}{delay} = 0;
+71     msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin} = idx;
+72 
+73     \textcolor{keywordflow}{return} msg;
+74 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_afcd8bbcf79046e0c981959902f39c8d6}\label{server_2main_8c_afcd8bbcf79046e0c981959902f39c8d6}} 
+\index{server/main.\+c@{server/main.\+c}!mng\+\_\+shutdown@{mng\+\_\+shutdown}}
+\index{mng\+\_\+shutdown@{mng\+\_\+shutdown}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{mng\+\_\+shutdown()}{mng\_shutdown()}}
+{\footnotesize\ttfamily void mng\+\_\+shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 128 of file main.\+c.
+
+
+\begin{DoxyCode}
+128                     \{
+129     exit(0);
+130 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a11f58633d789e95213caad92b4e7f910}\label{server_2main_8c_a11f58633d789e95213caad92b4e7f910}} 
+\index{server/main.\+c@{server/main.\+c}!mng\+\_\+start@{mng\+\_\+start}}
+\index{mng\+\_\+start@{mng\+\_\+start}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{mng\+\_\+start()}{mng\_start()}}
+{\footnotesize\ttfamily void mng\+\_\+start (\begin{DoxyParamCaption}\item[{int}]{idx }\end{DoxyParamCaption})}
+
+
+
+Start a manager. 
+
+
+
+Definition at line 135 of file main.\+c.
+
+
+\begin{DoxyCode}
+135                         \{
+136     signal(SIGUSR1, \hyperlink{server_2main_8c_afcd8bbcf79046e0c981959902f39c8d6}{mng\_shutdown});
+137 
+138     \hyperlink{structmsgbuf}{Msg} msg;
+139 
+140     \textcolor{comment}{// msg.type = SHUTDOWN;}
+141     \textcolor{comment}{// msg.id = getpid();}
+142 
+143     \textcolor{comment}{// msgsnd(queue\_id, &msg, sizeof(Msg) - sizeof(long), IPC\_NOWAIT);}
+144 
+145     \textcolor{keywordflow}{while} (\textcolor{keyword}{true}) \{
+146         \textcolor{keywordtype}{int} virtual\_queue = idx+1;
+147         \textcolor{keywordtype}{int} res = msgrcv(\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id}, &msg, \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), virtual\_queue, 0);
+148         
+149         \textcolor{keywordflow}{if} (res < 0) \{
+150             \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to receive message. Maybe the queue died?"});
+151             \textcolor{keywordflow}{break};
+152         \}
+153 
+154         \textcolor{keywordflow}{if} (msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin} == \hyperlink{server_2main_8c_a1b3f65587b48bff0583fb85181991b01}{SCHEDULER}) \{
+155             \hyperlink{server_2main_8c_ac5da6be581473f762bd94a630fddeddc}{mng\_broadcast\_down}(idx, msg);
+156             msg = \hyperlink{server_2main_8c_a3925a40d0dbce8600f69fff525e8079b}{mng\_execute}(idx, msg.\hyperlink{structmsgbuf_a18ea610b5e5e725589fec617879ec646}{s});
+157             \hyperlink{server_2main_8c_a1a70b6871ced7c61fb3cfc98453742f6}{mng\_broadcast\_up}(idx, msg);
+158         \} \textcolor{keywordflow}{else} \{
+159             \hyperlink{server_2main_8c_a1a70b6871ced7c61fb3cfc98453742f6}{mng\_broadcast\_up}(idx, msg);
+160         \}
+161     \}
+162 
+163     exit(1);
+164 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a99449691300a4ad53683f1719a2cad59}\label{server_2main_8c_a99449691300a4ad53683f1719a2cad59}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+execute@{sch\+\_\+execute}}
+\index{sch\+\_\+execute@{sch\+\_\+execute}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+execute()}{sch\_execute()}}
+{\footnotesize\ttfamily void sch\+\_\+execute (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Send message to node 0 to start execution. 
+
+
+
+Definition at line 222 of file main.\+c.
+
+
+\begin{DoxyCode}
+222                     \{
+223     printf(\textcolor{stringliteral}{"[SCHEDULER] Executing the Job %d\(\backslash\)n\(\backslash\)n"}, \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a7441ef0865bcb3db9b8064dd7375c1ea}{id});
+224     
+225     \hyperlink{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}{topology\_free} = \textcolor{keyword}{false};
+226     \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a37722a150250e2a5a98e5e0d11e53449}{start} = time(NULL);
+227 
+228     \hyperlink{structmsgbuf}{Msg} msg;
+229 
+230     msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type} = 1;
+231     msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id} = 0;
+232     msg.\hyperlink{structmsgbuf_ac310d9181e916ba43604099aee272c71}{t} = 0;
+233     msg.\hyperlink{structmsgbuf_a6f1be1f780ff54ec75b41451cd4d90bd}{delay} = 0;
+234     msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin} = \hyperlink{server_2main_8c_a1b3f65587b48bff0583fb85181991b01}{SCHEDULER};
+235     strcpy(msg.\hyperlink{structmsgbuf_a18ea610b5e5e725589fec617879ec646}{s}, \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_aa9a76d9571bf39c3d168d222f931ff86}{filename});
+236 
+237     msgsnd(\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id}, &msg, \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), 0);
+238 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a88b91c9f0ca8e84c89db2d2ddb6a5502}\label{server_2main_8c_a88b91c9f0ca8e84c89db2d2ddb6a5502}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+get\+\_\+next\+\_\+job@{sch\+\_\+get\+\_\+next\+\_\+job}}
+\index{sch\+\_\+get\+\_\+next\+\_\+job@{sch\+\_\+get\+\_\+next\+\_\+job}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+get\+\_\+next\+\_\+job()}{sch\_get\_next\_job()}}
+{\footnotesize\ttfamily \hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job}$\ast$ sch\+\_\+get\+\_\+next\+\_\+job (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Retrieves the oldest job that wasn\textquotesingle{}t executed. 
+
+\begin{DoxyReturn}{Returns}
+Job$\ast$ a pointer to the next job 
+\end{DoxyReturn}
+
+
+Definition at line 202 of file main.\+c.
+
+
+\begin{DoxyCode}
+202                          \{
+203     \hyperlink{structjob}{Job} *\hyperlink{structjob}{job} = NULL;
+204     \hyperlink{structnode}{Node} *curr = \hyperlink{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}{jobs}->\hyperlink{structlist_a4608ed60ff5a6f2ada6dc6e4744c299f}{begin};
+205 
+206     \textcolor{keywordflow}{while} (curr != NULL) \{
+207         \hyperlink{structjob}{Job} *aux = (\hyperlink{structjob}{Job}*) curr->\hyperlink{structnode_a0f61d63b009d0880a89c843bd50d8d76}{value};
+208 
+209         if ((job == NULL || job->\hyperlink{structjob_a77bd4f876bdc3afed5acdd936f775d34}{seconds} > aux->\hyperlink{structjob_a77bd4f876bdc3afed5acdd936f775d34}{seconds}) && !aux->
+      \hyperlink{structjob_a1d39aac66e12dae50a24cd7a9100ef33}{done}) \{
+210             job = aux;
+211         \}
+212 
+213         curr = curr->\hyperlink{structnode_a745e59ece59d43566f37915138c7aee3}{nxt};
+214     \}
+215 
+216     \textcolor{keywordflow}{return} job;
+217 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_acdecb64cd445bc7b2c4ec4f38bf59ef7}\label{server_2main_8c_acdecb64cd445bc7b2c4ec4f38bf59ef7}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+msg\+\_\+error@{sch\+\_\+msg\+\_\+error}}
+\index{sch\+\_\+msg\+\_\+error@{sch\+\_\+msg\+\_\+error}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+msg\+\_\+error()}{sch\_msg\_error()}}
+{\footnotesize\ttfamily void sch\+\_\+msg\+\_\+error (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Try to treat error that might be caused by alarm. 
+
+
+
+Definition at line 243 of file main.\+c.
+
+
+\begin{DoxyCode}
+243                      \{
+244     \textcolor{keywordflow}{if} (errno != ENOMSG) \{
+245         \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to receive message"});
+246         exit(1);
+247     \}
+248 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_af1816fe22f5d16f0eb889072a539f622}\label{server_2main_8c_af1816fe22f5d16f0eb889072a539f622}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+msg\+\_\+success@{sch\+\_\+msg\+\_\+success}}
+\index{sch\+\_\+msg\+\_\+success@{sch\+\_\+msg\+\_\+success}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+msg\+\_\+success()}{sch\_msg\_success()}}
+{\footnotesize\ttfamily void sch\+\_\+msg\+\_\+success (\begin{DoxyParamCaption}\item[{\hyperlink{client_2message_8h_a0eff37f93a9447baae48232554a8d822}{Msg}}]{msg }\end{DoxyParamCaption})}
+
+
+
+Treat a successfull message coming. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em msg} & The message received \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 255 of file main.\+c.
+
+
+\begin{DoxyCode}
+255                               \{
+256     printf(\textcolor{stringliteral}{"\(\backslash\)n\(\backslash\)n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s, origin: %d\(\backslash\)n\(\backslash\)n"}, 
+      msg.\hyperlink{structmsgbuf_a6a83a8677f7c78fd146859325e08209a}{type}, msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id}, msg.\hyperlink{structmsgbuf_ac310d9181e916ba43604099aee272c71}{t}, msg.\hyperlink{structmsgbuf_a6f1be1f780ff54ec75b41451cd4d90bd}{delay}, msg.\hyperlink{structmsgbuf_a18ea610b5e5e725589fec617879ec646}{s}, msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin});
+257 
+258     \textcolor{keywordflow}{if} (msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin} < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}) \{ \textcolor{comment}{// message from sons}
+259         \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a7cf416c88da5b0c8528923c4a453b7c7}{node\_pid}[msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin}] = msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id};
+260         \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a4d48877440cfb156064d9d483b50bd2f}{node\_time}[msg.\hyperlink{structmsgbuf_af17b5de4074fb8cec910e0949474a81b}{origin}] = msg.\hyperlink{structmsgbuf_ac310d9181e916ba43604099aee272c71}{t};
+261         \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a4eff08519948266efdd345aabe6ecbbb}{completed}++;
+262 
+263         \textcolor{keywordflow}{if} (\hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a4eff08519948266efdd345aabe6ecbbb}{completed} == \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}) \{ \textcolor{comment}{// finished the job}
+264             \hyperlink{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}{topology\_free} = \textcolor{keyword}{true};
+265             \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a1d39aac66e12dae50a24cd7a9100ef33}{done} = \textcolor{keyword}{true};
+266             \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a57079404ddb95b02cddb408cc7c0e4b8}{finish} = time(NULL);
+267             
+268             printf(\textcolor{stringliteral}{"\(\backslash\)n> job=%d, arquivo=%s, delay=%ds, makespan: %ds\(\backslash\)n"}, 
+      \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a7441ef0865bcb3db9b8064dd7375c1ea}{id}, \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_aa9a76d9571bf39c3d168d222f931ff86}{filename}, \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->
+      \hyperlink{structjob_a6f1be1f780ff54ec75b41451cd4d90bd}{delay}, \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a57079404ddb95b02cddb408cc7c0e4b8}{finish} - \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job}->\hyperlink{structjob_a37722a150250e2a5a98e5e0d11e53449}{start});
+269         \}
+270     \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{// message from clients}
+271         \hyperlink{structjob}{Job} *\hyperlink{structjob}{job} = \hyperlink{job_8c_aa75fe7690cd3a87e6d8e8ec15c93b496}{job\_create}(msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id}, msg.\hyperlink{structmsgbuf_ac310d9181e916ba43604099aee272c71}{t}, msg.\hyperlink{structmsgbuf_a18ea610b5e5e725589fec617879ec646}{s}, msg.
+      \hyperlink{structmsgbuf_a6f1be1f780ff54ec75b41451cd4d90bd}{delay});
+272 
+273         \hyperlink{list_8c_a18ebf6fb09526d9e5a7a6179e126c89e}{list\_push\_back}(\hyperlink{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}{jobs}, job);
+274     \}
+275 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a1b0444671f9f73442a8c297c25084ab3}\label{server_2main_8c_a1b0444671f9f73442a8c297c25084ab3}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+shutdown@{sch\+\_\+shutdown}}
+\index{sch\+\_\+shutdown@{sch\+\_\+shutdown}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+shutdown()}{sch\_shutdown()}}
+{\footnotesize\ttfamily void sch\+\_\+shutdown (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 179 of file main.\+c.
+
+
+\begin{DoxyCode}
+179                     \{   
+180     \hyperlink{structnode}{Node} *\hyperlink{structnode}{node} = \hyperlink{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}{jobs}->\hyperlink{structlist_a4608ed60ff5a6f2ada6dc6e4744c299f}{begin};
+181 
+182     \textcolor{keywordflow}{while} (node != NULL) \{
+183         \hyperlink{structjob}{Job} *\hyperlink{structjob}{job} = (\hyperlink{structjob}{Job}*)node->\hyperlink{structnode_a0f61d63b009d0880a89c843bd50d8d76}{value};
+184 
+185         \textcolor{keywordflow}{if}(job->\hyperlink{structjob_a1d39aac66e12dae50a24cd7a9100ef33}{done}) \{
+186             printf(\textcolor{stringliteral}{"[DONE] job: %d, file: %s, submission: %d\(\backslash\)n"}, job->\hyperlink{structjob_a7441ef0865bcb3db9b8064dd7375c1ea}{id}, job->
+      \hyperlink{structjob_aa9a76d9571bf39c3d168d222f931ff86}{filename}, job->\hyperlink{structjob_a672ef807e8a5c395641b197cd1606fdc}{submission});
+187         \} \textcolor{keywordflow}{else}\{
+188             printf(\textcolor{stringliteral}{"[CANCELLED] job: %d, file: %s\(\backslash\)n"}, job->\hyperlink{structjob_a7441ef0865bcb3db9b8064dd7375c1ea}{id}, job->\hyperlink{structjob_aa9a76d9571bf39c3d168d222f931ff86}{filename});
+189         \}
+190 
+191         node = node->\hyperlink{structnode_a745e59ece59d43566f37915138c7aee3}{nxt};
+192     \}
+193 
+194     \hyperlink{client_2main_8c_a3a80b6032f86a56bec74609034b3246f}{destroy}();
+195 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_ad10e2d4290a1cb82c180c69a8ffd39e4}\label{server_2main_8c_ad10e2d4290a1cb82c180c69a8ffd39e4}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+start@{sch\+\_\+start}}
+\index{sch\+\_\+start@{sch\+\_\+start}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+start()}{sch\_start()}}
+{\footnotesize\ttfamily void sch\+\_\+start (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Start a scheduler. 
+
+
+
+Definition at line 296 of file main.\+c.
+
+
+\begin{DoxyCode}
+296                   \{
+297     signal(SIGUSR1, \hyperlink{server_2main_8c_a1b0444671f9f73442a8c297c25084ab3}{sch\_shutdown});
+298 
+299     \hyperlink{structmsgbuf}{Msg} msg;
+300 
+301     \textcolor{comment}{// msg.type = SHUTDOWN;}
+302     \textcolor{comment}{// msg.id = getpid();}
+303 
+304     \textcolor{comment}{// msgsnd(queue\_id, &msg, sizeof(Msg) - sizeof(long), IPC\_NOWAIT);}
+305 
+306     \textcolor{keywordtype}{int} cont = 0;
+307     \textcolor{keywordtype}{int} virtual\_id = \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}+1; \textcolor{comment}{//> the virtual queue id}
+308     \textcolor{keywordtype}{char} traces[1000];
+309 
+310     \hyperlink{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}{topology\_free} = \textcolor{keyword}{true};
+311 
+312     \textcolor{keywordflow}{while} (\textcolor{keyword}{true}) \{
+313         \hyperlink{structmsgbuf}{Msg} msg;
+314         \textcolor{keywordtype}{int} res = msgrcv(\hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id}, &msg, \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), virtual\_id, IPC\_NOWAIT);
+315 
+316         \textcolor{keywordflow}{if} (res < 0) \{
+317             \hyperlink{server_2main_8c_acdecb64cd445bc7b2c4ec4f38bf59ef7}{sch\_msg\_error}();
+318         \} \textcolor{keywordflow}{else} \{
+319             \hyperlink{server_2main_8c_af1816fe22f5d16f0eb889072a539f622}{sch\_msg\_success}(msg);
+320         \}
+321 
+322         \hyperlink{server_2main_8c_a231f9b911541bb3df53edf5c4d742ced}{sch\_try\_execute}();
+323     \}
+324 
+325     \hyperlink{client_2main_8c_a3a80b6032f86a56bec74609034b3246f}{destroy}();
+326 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{server_2main_8c_a231f9b911541bb3df53edf5c4d742ced}\label{server_2main_8c_a231f9b911541bb3df53edf5c4d742ced}} 
+\index{server/main.\+c@{server/main.\+c}!sch\+\_\+try\+\_\+execute@{sch\+\_\+try\+\_\+execute}}
+\index{sch\+\_\+try\+\_\+execute@{sch\+\_\+try\+\_\+execute}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{sch\+\_\+try\+\_\+execute()}{sch\_try\_execute()}}
+{\footnotesize\ttfamily void sch\+\_\+try\+\_\+execute (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Verify if the topology is executing a job and then get the next job to execute. 
+
+
+
+Definition at line 281 of file main.\+c.
+
+
+\begin{DoxyCode}
+281                        \{
+282     \textcolor{keywordflow}{if} (\hyperlink{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}{topology\_free}) \{
+283         \hyperlink{structjob}{Job} *nxt\_job = \hyperlink{server_2main_8c_a88b91c9f0ca8e84c89db2d2ddb6a5502}{sch\_get\_next\_job}();
+284         time\_t now = time(NULL);
+285 
+286         \textcolor{keywordflow}{if} (nxt\_job && nxt\_job->\hyperlink{structjob_a77bd4f876bdc3afed5acdd936f775d34}{seconds} <= now) \{
+287             \hyperlink{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}{curr\_job} = nxt\_job;
+288             \hyperlink{server_2main_8c_a99449691300a4ad53683f1719a2cad59}{sch\_execute}();
+289         \}
+290     \}
+291 \}
+\end{DoxyCode}
+
+
+\subsection{Variable Documentation}
+\mbox{\Hypertarget{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}\label{server_2main_8c_a81ff2c380d9cc4bb475493730d72450f}} 
+\index{server/main.\+c@{server/main.\+c}!curr\+\_\+job@{curr\+\_\+job}}
+\index{curr\+\_\+job@{curr\+\_\+job}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{curr\+\_\+job}{curr\_job}}
+{\footnotesize\ttfamily \hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job}$\ast$ curr\+\_\+job}
+
+
+
+Definition at line 25 of file main.\+c.
+
+\mbox{\Hypertarget{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}\label{server_2main_8c_a509f275c9a43353d594459c4e72eb2f2}} 
+\index{server/main.\+c@{server/main.\+c}!jobs@{jobs}}
+\index{jobs@{jobs}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{jobs}{jobs}}
+{\footnotesize\ttfamily \hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List}$\ast$ jobs}
+
+
+
+Definition at line 23 of file main.\+c.
+
+\mbox{\Hypertarget{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}\label{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}} 
+\index{server/main.\+c@{server/main.\+c}!queue\+\_\+id@{queue\+\_\+id}}
+\index{queue\+\_\+id@{queue\+\_\+id}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{queue\+\_\+id}{queue\_id}}
+{\footnotesize\ttfamily int queue\+\_\+id}
+
+
+
+Definition at line 19 of file main.\+c.
+
+\mbox{\Hypertarget{server_2main_8c_ae1768a5abe0e7f0315fbb9a50f0ae4ac}\label{server_2main_8c_ae1768a5abe0e7f0315fbb9a50f0ae4ac}} 
+\index{server/main.\+c@{server/main.\+c}!structure@{structure}}
+\index{structure@{structure}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{structure}{structure}}
+{\footnotesize\ttfamily int structure\mbox{[}\hyperlink{shutdown_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}\mbox{]}}
+
+
+
+Definition at line 17 of file main.\+c.
+
+\mbox{\Hypertarget{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}\label{server_2main_8c_ab8f150b73f6c577e2477164b6b8d10af}} 
+\index{server/main.\+c@{server/main.\+c}!topology\+\_\+free@{topology\+\_\+free}}
+\index{topology\+\_\+free@{topology\+\_\+free}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{topology\+\_\+free}{topology\_free}}
+{\footnotesize\ttfamily bool topology\+\_\+free}
+
+
+
+Definition at line 21 of file main.\+c.
+
+\mbox{\Hypertarget{server_2main_8c_adffae9764a3188be8313113eda3e4b36}\label{server_2main_8c_adffae9764a3188be8313113eda3e4b36}} 
+\index{server/main.\+c@{server/main.\+c}!topology\+\_\+type@{topology\+\_\+type}}
+\index{topology\+\_\+type@{topology\+\_\+type}!server/main.\+c@{server/main.\+c}}
+\subsubsection{\texorpdfstring{topology\+\_\+type}{topology\_type}}
+{\footnotesize\ttfamily int topology\+\_\+type}
+
+
+
+Definition at line 15 of file main.\+c.
+

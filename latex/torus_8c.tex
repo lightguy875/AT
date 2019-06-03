@@ -1,0 +1,106 @@
+\hypertarget{torus_8c}{}\section{server/torus.c File Reference}
+\label{torus_8c}\index{server/torus.\+c@{server/torus.\+c}}
+{\ttfamily \#include \char`\"{}torus.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{torus_8c_a9540dca4df3b1305b1751f01889cf5f5}{tr\+\_\+make} (int $\ast$tr)
+\begin{DoxyCompactList}\small\item\em Initializa the structure. \end{DoxyCompactList}\item 
+int \hyperlink{torus_8c_ac1e9c9daa1de6239a5a3db3af75b61c0}{tr\+\_\+up} (int idx)
+\begin{DoxyCompactList}\small\item\em Estrutura do no. \end{DoxyCompactList}\item 
+void \hyperlink{torus_8c_a7e6b27c8db4e4b0a440ce31d24027111}{tr\+\_\+down} (int idx, int $\ast$ans)
+\begin{DoxyCompactList}\small\item\em Enviar para os nós embaixo da árvore. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{torus_8c_a7e6b27c8db4e4b0a440ce31d24027111}\label{torus_8c_a7e6b27c8db4e4b0a440ce31d24027111}} 
+\index{torus.\+c@{torus.\+c}!tr\+\_\+down@{tr\+\_\+down}}
+\index{tr\+\_\+down@{tr\+\_\+down}!torus.\+c@{torus.\+c}}
+\subsubsection{\texorpdfstring{tr\+\_\+down()}{tr\_down()}}
+{\footnotesize\ttfamily void tr\+\_\+down (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{int $\ast$}]{ans }\end{DoxyParamCaption})}
+
+
+
+Enviar para os nós embaixo da árvore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & \\
+\hline
+{\em ans} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 35 of file torus.\+c.
+
+
+\begin{DoxyCode}
+35                                 \{
+36     ans[0] = idx + \hyperlink{util_8h_a52037c938e3c1b126c6277da5ca689d0}{M};
+37 
+38     \textcolor{keywordflow}{if} (idx < M - 1) \{
+39         ans[1] = idx + 1;
+40     \}
+41 
+42     ans[0] = ans[0] < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N} ? ans[0] : -1;
+43     ans[1] = ans[1] < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N} ? ans[1] : -1;
+44 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{torus_8c_a9540dca4df3b1305b1751f01889cf5f5}\label{torus_8c_a9540dca4df3b1305b1751f01889cf5f5}} 
+\index{torus.\+c@{torus.\+c}!tr\+\_\+make@{tr\+\_\+make}}
+\index{tr\+\_\+make@{tr\+\_\+make}!torus.\+c@{torus.\+c}}
+\subsubsection{\texorpdfstring{tr\+\_\+make()}{tr\_make()}}
+{\footnotesize\ttfamily void tr\+\_\+make (\begin{DoxyParamCaption}\item[{int $\ast$}]{tr }\end{DoxyParamCaption})}
+
+
+
+Initializa the structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tr} & an array to store the structure. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 3 of file torus.\+c.
+
+
+\begin{DoxyCode}
+3                       \{
+4     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}; i++) \{
+5         tr[i] = -1;
+6     \}
+7 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{torus_8c_ac1e9c9daa1de6239a5a3db3af75b61c0}\label{torus_8c_ac1e9c9daa1de6239a5a3db3af75b61c0}} 
+\index{torus.\+c@{torus.\+c}!tr\+\_\+up@{tr\+\_\+up}}
+\index{tr\+\_\+up@{tr\+\_\+up}!torus.\+c@{torus.\+c}}
+\subsubsection{\texorpdfstring{tr\+\_\+up()}{tr\_up()}}
+{\footnotesize\ttfamily int tr\+\_\+up (\begin{DoxyParamCaption}\item[{int}]{idx }\end{DoxyParamCaption})}
+
+
+
+Estrutura do no. 
+
+Get the index of the father of the node at the given index.
+
+Structure\+: root node 1 12 13 14 15 8 9 10 11 4 5 6 7 0 1 2 3 // First line 
+
+Definition at line 18 of file torus.\+c.
+
+
+\begin{DoxyCode}
+18                     \{
+19     \textcolor{keywordflow}{if} (idx) \{ \textcolor{comment}{// if isn't the root node}
+20         \textcolor{keywordflow}{if}(idx > \hyperlink{util_8h_a52037c938e3c1b126c6277da5ca689d0}{M}) \{\textcolor{comment}{// if top line, send to first line}
+21             \textcolor{keywordflow}{return} idx - \hyperlink{util_8h_a52037c938e3c1b126c6277da5ca689d0}{M}; 
+22         \} \textcolor{keywordflow}{else} \{
+23             \textcolor{keywordflow}{return} idx - 1;
+24         \}
+25     \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{// if root node, send to scheduler}
+26         \textcolor{keywordflow}{return} \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N};
+27     \}
+28 \}
+\end{DoxyCode}

@@ -1,0 +1,223 @@
+\hypertarget{client_2main_8c}{}\section{client/main.c File Reference}
+\label{client_2main_8c}\index{client/main.\+c@{client/main.\+c}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$sys/msg.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}message.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{client_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}{K\+EY}~15003
+\item 
+\#define \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}~15
+\item 
+\#define \hyperlink{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(x)~printf(\char`\"{}\textbackslash{}033\mbox{[}0;32m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);
+\item 
+\#define \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(x)~printf(\char`\"{}\textbackslash{}033\mbox{[}0;31m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+bool \hyperlink{client_2main_8c_ab0467b7c6f115d85cb5108b2bc3cda37}{try\+\_\+cast\+\_\+int} (char $\ast$num, int $\ast$result)
+\begin{DoxyCompactList}\small\item\em Cast string to int. \end{DoxyCompactList}\item 
+void \hyperlink{client_2main_8c_af78c6f9e917943500c4938514e11eb2c}{send} (int seconds, char filename\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Send a message with a job to the queue. \end{DoxyCompactList}\item 
+void \hyperlink{client_2main_8c_a3a80b6032f86a56bec74609034b3246f}{destroy} ()
+\begin{DoxyCompactList}\small\item\em Destroy the queue. \end{DoxyCompactList}\item 
+int \hyperlink{client_2main_8c_a0ddf1224851353fc92bfbff6f499fa97}{main} (int argc, char $\ast$argv\mbox{[}$\,$\mbox{]})
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}\label{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}} 
+\index{client/main.\+c@{client/main.\+c}!E@{E}}
+\index{E@{E}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{E}{E}}
+{\footnotesize\ttfamily \#define E(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~printf(\char`\"{}\textbackslash{}033\mbox{[}0;31m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);}
+
+
+
+Definition at line 18 of file main.\+c.
+
+\mbox{\Hypertarget{client_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}\label{client_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}} 
+\index{client/main.\+c@{client/main.\+c}!K\+EY@{K\+EY}}
+\index{K\+EY@{K\+EY}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{K\+EY}{KEY}}
+{\footnotesize\ttfamily \#define K\+EY~15003}
+
+
+
+Definition at line 14 of file main.\+c.
+
+\mbox{\Hypertarget{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}\label{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}} 
+\index{client/main.\+c@{client/main.\+c}!N@{N}}
+\index{N@{N}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{N}{N}}
+{\footnotesize\ttfamily \#define N~15}
+
+
+
+Definition at line 15 of file main.\+c.
+
+\mbox{\Hypertarget{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}\label{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}} 
+\index{client/main.\+c@{client/main.\+c}!S@{S}}
+\index{S@{S}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{S}{S}}
+{\footnotesize\ttfamily \#define S(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~printf(\char`\"{}\textbackslash{}033\mbox{[}0;32m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);}
+
+
+
+Definition at line 17 of file main.\+c.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{client_2main_8c_a3a80b6032f86a56bec74609034b3246f}\label{client_2main_8c_a3a80b6032f86a56bec74609034b3246f}} 
+\index{client/main.\+c@{client/main.\+c}!destroy@{destroy}}
+\index{destroy@{destroy}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{destroy()}{destroy()}}
+{\footnotesize\ttfamily void destroy (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Destroy the queue. 
+
+
+
+Definition at line 74 of file main.\+c.
+
+
+\begin{DoxyCode}
+74                \{
+75     \textcolor{keywordtype}{int} \textcolor{keywordtype}{id} = msgget(\hyperlink{client_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}{KEY}, 0);
+76 
+77     printf(\textcolor{stringliteral}{"Destroying the queue %d\(\backslash\)n"}, \textcolor{keywordtype}{id});
+78     \textcolor{keyword}{struct }msqid\_ds msg;
+79     msgctl(\textcolor{keywordtype}{id}, IPC\_RMID, &msg);
+80 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{client_2main_8c_a0ddf1224851353fc92bfbff6f499fa97}\label{client_2main_8c_a0ddf1224851353fc92bfbff6f499fa97}} 
+\index{client/main.\+c@{client/main.\+c}!main@{main}}
+\index{main@{main}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}\item[{int}]{argc,  }\item[{char $\ast$}]{argv\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Definition at line 82 of file main.\+c.
+
+
+\begin{DoxyCode}
+82                                   \{
+83     \textcolor{keywordtype}{int} seconds = 0;
+84 
+85     \textcolor{keywordflow}{if} (argc == 1) \{
+86         \hyperlink{client_2main_8c_a3a80b6032f86a56bec74609034b3246f}{destroy}();
+87     \}
+88 
+89     \textcolor{keywordflow}{if} (argc == 3 && \hyperlink{client_2main_8c_ab0467b7c6f115d85cb5108b2bc3cda37}{try\_cast\_int}(argv[1], &seconds) && argv[2] != NULL) \{
+90         \textcolor{keywordtype}{char} filename[\hyperlink{client_2message_8h_a220f38b26fa99d4d91b574f42d991516}{MAX\_STRING\_SIZE}];
+91 
+92         strcpy(filename, argv[2]);
+93 
+94         \hyperlink{client_2main_8c_af78c6f9e917943500c4938514e11eb2c}{send}(seconds, filename);
+95     \}
+96 
+97     \textcolor{keywordflow}{return} 0;
+98 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{client_2main_8c_af78c6f9e917943500c4938514e11eb2c}\label{client_2main_8c_af78c6f9e917943500c4938514e11eb2c}} 
+\index{client/main.\+c@{client/main.\+c}!send@{send}}
+\index{send@{send}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{send()}{send()}}
+{\footnotesize\ttfamily void send (\begin{DoxyParamCaption}\item[{int}]{seconds,  }\item[{char}]{filename\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Send a message with a job to the queue. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em t} & the time in which the job should be executed. \\
+\hline
+{\em filename} & the path of the file to be executed. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 45 of file main.\+c.
+
+
+\begin{DoxyCode}
+45                                          \{
+46     \textcolor{keywordtype}{int} key = \hyperlink{client_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}{KEY}; \textcolor{comment}{// matricula truncada}
+47     \textcolor{keywordtype}{int} \textcolor{keywordtype}{id} = msgget(key, S\_IWUSR);
+48 
+49     time\_t t = time(NULL) + seconds;
+50 
+51     \textcolor{keywordflow}{if} (\textcolor{keywordtype}{id} < 0) \{
+52         \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to get queue"});
+53     \} \textcolor{keywordflow}{else} \{
+54         \hyperlink{client_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(\textcolor{stringliteral}{"Got the queue"});
+55     \}
+56 
+57     srand(time(NULL) + getpid() + clock());
+58 
+59     \hyperlink{structmsgbuf}{Msg} msg = \{ \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}+1, rand(), t, seconds, \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}+1 \};
+60 
+61     strcpy(msg.\hyperlink{structmsgbuf_a18ea610b5e5e725589fec617879ec646}{s}, filename);
+62     \textcolor{keywordtype}{int} res = msgsnd(\textcolor{keywordtype}{id}, &msg, \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), 0);
+63 
+64     \textcolor{keywordflow}{if} (res < 0) \{
+65         \hyperlink{client_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to send messages"});
+66     \} \textcolor{keywordflow}{else} \{
+67         printf(\textcolor{stringliteral}{"\(\backslash\)n> job=%ld, arquivo=%s, delay=%ds\(\backslash\)n"}, msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id}, msg.\hyperlink{structmsgbuf_a18ea610b5e5e725589fec617879ec646}{s}, msg.
+      \hyperlink{structmsgbuf_a6f1be1f780ff54ec75b41451cd4d90bd}{delay});
+68     \}
+69 \} 
+\end{DoxyCode}
+\mbox{\Hypertarget{client_2main_8c_ab0467b7c6f115d85cb5108b2bc3cda37}\label{client_2main_8c_ab0467b7c6f115d85cb5108b2bc3cda37}} 
+\index{client/main.\+c@{client/main.\+c}!try\+\_\+cast\+\_\+int@{try\+\_\+cast\+\_\+int}}
+\index{try\+\_\+cast\+\_\+int@{try\+\_\+cast\+\_\+int}!client/main.\+c@{client/main.\+c}}
+\subsubsection{\texorpdfstring{try\+\_\+cast\+\_\+int()}{try\_cast\_int()}}
+{\footnotesize\ttfamily bool try\+\_\+cast\+\_\+int (\begin{DoxyParamCaption}\item[{char $\ast$}]{num,  }\item[{int $\ast$}]{result }\end{DoxyParamCaption})}
+
+
+
+Cast string to int. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em num} & a string with a number. \\
+\hline
+{\em result} & a pointer to the result of the convertion. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+if it succeeded or not. 
+\end{DoxyReturn}
+
+
+Definition at line 26 of file main.\+c.
+
+
+\begin{DoxyCode}
+26                                            \{
+27     \textcolor{keywordtype}{int} sz = strlen(num);
+28     
+29     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = sz - 1, n = 1; i >= 0; i--, n *= 10) \{
+30         \textcolor{keywordflow}{if} (num[i] >= \textcolor{charliteral}{'0'} && num[i] <= \textcolor{charliteral}{'9'}) \{
+31             (*result) += n * (num[i] - \textcolor{charliteral}{'0'});
+32         \} \textcolor{keywordflow}{else} \{
+33             \textcolor{keywordflow}{return} \textcolor{keyword}{false};
+34         \}
+35     \}
+36 
+37     \textcolor{keywordflow}{return} \textcolor{keyword}{true};
+38 \}
+\end{DoxyCode}

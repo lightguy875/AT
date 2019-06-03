@@ -1,0 +1,232 @@
+\hypertarget{util_8h}{}\section{server/util.h File Reference}
+\label{util_8h}\index{server/util.\+h@{server/util.\+h}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ipc.\+h$>$}\newline
+{\ttfamily \#include $<$sys/msg.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{util_8h_a8d23feea868a983c8c2b661e1e16972f}{R\+ED}~\char`\"{}\textbackslash{}033\mbox{[}0;31m\char`\"{}
+\item 
+\#define \hyperlink{util_8h_acfbc006ea433ad708fdee3e82996e721}{G\+R\+E\+EN}~\char`\"{}\textbackslash{}033\mbox{[}0;32m\char`\"{}
+\item 
+\#define \hyperlink{util_8h_abf681265909adf3d3e8116c93c0ba179}{Y\+E\+L\+L\+OW}~\char`\"{}\textbackslash{}033\mbox{[}0;33m\char`\"{}
+\item 
+\#define \hyperlink{util_8h_ab702106cf3b3e96750b6845ded4e0299}{R\+E\+S\+ET}~\char`\"{}\textbackslash{}033\mbox{[}0m\char`\"{}
+\item 
+\#define \hyperlink{util_8h_a4c8996ca35aa09633823413a3f985c03}{M\+S\+G\+\_\+\+F\+L\+AG}~0x123
+\item 
+\#define \hyperlink{util_8h_abf5b8fbbeb8255336e401a15a80214a8}{T\+R\+EE}~1
+\item 
+\#define \hyperlink{util_8h_aa023412eb2b8e6b3f7cda19ff54e7813}{H\+Y\+P\+E\+R\+C\+U\+BE}~2
+\item 
+\#define \hyperlink{util_8h_aa20dd2cef76114dea8976ed59c86908c}{T\+O\+R\+US}~3
+\item 
+\#define \hyperlink{util_8h_ac4a3ed3432929804c708f7760fb79e28}{S}(x)~printf(\char`\"{}\%s\%s\%s\textbackslash{}n\char`\"{}, G\+R\+E\+EN, x, \hyperlink{util_8h_ab702106cf3b3e96750b6845ded4e0299}{R\+E\+S\+ET}); fflush(stdout);
+\item 
+\#define \hyperlink{util_8h_a2891ffdd60b058e9dd46aa71cb738129}{E}(x)~printf(\char`\"{}\%s\%s\%s\textbackslash{}n\char`\"{}, R\+ED, x, \hyperlink{util_8h_ab702106cf3b3e96750b6845ded4e0299}{R\+E\+S\+ET}); fflush(stdout);
+\item 
+\#define \hyperlink{util_8h_a8ae9d53f33f46cfcfcb9736e6351452a}{K\+EY}~15003
+\item 
+\#define \hyperlink{util_8h_a0240ac851181b84ac374872dc5434ee4}{N}~15
+\item 
+\#define \hyperlink{util_8h_a52037c938e3c1b126c6277da5ca689d0}{M}~4
+\item 
+\#define \hyperlink{util_8h_ab0139008fdda107456f13f837872b410}{P\+A\+TH}~\char`\"{}../prog/\char`\"{}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{util_8h_a357bbce5cdbe6618f15bf15cf62bbb6c}{y\+\_\+cast\+\_\+int} (char $\ast$string, int $\ast$inteiro)
+\begin{DoxyCompactList}\small\item\em Converte char em string. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Luís Eduardo Luz Sila -\/ 15/0137885 
+
+Claudio Segala Rodrigues Filho 15/0032552 
+
+Yan Victor dos Santos 14/0033599 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2019-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2019 
+\end{DoxyCopyright}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{util_8h_a2891ffdd60b058e9dd46aa71cb738129}\label{util_8h_a2891ffdd60b058e9dd46aa71cb738129}} 
+\index{util.\+h@{util.\+h}!E@{E}}
+\index{E@{E}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{E}{E}}
+{\footnotesize\ttfamily \#define E(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~printf(\char`\"{}\%s\%s\%s\textbackslash{}n\char`\"{}, R\+ED, x, \hyperlink{util_8h_ab702106cf3b3e96750b6845ded4e0299}{R\+E\+S\+ET}); fflush(stdout);}
+
+
+
+Definition at line 40 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_acfbc006ea433ad708fdee3e82996e721}\label{util_8h_acfbc006ea433ad708fdee3e82996e721}} 
+\index{util.\+h@{util.\+h}!G\+R\+E\+EN@{G\+R\+E\+EN}}
+\index{G\+R\+E\+EN@{G\+R\+E\+EN}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{G\+R\+E\+EN}{GREEN}}
+{\footnotesize\ttfamily \#define G\+R\+E\+EN~\char`\"{}\textbackslash{}033\mbox{[}0;32m\char`\"{}}
+
+
+
+Definition at line 29 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_aa023412eb2b8e6b3f7cda19ff54e7813}\label{util_8h_aa023412eb2b8e6b3f7cda19ff54e7813}} 
+\index{util.\+h@{util.\+h}!H\+Y\+P\+E\+R\+C\+U\+BE@{H\+Y\+P\+E\+R\+C\+U\+BE}}
+\index{H\+Y\+P\+E\+R\+C\+U\+BE@{H\+Y\+P\+E\+R\+C\+U\+BE}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{H\+Y\+P\+E\+R\+C\+U\+BE}{HYPERCUBE}}
+{\footnotesize\ttfamily \#define H\+Y\+P\+E\+R\+C\+U\+BE~2}
+
+
+
+Definition at line 36 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_a8ae9d53f33f46cfcfcb9736e6351452a}\label{util_8h_a8ae9d53f33f46cfcfcb9736e6351452a}} 
+\index{util.\+h@{util.\+h}!K\+EY@{K\+EY}}
+\index{K\+EY@{K\+EY}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{K\+EY}{KEY}}
+{\footnotesize\ttfamily \#define K\+EY~15003}
+
+
+
+Definition at line 42 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_a52037c938e3c1b126c6277da5ca689d0}\label{util_8h_a52037c938e3c1b126c6277da5ca689d0}} 
+\index{util.\+h@{util.\+h}!M@{M}}
+\index{M@{M}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{M}{M}}
+{\footnotesize\ttfamily \#define M~4}
+
+
+
+Definition at line 44 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_a4c8996ca35aa09633823413a3f985c03}\label{util_8h_a4c8996ca35aa09633823413a3f985c03}} 
+\index{util.\+h@{util.\+h}!M\+S\+G\+\_\+\+F\+L\+AG@{M\+S\+G\+\_\+\+F\+L\+AG}}
+\index{M\+S\+G\+\_\+\+F\+L\+AG@{M\+S\+G\+\_\+\+F\+L\+AG}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{M\+S\+G\+\_\+\+F\+L\+AG}{MSG\_FLAG}}
+{\footnotesize\ttfamily \#define M\+S\+G\+\_\+\+F\+L\+AG~0x123}
+
+
+
+Definition at line 33 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_a0240ac851181b84ac374872dc5434ee4}\label{util_8h_a0240ac851181b84ac374872dc5434ee4}} 
+\index{util.\+h@{util.\+h}!N@{N}}
+\index{N@{N}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{N}{N}}
+{\footnotesize\ttfamily \#define N~15}
+
+
+
+Definition at line 43 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_ab0139008fdda107456f13f837872b410}\label{util_8h_ab0139008fdda107456f13f837872b410}} 
+\index{util.\+h@{util.\+h}!P\+A\+TH@{P\+A\+TH}}
+\index{P\+A\+TH@{P\+A\+TH}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{P\+A\+TH}{PATH}}
+{\footnotesize\ttfamily \#define P\+A\+TH~\char`\"{}../prog/\char`\"{}}
+
+
+
+Definition at line 46 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_a8d23feea868a983c8c2b661e1e16972f}\label{util_8h_a8d23feea868a983c8c2b661e1e16972f}} 
+\index{util.\+h@{util.\+h}!R\+ED@{R\+ED}}
+\index{R\+ED@{R\+ED}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{R\+ED}{RED}}
+{\footnotesize\ttfamily \#define R\+ED~\char`\"{}\textbackslash{}033\mbox{[}0;31m\char`\"{}}
+
+
+
+Definition at line 28 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_ab702106cf3b3e96750b6845ded4e0299}\label{util_8h_ab702106cf3b3e96750b6845ded4e0299}} 
+\index{util.\+h@{util.\+h}!R\+E\+S\+ET@{R\+E\+S\+ET}}
+\index{R\+E\+S\+ET@{R\+E\+S\+ET}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{R\+E\+S\+ET}{RESET}}
+{\footnotesize\ttfamily \#define R\+E\+S\+ET~\char`\"{}\textbackslash{}033\mbox{[}0m\char`\"{}}
+
+
+
+Definition at line 31 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_ac4a3ed3432929804c708f7760fb79e28}\label{util_8h_ac4a3ed3432929804c708f7760fb79e28}} 
+\index{util.\+h@{util.\+h}!S@{S}}
+\index{S@{S}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{S}{S}}
+{\footnotesize\ttfamily \#define S(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~printf(\char`\"{}\%s\%s\%s\textbackslash{}n\char`\"{}, G\+R\+E\+EN, x, \hyperlink{util_8h_ab702106cf3b3e96750b6845ded4e0299}{R\+E\+S\+ET}); fflush(stdout);}
+
+
+
+Definition at line 39 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_aa20dd2cef76114dea8976ed59c86908c}\label{util_8h_aa20dd2cef76114dea8976ed59c86908c}} 
+\index{util.\+h@{util.\+h}!T\+O\+R\+US@{T\+O\+R\+US}}
+\index{T\+O\+R\+US@{T\+O\+R\+US}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{T\+O\+R\+US}{TORUS}}
+{\footnotesize\ttfamily \#define T\+O\+R\+US~3}
+
+
+
+Definition at line 37 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_abf5b8fbbeb8255336e401a15a80214a8}\label{util_8h_abf5b8fbbeb8255336e401a15a80214a8}} 
+\index{util.\+h@{util.\+h}!T\+R\+EE@{T\+R\+EE}}
+\index{T\+R\+EE@{T\+R\+EE}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{T\+R\+EE}{TREE}}
+{\footnotesize\ttfamily \#define T\+R\+EE~1}
+
+
+
+Definition at line 35 of file util.\+h.
+
+\mbox{\Hypertarget{util_8h_abf681265909adf3d3e8116c93c0ba179}\label{util_8h_abf681265909adf3d3e8116c93c0ba179}} 
+\index{util.\+h@{util.\+h}!Y\+E\+L\+L\+OW@{Y\+E\+L\+L\+OW}}
+\index{Y\+E\+L\+L\+OW@{Y\+E\+L\+L\+OW}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{Y\+E\+L\+L\+OW}{YELLOW}}
+{\footnotesize\ttfamily \#define Y\+E\+L\+L\+OW~\char`\"{}\textbackslash{}033\mbox{[}0;33m\char`\"{}}
+
+
+
+Definition at line 30 of file util.\+h.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{util_8h_a357bbce5cdbe6618f15bf15cf62bbb6c}\label{util_8h_a357bbce5cdbe6618f15bf15cf62bbb6c}} 
+\index{util.\+h@{util.\+h}!y\+\_\+cast\+\_\+int@{y\+\_\+cast\+\_\+int}}
+\index{y\+\_\+cast\+\_\+int@{y\+\_\+cast\+\_\+int}!util.\+h@{util.\+h}}
+\subsubsection{\texorpdfstring{y\+\_\+cast\+\_\+int()}{y\_cast\_int()}}
+{\footnotesize\ttfamily y\+\_\+cast\+\_\+int (\begin{DoxyParamCaption}\item[{char $\ast$}]{string,  }\item[{int $\ast$}]{inteiro }\end{DoxyParamCaption})}
+
+
+
+Converte char em string. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em string} & passa a string para ser transformada em inteiro \\
+\hline
+{\em inteiro} & passa o inteiro que receberá a string \\
+\hline
+\end{DoxyParams}

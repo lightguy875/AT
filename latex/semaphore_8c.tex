@@ -1,0 +1,118 @@
+\hypertarget{semaphore_8c}{}\section{util/semaphore.c File Reference}
+\label{semaphore_8c}\index{util/semaphore.\+c@{util/semaphore.\+c}}
+{\ttfamily \#include \char`\"{}semaphore.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structsemaphore}{semaphore}
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{semaphore_8c_ad5d3237fa79d105bc0d56538abf91bf2}{sem\+\_\+op} (\hyperlink{semaphore_8h_af30272aba649c62df5dfbb8a3ae977ed}{Semaphore} $\ast$sem, int idx, int num, int op, int flag)
+\begin{DoxyCompactList}\small\item\em Get the index of the father of the node at the given index. \end{DoxyCompactList}\item 
+void \hyperlink{semaphore_8c_a85f7f8aba55e65d45d7e9fc8898e6b2e}{P} (\hyperlink{semaphore_8h_af30272aba649c62df5dfbb8a3ae977ed}{Semaphore} $\ast$sem)
+\begin{DoxyCompactList}\small\item\em Increase the semaphore. \end{DoxyCompactList}\item 
+void \hyperlink{semaphore_8c_a4c4d53a695e33aba0eead6a711c72f9e}{V} (\hyperlink{semaphore_8h_af30272aba649c62df5dfbb8a3ae977ed}{Semaphore} $\ast$sem)
+\begin{DoxyCompactList}\small\item\em Decrease the semaphore. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{semaphore_8c_a85f7f8aba55e65d45d7e9fc8898e6b2e}\label{semaphore_8c_a85f7f8aba55e65d45d7e9fc8898e6b2e}} 
+\index{semaphore.\+c@{semaphore.\+c}!P@{P}}
+\index{P@{P}!semaphore.\+c@{semaphore.\+c}}
+\subsubsection{\texorpdfstring{P()}{P()}}
+{\footnotesize\ttfamily void P (\begin{DoxyParamCaption}\item[{\hyperlink{semaphore_8h_af30272aba649c62df5dfbb8a3ae977ed}{Semaphore} $\ast$}]{sem }\end{DoxyParamCaption})}
+
+
+
+Increase the semaphore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sem} & the semaphore. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 14 of file semaphore.\+c.
+
+
+\begin{DoxyCode}
+14                         \{
+15     \hyperlink{semaphore_8c_ad5d3237fa79d105bc0d56538abf91bf2}{sem\_op}(sem, 0, 0, 0, 0);
+16     \hyperlink{semaphore_8c_ad5d3237fa79d105bc0d56538abf91bf2}{sem\_op}(sem, 1, 0, 1, 0);
+17 
+18     \textcolor{keywordtype}{int} res = semop(sem->\hyperlink{structsemaphore_a7441ef0865bcb3db9b8064dd7375c1ea}{id}, sem->\hyperlink{structsemaphore_ad6e484da20dc1069154e0a04e1680662}{def}, 2);
+19 
+20     \textcolor{keywordflow}{if} (res < 0) \{
+21         printf(\textcolor{stringliteral}{"Erro no p=%d\(\backslash\)n"}, errno);
+22     \}
+23 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{semaphore_8c_ad5d3237fa79d105bc0d56538abf91bf2}\label{semaphore_8c_ad5d3237fa79d105bc0d56538abf91bf2}} 
+\index{semaphore.\+c@{semaphore.\+c}!sem\+\_\+op@{sem\+\_\+op}}
+\index{sem\+\_\+op@{sem\+\_\+op}!semaphore.\+c@{semaphore.\+c}}
+\subsubsection{\texorpdfstring{sem\+\_\+op()}{sem\_op()}}
+{\footnotesize\ttfamily void sem\+\_\+op (\begin{DoxyParamCaption}\item[{\hyperlink{semaphore_8h_af30272aba649c62df5dfbb8a3ae977ed}{Semaphore} $\ast$}]{sem,  }\item[{int}]{idx,  }\item[{int}]{num,  }\item[{int}]{op,  }\item[{int}]{flag }\end{DoxyParamCaption})}
+
+
+
+Get the index of the father of the node at the given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sem} & the semaphore. \\
+\hline
+{\em idx} & the index. \\
+\hline
+{\em num} & the number of operations. \\
+\hline
+{\em op} & the operation. \\
+\hline
+{\em flag} & the flag. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 8 of file semaphore.\+c.
+
+
+\begin{DoxyCode}
+8                                                                  \{
+9   sem->\hyperlink{structsemaphore_ad6e484da20dc1069154e0a04e1680662}{def}[idx].sem\_num = num;
+10   sem->\hyperlink{structsemaphore_ad6e484da20dc1069154e0a04e1680662}{def}[idx].sem\_op = op;
+11   sem->\hyperlink{structsemaphore_ad6e484da20dc1069154e0a04e1680662}{def}[idx].sem\_flg = flag;
+12 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{semaphore_8c_a4c4d53a695e33aba0eead6a711c72f9e}\label{semaphore_8c_a4c4d53a695e33aba0eead6a711c72f9e}} 
+\index{semaphore.\+c@{semaphore.\+c}!V@{V}}
+\index{V@{V}!semaphore.\+c@{semaphore.\+c}}
+\subsubsection{\texorpdfstring{V()}{V()}}
+{\footnotesize\ttfamily void V (\begin{DoxyParamCaption}\item[{\hyperlink{semaphore_8h_af30272aba649c62df5dfbb8a3ae977ed}{Semaphore} $\ast$}]{sem }\end{DoxyParamCaption})}
+
+
+
+Decrease the semaphore. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em sem} & the semaphore. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 25 of file semaphore.\+c.
+
+
+\begin{DoxyCode}
+25                         \{
+26     \hyperlink{semaphore_8c_ad5d3237fa79d105bc0d56538abf91bf2}{sem\_op}(sem, 0, 0, -1, 0);
+27 
+28     \textcolor{keywordtype}{int} res = semop(sem->\hyperlink{structsemaphore_a7441ef0865bcb3db9b8064dd7375c1ea}{id}, sem->\hyperlink{structsemaphore_ad6e484da20dc1069154e0a04e1680662}{def}, 2);
+29 
+30     \textcolor{keywordflow}{if} (res < 0) \{
+31         printf(\textcolor{stringliteral}{"Erro no p=%d\(\backslash\)n"}, errno);
+32     \}
+33 \}
+\end{DoxyCode}

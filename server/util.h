@@ -49,5 +49,6 @@
  * 
  * @param string passa a string para ser transformada em inteiro
  * @param inteiro  passa o inteiro que receberá a string
+ * @return retorna um booleano
  */
-y_cast_int (char* string, int* inteiro);
+bool try_cast_int (char* string, int* inteiro);

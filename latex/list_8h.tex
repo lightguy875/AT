@@ -1,0 +1,275 @@
+\hypertarget{list_8h}{}\section{server/list.h File Reference}
+\label{list_8h}\index{server/list.\+h@{server/list.\+h}}
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+{\ttfamily \#include \char`\"{}job.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structnode}{node}
+\begin{DoxyCompactList}\small\item\em A node. The node of a doubly linked list. \end{DoxyCompactList}\item 
+struct \hyperlink{structlist}{list}
+\begin{DoxyCompactList}\small\item\em A list. A doubly linked list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structnode}{node} \hyperlink{list_8h_aba087cc5af103c72c4e5864cc5622196}{Node}
+\begin{DoxyCompactList}\small\item\em A node. The node of a doubly linked list. \end{DoxyCompactList}\item 
+typedef struct \hyperlink{structlist}{list} \hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List}
+\begin{DoxyCompactList}\small\item\em A list. A doubly linked list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{list_8h_aba087cc5af103c72c4e5864cc5622196}{Node} $\ast$ \hyperlink{list_8h_a97ec527534bf7994c2716d1ea0b41b44}{node\+\_\+create} (void $\ast$value)
+\begin{DoxyCompactList}\small\item\em Create a node. \end{DoxyCompactList}\item 
+\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$ \hyperlink{list_8h_a0ae9f0f842f635774a6670ab93809fb2}{list\+\_\+create} ()
+\begin{DoxyCompactList}\small\item\em Create a list. \end{DoxyCompactList}\item 
+void \hyperlink{list_8h_a18ebf6fb09526d9e5a7a6179e126c89e}{list\+\_\+push\+\_\+back} (\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$\hyperlink{structlist}{list}, void $\ast$value)
+\begin{DoxyCompactList}\small\item\em Add node to the end of the list. \end{DoxyCompactList}\item 
+void $\ast$ \hyperlink{list_8h_ad237c0d5abeded31798fea824aa92f97}{list\+\_\+pop\+\_\+back} (\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$\hyperlink{structlist}{list})
+\begin{DoxyCompactList}\small\item\em Remove last node. \end{DoxyCompactList}\item 
+void \hyperlink{list_8h_ad720671a4abc61ed689060cacc592565}{list\+\_\+destroy} (\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$\hyperlink{structlist}{list})
+\begin{DoxyCompactList}\small\item\em Destroy and free everything in the list. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Luís Eduardo Luz Sila -\/ 15/0137885 
+
+Claudio Segala Rodrigues Filho 15/0032552 
+
+Yan Victor dos Santos 14/0033599 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2019-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2019 
+\end{DoxyCopyright}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{list_8h_aea9600c17a2a32b560e34fa5a386afe9}\label{list_8h_aea9600c17a2a32b560e34fa5a386afe9}} 
+\index{list.\+h@{list.\+h}!List@{List}}
+\index{List@{List}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{List}{List}}
+{\footnotesize\ttfamily typedef struct \hyperlink{structlist}{list}  \hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List}}
+
+
+
+A list. A doubly linked list. 
+
+\mbox{\Hypertarget{list_8h_aba087cc5af103c72c4e5864cc5622196}\label{list_8h_aba087cc5af103c72c4e5864cc5622196}} 
+\index{list.\+h@{list.\+h}!Node@{Node}}
+\index{Node@{Node}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{Node}{Node}}
+{\footnotesize\ttfamily typedef struct \hyperlink{structnode}{node}  \hyperlink{list_8h_aba087cc5af103c72c4e5864cc5622196}{Node}}
+
+
+
+A node. The node of a doubly linked list. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{list_8h_a0ae9f0f842f635774a6670ab93809fb2}\label{list_8h_a0ae9f0f842f635774a6670ab93809fb2}} 
+\index{list.\+h@{list.\+h}!list\+\_\+create@{list\+\_\+create}}
+\index{list\+\_\+create@{list\+\_\+create}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{list\+\_\+create()}{list\_create()}}
+{\footnotesize\ttfamily \hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List}$\ast$ list\+\_\+create (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Create a list. 
+
+\begin{DoxyReturn}{Returns}
+List$\ast$ a pointer to the list created. 
+\end{DoxyReturn}
+
+
+Definition at line 18 of file list.\+c.
+
+
+\begin{DoxyCode}
+18                     \{
+19     \hyperlink{structlist}{List} *\hyperlink{structlist}{list} = (\hyperlink{structlist}{List}*) malloc(\textcolor{keyword}{sizeof}(\hyperlink{structlist}{List}));
+20 
+21     list->\hyperlink{structlist_a0e1ea19fb9fa7881d15d84eff4c090e1}{sz} = 0;
+22     list->\hyperlink{structlist_a4608ed60ff5a6f2ada6dc6e4744c299f}{begin} = NULL;
+23     list->\hyperlink{structlist_a8a6d5d9008d8b6eac4a8edb8fbb1f191}{end} = NULL;
+24 
+25     \textcolor{keywordflow}{return} list;
+26 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{list_8h_ad720671a4abc61ed689060cacc592565}\label{list_8h_ad720671a4abc61ed689060cacc592565}} 
+\index{list.\+h@{list.\+h}!list\+\_\+destroy@{list\+\_\+destroy}}
+\index{list\+\_\+destroy@{list\+\_\+destroy}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{list\+\_\+destroy()}{list\_destroy()}}
+{\footnotesize\ttfamily void list\+\_\+destroy (\begin{DoxyParamCaption}\item[{\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$}]{list }\end{DoxyParamCaption})}
+
+
+
+Destroy and free everything in the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 71 of file list.\+c.
+
+
+\begin{DoxyCode}
+71                               \{
+72     \hyperlink{structnode}{Node} *curr = list->\hyperlink{structlist_a4608ed60ff5a6f2ada6dc6e4744c299f}{begin};
+73 
+74     \textcolor{keywordflow}{while} (curr != NULL) \{
+75         \hyperlink{structnode}{Node} *aux = curr->\hyperlink{structnode_a745e59ece59d43566f37915138c7aee3}{nxt};
+76 
+77         free(curr);
+78 
+79         curr = aux;
+80     \}
+81 
+82     free(list);
+83     list = NULL;
+84 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{list_8h_ad237c0d5abeded31798fea824aa92f97}\label{list_8h_ad237c0d5abeded31798fea824aa92f97}} 
+\index{list.\+h@{list.\+h}!list\+\_\+pop\+\_\+back@{list\+\_\+pop\+\_\+back}}
+\index{list\+\_\+pop\+\_\+back@{list\+\_\+pop\+\_\+back}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{list\+\_\+pop\+\_\+back()}{list\_pop\_back()}}
+{\footnotesize\ttfamily void$\ast$ list\+\_\+pop\+\_\+back (\begin{DoxyParamCaption}\item[{\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$}]{list }\end{DoxyParamCaption})}
+
+
+
+Remove last node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & a list. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+void$\ast$ pointer to the value of the returned 
+\end{DoxyReturn}
+
+
+Definition at line 45 of file list.\+c.
+
+
+\begin{DoxyCode}
+45                                 \{
+46     \textcolor{keywordflow}{if} (list->\hyperlink{structlist_a0e1ea19fb9fa7881d15d84eff4c090e1}{sz}) \{
+47         list->\hyperlink{structlist_a0e1ea19fb9fa7881d15d84eff4c090e1}{sz}--;
+48 
+49         \hyperlink{structnode}{Node} *last = list->\hyperlink{structlist_a8a6d5d9008d8b6eac4a8edb8fbb1f191}{end};
+50         \hyperlink{structnode}{Node} *penultimate = last->\hyperlink{structnode_a530843171ca1a6e033bac999737cb184}{prev};
+51 
+52         list->\hyperlink{structlist_a8a6d5d9008d8b6eac4a8edb8fbb1f191}{end} = penultimate;
+53         last->\hyperlink{structnode_a530843171ca1a6e033bac999737cb184}{prev} = NULL;
+54 
+55         \textcolor{keywordflow}{if} (penultimate == NULL) \{
+56             list->\hyperlink{structlist_a4608ed60ff5a6f2ada6dc6e4744c299f}{begin} = NULL;
+57         \} \textcolor{keywordflow}{else} \{
+58             penultimate->\hyperlink{structnode_a745e59ece59d43566f37915138c7aee3}{nxt} = NULL;
+59         \}
+60 
+61         \textcolor{keywordtype}{void}* value = last->\hyperlink{structnode_a0f61d63b009d0880a89c843bd50d8d76}{value};
+62 
+63         free(last);
+64 
+65         \textcolor{keywordflow}{return} value;
+66     \}
+67 
+68     \textcolor{keywordflow}{return} NULL;
+69 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{list_8h_a18ebf6fb09526d9e5a7a6179e126c89e}\label{list_8h_a18ebf6fb09526d9e5a7a6179e126c89e}} 
+\index{list.\+h@{list.\+h}!list\+\_\+push\+\_\+back@{list\+\_\+push\+\_\+back}}
+\index{list\+\_\+push\+\_\+back@{list\+\_\+push\+\_\+back}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{list\+\_\+push\+\_\+back()}{list\_push\_back()}}
+{\footnotesize\ttfamily void list\+\_\+push\+\_\+back (\begin{DoxyParamCaption}\item[{\hyperlink{list_8h_aea9600c17a2a32b560e34fa5a386afe9}{List} $\ast$}]{list,  }\item[{void $\ast$}]{value }\end{DoxyParamCaption})}
+
+
+
+Add node to the end of the list. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em list} & a list. \\
+\hline
+{\em value} & a value to be stored in the node. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 28 of file list.\+c.
+
+
+\begin{DoxyCode}
+28                                              \{
+29     \hyperlink{structnode}{Node} *\textcolor{keyword}{new} = \hyperlink{list_8c_a97ec527534bf7994c2716d1ea0b41b44}{node\_create}(value); 
+30 
+31     \textcolor{keywordflow}{if} (list->\hyperlink{structlist_a0e1ea19fb9fa7881d15d84eff4c090e1}{sz}) \{
+32         \hyperlink{structnode}{Node} *last = list->\hyperlink{structlist_a8a6d5d9008d8b6eac4a8edb8fbb1f191}{end};
+33 
+34         last->\hyperlink{structnode_a745e59ece59d43566f37915138c7aee3}{nxt} = \textcolor{keyword}{new};
+35         \textcolor{keyword}{new}->\hyperlink{structnode_a530843171ca1a6e033bac999737cb184}{prev} = last;
+36 
+37         list->\hyperlink{structlist_a8a6d5d9008d8b6eac4a8edb8fbb1f191}{end} = \textcolor{keyword}{new};
+38     \} \textcolor{keywordflow}{else} \{
+39         list->\hyperlink{structlist_a4608ed60ff5a6f2ada6dc6e4744c299f}{begin} = list->\hyperlink{structlist_a8a6d5d9008d8b6eac4a8edb8fbb1f191}{end} = \textcolor{keyword}{new};
+40     \}
+41 
+42     list->\hyperlink{structlist_a0e1ea19fb9fa7881d15d84eff4c090e1}{sz}++;
+43 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{list_8h_a97ec527534bf7994c2716d1ea0b41b44}\label{list_8h_a97ec527534bf7994c2716d1ea0b41b44}} 
+\index{list.\+h@{list.\+h}!node\+\_\+create@{node\+\_\+create}}
+\index{node\+\_\+create@{node\+\_\+create}!list.\+h@{list.\+h}}
+\subsubsection{\texorpdfstring{node\+\_\+create()}{node\_create()}}
+{\footnotesize\ttfamily \hyperlink{list_8h_aba087cc5af103c72c4e5864cc5622196}{Node}$\ast$ node\+\_\+create (\begin{DoxyParamCaption}\item[{void $\ast$}]{value }\end{DoxyParamCaption})}
+
+
+
+Create a node. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & a void pointer to the value. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node$\ast$ a pointer to the node
+\end{DoxyReturn}
+Create a node.
+
+
+\begin{DoxyParams}{Parameters}
+{\em value} & O valor \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Node$\ast$ 
+\end{DoxyReturn}
+
+
+Definition at line 8 of file list.\+c.
+
+
+\begin{DoxyCode}
+8                                \{
+9     \hyperlink{structnode}{Node} *\hyperlink{structnode}{node} = (\hyperlink{structnode}{Node}*) malloc(\textcolor{keyword}{sizeof}(\hyperlink{structnode}{Node}));
+10 
+11     node->\hyperlink{structnode_a530843171ca1a6e033bac999737cb184}{prev} = NULL;
+12     node->\hyperlink{structnode_a745e59ece59d43566f37915138c7aee3}{nxt} = NULL;
+13     node->\hyperlink{structnode_a0f61d63b009d0880a89c843bd50d8d76}{value} = value;
+14 
+15     \textcolor{keywordflow}{return} node;
+16 \}
+\end{DoxyCode}

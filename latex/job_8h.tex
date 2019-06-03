@@ -1,0 +1,105 @@
+\hypertarget{job_8h}{}\section{server/job.h File Reference}
+\label{job_8h}\index{server/job.\+h@{server/job.\+h}}
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+\subsection*{Data Structures}
+\begin{DoxyCompactItemize}
+\item 
+struct \hyperlink{structjob}{job}
+\begin{DoxyCompactList}\small\item\em Um job com toda a estrutura que compõe o job. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Typedefs}
+\begin{DoxyCompactItemize}
+\item 
+typedef struct \hyperlink{structjob}{job} \hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job}
+\begin{DoxyCompactList}\small\item\em Um job com toda a estrutura que compõe o job. \end{DoxyCompactList}\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+\hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job} $\ast$ \hyperlink{job_8h_aa75fe7690cd3a87e6d8e8ec15c93b496}{job\+\_\+create} (int id, int seconds, char $\ast$filename, int delay)
+\begin{DoxyCompactList}\small\item\em Create a job. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Luís Eduardo Luz Sila -\/ 15/0137885 
+
+Claudio Segala Rodrigues Filho 15/0032552 
+
+Yan Victor dos Santos 14/0033599 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2019-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2019 
+\end{DoxyCopyright}
+
+
+\subsection{Typedef Documentation}
+\mbox{\Hypertarget{job_8h_aae990edc4ebc341dde4984ca7e744145}\label{job_8h_aae990edc4ebc341dde4984ca7e744145}} 
+\index{job.\+h@{job.\+h}!Job@{Job}}
+\index{Job@{Job}!job.\+h@{job.\+h}}
+\subsubsection{\texorpdfstring{Job}{Job}}
+{\footnotesize\ttfamily typedef struct \hyperlink{structjob}{job}  \hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job}}
+
+
+
+Um job com toda a estrutura que compõe o job. 
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{job_8h_aa75fe7690cd3a87e6d8e8ec15c93b496}\label{job_8h_aa75fe7690cd3a87e6d8e8ec15c93b496}} 
+\index{job.\+h@{job.\+h}!job\+\_\+create@{job\+\_\+create}}
+\index{job\+\_\+create@{job\+\_\+create}!job.\+h@{job.\+h}}
+\subsubsection{\texorpdfstring{job\+\_\+create()}{job\_create()}}
+{\footnotesize\ttfamily \hyperlink{job_8h_aae990edc4ebc341dde4984ca7e744145}{Job}$\ast$ job\+\_\+create (\begin{DoxyParamCaption}\item[{int}]{id,  }\item[{int}]{seconds,  }\item[{char $\ast$}]{filename,  }\item[{int}]{delay }\end{DoxyParamCaption})}
+
+
+
+Create a job. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em job} & id \\
+\hline
+{\em seconds} & \\
+\hline
+{\em filename} & \\
+\hline
+{\em delay} & \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+Job$\ast$ a pointer to the node 
+\end{DoxyReturn}
+
+
+Definition at line 4 of file job.\+c.
+
+
+\begin{DoxyCode}
+4                                                                 \{
+5     \hyperlink{structjob}{Job} *\hyperlink{structjob}{job} = (\hyperlink{structjob}{Job}*)malloc(\textcolor{keyword}{sizeof}(\hyperlink{structjob}{Job}));
+6 
+7     job->\hyperlink{structjob_a7441ef0865bcb3db9b8064dd7375c1ea}{id} = id;
+8     job->\hyperlink{structjob_a77bd4f876bdc3afed5acdd936f775d34}{seconds} = seconds;
+9     job->\hyperlink{structjob_a6f1be1f780ff54ec75b41451cd4d90bd}{delay} = delay;
+10     job->\hyperlink{structjob_a1d39aac66e12dae50a24cd7a9100ef33}{done} = \textcolor{keyword}{false};
+11     job->\hyperlink{structjob_a672ef807e8a5c395641b197cd1606fdc}{submission} = time(NULL);
+12     job->\hyperlink{structjob_a37722a150250e2a5a98e5e0d11e53449}{start} = 0;
+13     job->\hyperlink{structjob_a57079404ddb95b02cddb408cc7c0e4b8}{finish} = 0;
+14     job->\hyperlink{structjob_a4eff08519948266efdd345aabe6ecbbb}{completed} = 0;
+15 
+16     strcpy(job->\hyperlink{structjob_aa9a76d9571bf39c3d168d222f931ff86}{filename}, filename);
+17 
+18     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}; i++) \{
+19         job->\hyperlink{structjob_a4d48877440cfb156064d9d483b50bd2f}{node\_time}[i] = -1;
+20         job->\hyperlink{structjob_a7cf416c88da5b0c8528923c4a453b7c7}{node\_pid}[i] = -1;
+21     \}
+22 
+23     \textcolor{keywordflow}{return} job;
+24 \}
+\end{DoxyCode}

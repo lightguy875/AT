@@ -1,0 +1,116 @@
+\hypertarget{torus_8h}{}\section{server/torus.h File Reference}
+\label{torus_8h}\index{server/torus.\+h@{server/torus.\+h}}
+{\ttfamily \#include \char`\"{}util.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{torus_8h_a9540dca4df3b1305b1751f01889cf5f5}{tr\+\_\+make} (int $\ast$tr)
+\begin{DoxyCompactList}\small\item\em Initializa the structure. \end{DoxyCompactList}\item 
+int \hyperlink{torus_8h_ac1e9c9daa1de6239a5a3db3af75b61c0}{tr\+\_\+up} (int idx)
+\begin{DoxyCompactList}\small\item\em Get the index of the father of the node at the given index. \end{DoxyCompactList}\item 
+void \hyperlink{torus_8h_acc28442ebb6bfcfdae8f750ea52181c2}{tr\+\_\+down} (int idx, int ans\mbox{[}$\,$\mbox{]})
+\begin{DoxyCompactList}\small\item\em Get the index of the sons of the node at the given index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Detailed Description}
+\begin{DoxyAuthor}{Author}
+Luís Eduardo Luz Sila -\/ 15/0137885 
+
+Claudio Segala Rodrigues Filho 15/0032552 
+
+Yan Victor dos Santos 14/0033599 
+\end{DoxyAuthor}
+\begin{DoxyVersion}{Version}
+0.\+1 
+\end{DoxyVersion}
+\begin{DoxyDate}{Date}
+2019-\/06-\/03
+\end{DoxyDate}
+\begin{DoxyCopyright}{Copyright}
+Copyright (c) 2019 
+\end{DoxyCopyright}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{torus_8h_acc28442ebb6bfcfdae8f750ea52181c2}\label{torus_8h_acc28442ebb6bfcfdae8f750ea52181c2}} 
+\index{torus.\+h@{torus.\+h}!tr\+\_\+down@{tr\+\_\+down}}
+\index{tr\+\_\+down@{tr\+\_\+down}!torus.\+h@{torus.\+h}}
+\subsubsection{\texorpdfstring{tr\+\_\+down()}{tr\_down()}}
+{\footnotesize\ttfamily void tr\+\_\+down (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{int}]{ans\mbox{[}$\,$\mbox{]} }\end{DoxyParamCaption})}
+
+
+
+Get the index of the sons of the node at the given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & the index. \\
+\hline
+{\em ans} & the output, it should be at least 2, the rest will be filled with -\/1. \\
+\hline
+\end{DoxyParams}
+\mbox{\Hypertarget{torus_8h_a9540dca4df3b1305b1751f01889cf5f5}\label{torus_8h_a9540dca4df3b1305b1751f01889cf5f5}} 
+\index{torus.\+h@{torus.\+h}!tr\+\_\+make@{tr\+\_\+make}}
+\index{tr\+\_\+make@{tr\+\_\+make}!torus.\+h@{torus.\+h}}
+\subsubsection{\texorpdfstring{tr\+\_\+make()}{tr\_make()}}
+{\footnotesize\ttfamily void tr\+\_\+make (\begin{DoxyParamCaption}\item[{int $\ast$}]{tr }\end{DoxyParamCaption})}
+
+
+
+Initializa the structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em tr} & an array to store the structure. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 3 of file torus.\+c.
+
+
+\begin{DoxyCode}
+3                       \{
+4     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}; i++) \{
+5         tr[i] = -1;
+6     \}
+7 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{torus_8h_ac1e9c9daa1de6239a5a3db3af75b61c0}\label{torus_8h_ac1e9c9daa1de6239a5a3db3af75b61c0}} 
+\index{torus.\+h@{torus.\+h}!tr\+\_\+up@{tr\+\_\+up}}
+\index{tr\+\_\+up@{tr\+\_\+up}!torus.\+h@{torus.\+h}}
+\subsubsection{\texorpdfstring{tr\+\_\+up()}{tr\_up()}}
+{\footnotesize\ttfamily int tr\+\_\+up (\begin{DoxyParamCaption}\item[{int}]{idx }\end{DoxyParamCaption})}
+
+
+
+Get the index of the father of the node at the given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & the index. \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int The index of the father
+\end{DoxyReturn}
+Get the index of the father of the node at the given index.
+
+Structure\+: root node 1 12 13 14 15 8 9 10 11 4 5 6 7 0 1 2 3 // First line 
+
+Definition at line 18 of file torus.\+c.
+
+
+\begin{DoxyCode}
+18                     \{
+19     \textcolor{keywordflow}{if} (idx) \{ \textcolor{comment}{// if isn't the root node}
+20         \textcolor{keywordflow}{if}(idx > \hyperlink{util_8h_a52037c938e3c1b126c6277da5ca689d0}{M}) \{\textcolor{comment}{// if top line, send to first line}
+21             \textcolor{keywordflow}{return} idx - \hyperlink{util_8h_a52037c938e3c1b126c6277da5ca689d0}{M}; 
+22         \} \textcolor{keywordflow}{else} \{
+23             \textcolor{keywordflow}{return} idx - 1;
+24         \}
+25     \} \textcolor{keywordflow}{else} \{ \textcolor{comment}{// if root node, send to scheduler}
+26         \textcolor{keywordflow}{return} \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N};
+27     \}
+28 \}
+\end{DoxyCode}

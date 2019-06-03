@@ -1,0 +1,143 @@
+\hypertarget{shutdown_2main_8c}{}\section{shutdown/main.c File Reference}
+\label{shutdown_2main_8c}\index{shutdown/main.\+c@{shutdown/main.\+c}}
+{\ttfamily \#include $<$stdbool.\+h$>$}\newline
+{\ttfamily \#include $<$stdio.\+h$>$}\newline
+{\ttfamily \#include $<$stdlib.\+h$>$}\newline
+{\ttfamily \#include $<$string.\+h$>$}\newline
+{\ttfamily \#include $<$time.\+h$>$}\newline
+{\ttfamily \#include $<$unistd.\+h$>$}\newline
+{\ttfamily \#include $<$errno.\+h$>$}\newline
+{\ttfamily \#include $<$sys/types.\+h$>$}\newline
+{\ttfamily \#include $<$sys/wait.\+h$>$}\newline
+{\ttfamily \#include $<$sys/stat.\+h$>$}\newline
+{\ttfamily \#include $<$sys/ipc.\+h$>$}\newline
+{\ttfamily \#include $<$sys/msg.\+h$>$}\newline
+{\ttfamily \#include $<$signal.\+h$>$}\newline
+{\ttfamily \#include \char`\"{}message.\+h\char`\"{}}\newline
+\subsection*{Macros}
+\begin{DoxyCompactItemize}
+\item 
+\#define \hyperlink{shutdown_2main_8c_a1b3f65587b48bff0583fb85181991b01}{S\+C\+H\+E\+D\+U\+L\+ER}~200
+\item 
+\#define \hyperlink{shutdown_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}{S\+H\+U\+T\+D\+O\+WN}~201
+\item 
+\#define \hyperlink{shutdown_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}{K\+EY}~15003
+\item 
+\#define \hyperlink{shutdown_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}~15
+\item 
+\#define \hyperlink{shutdown_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(x)~printf(\char`\"{}\textbackslash{}033\mbox{[}0;32m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);
+\item 
+\#define \hyperlink{shutdown_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(x)~printf(\char`\"{}\textbackslash{}033\mbox{[}0;31m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);
+\end{DoxyCompactItemize}
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+int \hyperlink{shutdown_2main_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}{main} ()
+\end{DoxyCompactItemize}
+
+
+\subsection{Macro Definition Documentation}
+\mbox{\Hypertarget{shutdown_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}\label{shutdown_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!E@{E}}
+\index{E@{E}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{E}{E}}
+{\footnotesize\ttfamily \#define E(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~printf(\char`\"{}\textbackslash{}033\mbox{[}0;31m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);}
+
+
+
+Definition at line 38 of file main.\+c.
+
+\mbox{\Hypertarget{shutdown_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}\label{shutdown_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!K\+EY@{K\+EY}}
+\index{K\+EY@{K\+EY}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{K\+EY}{KEY}}
+{\footnotesize\ttfamily \#define K\+EY~15003}
+
+
+
+Definition at line 34 of file main.\+c.
+
+\mbox{\Hypertarget{shutdown_2main_8c_a0240ac851181b84ac374872dc5434ee4}\label{shutdown_2main_8c_a0240ac851181b84ac374872dc5434ee4}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!N@{N}}
+\index{N@{N}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{N}{N}}
+{\footnotesize\ttfamily \#define N~15}
+
+
+
+Definition at line 35 of file main.\+c.
+
+\mbox{\Hypertarget{shutdown_2main_8c_ac4a3ed3432929804c708f7760fb79e28}\label{shutdown_2main_8c_ac4a3ed3432929804c708f7760fb79e28}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!S@{S}}
+\index{S@{S}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{S}{S}}
+{\footnotesize\ttfamily \#define S(\begin{DoxyParamCaption}\item[{}]{x }\end{DoxyParamCaption})~printf(\char`\"{}\textbackslash{}033\mbox{[}0;32m\%s\textbackslash{}033\mbox{[}0m\textbackslash{}n\char`\"{}, x);}
+
+
+
+Definition at line 37 of file main.\+c.
+
+\mbox{\Hypertarget{shutdown_2main_8c_a1b3f65587b48bff0583fb85181991b01}\label{shutdown_2main_8c_a1b3f65587b48bff0583fb85181991b01}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!S\+C\+H\+E\+D\+U\+L\+ER@{S\+C\+H\+E\+D\+U\+L\+ER}}
+\index{S\+C\+H\+E\+D\+U\+L\+ER@{S\+C\+H\+E\+D\+U\+L\+ER}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{S\+C\+H\+E\+D\+U\+L\+ER}{SCHEDULER}}
+{\footnotesize\ttfamily \#define S\+C\+H\+E\+D\+U\+L\+ER~200}
+
+
+
+Definition at line 31 of file main.\+c.
+
+\mbox{\Hypertarget{shutdown_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}\label{shutdown_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!S\+H\+U\+T\+D\+O\+WN@{S\+H\+U\+T\+D\+O\+WN}}
+\index{S\+H\+U\+T\+D\+O\+WN@{S\+H\+U\+T\+D\+O\+WN}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{S\+H\+U\+T\+D\+O\+WN}{SHUTDOWN}}
+{\footnotesize\ttfamily \#define S\+H\+U\+T\+D\+O\+WN~201}
+
+
+
+Definition at line 32 of file main.\+c.
+
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{shutdown_2main_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}\label{shutdown_2main_8c_ae66f6b31b5ad750f1fe042a706a4e3d4}} 
+\index{shutdown/main.\+c@{shutdown/main.\+c}!main@{main}}
+\index{main@{main}!shutdown/main.\+c@{shutdown/main.\+c}}
+\subsubsection{\texorpdfstring{main()}{main()}}
+{\footnotesize\ttfamily int main (\begin{DoxyParamCaption}{ }\end{DoxyParamCaption})}
+
+
+
+Definition at line 40 of file main.\+c.
+
+
+\begin{DoxyCode}
+40             \{
+41     \textcolor{keywordtype}{int} key = \hyperlink{shutdown_2main_8c_a8ae9d53f33f46cfcfcb9736e6351452a}{KEY}; \textcolor{comment}{// matricula truncada}
+42     \textcolor{keywordtype}{int} \hyperlink{server_2main_8c_a9069963fa1ce9797b853db16f9845d58}{queue\_id} = msgget(key, S\_IWUSR);
+43 
+44     \textcolor{keywordflow}{if} (queue\_id < 0) \{
+45         \hyperlink{shutdown_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to get queue"});
+46     \} \textcolor{keywordflow}{else} \{
+47         \hyperlink{shutdown_2main_8c_ac4a3ed3432929804c708f7760fb79e28}{S}(\textcolor{stringliteral}{"Got the queue"});
+48     \}
+49 
+50     \textcolor{keywordtype}{int} count = \hyperlink{shutdown_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N} + 1;
+51 
+52     \textcolor{keywordflow}{while} (count--) \{
+53         \hyperlink{structmsgbuf}{Msg} msg;
+54 
+55         \textcolor{keywordtype}{int} virtual\_queue = \hyperlink{shutdown_2main_8c_a3b61478edd7c1b25c8facd2907cf6c33}{SHUTDOWN};
+56         \textcolor{keywordtype}{int} res = msgrcv(queue\_id, &msg, \textcolor{keyword}{sizeof}(\hyperlink{structmsgbuf}{Msg}) - \textcolor{keyword}{sizeof}(\textcolor{keywordtype}{long}), virtual\_queue, 0);
+57         
+58         \textcolor{keywordflow}{if} (res < 0) \{
+59             \hyperlink{shutdown_2main_8c_a2891ffdd60b058e9dd46aa71cb738129}{E}(\textcolor{stringliteral}{"Failed to receive message. Maybe the queue died?"});
+60             \textcolor{keywordflow}{break};
+61         \}
+62 
+63         kill(msg.\hyperlink{structmsgbuf_a7350fbd6ad10618f3b750b1f99ca5c3c}{id}, SIGUSR1);
+64     \}
+65 
+66     \textcolor{keywordflow}{return} 0;
+67 \}
+\end{DoxyCode}

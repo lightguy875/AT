@@ -1,0 +1,101 @@
+\hypertarget{tree_8c}{}\section{server/tree.c File Reference}
+\label{tree_8c}\index{server/tree.\+c@{server/tree.\+c}}
+{\ttfamily \#include \char`\"{}tree.\+h\char`\"{}}\newline
+\subsection*{Functions}
+\begin{DoxyCompactItemize}
+\item 
+void \hyperlink{tree_8c_ab0b61eccd46e38d01122850aa889ec8b}{ft\+\_\+make} (int $\ast$ft)
+\begin{DoxyCompactList}\small\item\em Create a new tree structure. \end{DoxyCompactList}\item 
+int \hyperlink{tree_8c_acbd6abfeadedf195ad06a95233dede47}{ft\+\_\+up} (int idx)
+\begin{DoxyCompactList}\small\item\em Access up values from fat tree. \end{DoxyCompactList}\item 
+void \hyperlink{tree_8c_a58ddef16457786db1cb0aa9862480d90}{ft\+\_\+down} (int idx, int $\ast$ans)
+\begin{DoxyCompactList}\small\item\em Get the index of the sons of the node at the given index. \end{DoxyCompactList}\end{DoxyCompactItemize}
+
+
+\subsection{Function Documentation}
+\mbox{\Hypertarget{tree_8c_a58ddef16457786db1cb0aa9862480d90}\label{tree_8c_a58ddef16457786db1cb0aa9862480d90}} 
+\index{tree.\+c@{tree.\+c}!ft\+\_\+down@{ft\+\_\+down}}
+\index{ft\+\_\+down@{ft\+\_\+down}!tree.\+c@{tree.\+c}}
+\subsubsection{\texorpdfstring{ft\+\_\+down()}{ft\_down()}}
+{\footnotesize\ttfamily void ft\+\_\+down (\begin{DoxyParamCaption}\item[{int}]{idx,  }\item[{int $\ast$}]{ans }\end{DoxyParamCaption})}
+
+
+
+Get the index of the sons of the node at the given index. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & the index. \\
+\hline
+{\em ans} & the output, it should be at least 2, the rest will be filled with -\/1. \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 16 of file tree.\+c.
+
+
+\begin{DoxyCode}
+16                                 \{
+17     ans[0] = (2 * idx + 1 < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}) ? 2 * idx + 1 : -1;
+18     ans[1] = (2 * idx + 2 < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}) ? 2 * idx + 2 : -1;
+19 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{tree_8c_ab0b61eccd46e38d01122850aa889ec8b}\label{tree_8c_ab0b61eccd46e38d01122850aa889ec8b}} 
+\index{tree.\+c@{tree.\+c}!ft\+\_\+make@{ft\+\_\+make}}
+\index{ft\+\_\+make@{ft\+\_\+make}!tree.\+c@{tree.\+c}}
+\subsubsection{\texorpdfstring{ft\+\_\+make()}{ft\_make()}}
+{\footnotesize\ttfamily void ft\+\_\+make (\begin{DoxyParamCaption}\item[{int $\ast$}]{ft }\end{DoxyParamCaption})}
+
+
+
+Create a new tree structure. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em ft} & an array to start the structure \\
+\hline
+\end{DoxyParams}
+
+
+Definition at line 3 of file tree.\+c.
+
+
+\begin{DoxyCode}
+3                       \{
+4     \textcolor{keywordflow}{for} (\textcolor{keywordtype}{int} i = 0; i < \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N}; i++) \{
+5         ft[i] = -1;
+6     \}
+7 \}
+\end{DoxyCode}
+\mbox{\Hypertarget{tree_8c_acbd6abfeadedf195ad06a95233dede47}\label{tree_8c_acbd6abfeadedf195ad06a95233dede47}} 
+\index{tree.\+c@{tree.\+c}!ft\+\_\+up@{ft\+\_\+up}}
+\index{ft\+\_\+up@{ft\+\_\+up}!tree.\+c@{tree.\+c}}
+\subsubsection{\texorpdfstring{ft\+\_\+up()}{ft\_up()}}
+{\footnotesize\ttfamily int ft\+\_\+up (\begin{DoxyParamCaption}\item[{int}]{idx }\end{DoxyParamCaption})}
+
+
+
+Access up values from fat tree. 
+
+
+\begin{DoxyParams}{Parameters}
+{\em idx} & index \\
+\hline
+\end{DoxyParams}
+\begin{DoxyReturn}{Returns}
+int 
+\end{DoxyReturn}
+
+
+Definition at line 9 of file tree.\+c.
+
+
+\begin{DoxyCode}
+9                     \{
+10   \textcolor{keywordflow}{if} (idx)
+11       \textcolor{keywordflow}{return} (idx - 1) / 2;
+12   
+13   \textcolor{keywordflow}{return} \hyperlink{client_2main_8c_a0240ac851181b84ac374872dc5434ee4}{N};
+14 \}
+\end{DoxyCode}
