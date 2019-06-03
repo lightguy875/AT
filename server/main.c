@@ -27,6 +27,8 @@ int pids[N];
 
 List* jobs;
 
+char buffer[33];
+
 void shutdown() {
 	Node *node = jobs->begin;
 
@@ -144,30 +146,27 @@ void mng_broadcast_up(int idx, Msg msg) {
 /**
  * @brief Start a manager
  */
-void msn_start(int idx) {
-	queue_id = queue_retrieve(KEY);
-
+void mng_start(int idx) {
 	while (true) {
 		Msg msg;
 
-		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx + 1, 0);
+		int virtual_queue = idx+1;
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_queue, 0);
 		
 		if (res < 0) {
-			E("Failed to receive message. A process was killed...");
+			E("Failed to receive message. Maybe the queue died?");
 			break;
-		} else {
-			if (strstr (msg.s, "finished") == NULL) {
-				mng_broadcast_down(idx, msg);
-				msg = mng_execute(idx, msg.s);
-			}
-			
-			char buffer[33];
-			
-			sprintf(buffer, " -> %d", idx + 1);
-			strcat(msg.s, buffer);
-
-			mng_broadcast_up(idx, msg);
 		}
+
+		if (strstr (msg.s, "finished") == NULL) {
+			mng_broadcast_down(idx, msg);
+			msg = mng_execute(idx, msg.s);
+		}
+		
+		sprintf(buffer, " -> %d", idx + 1);
+		strcat(msg.s, buffer);
+
+		mng_broadcast_up(idx, msg);
 	}
 
 	exit(1);
@@ -179,33 +178,20 @@ void msn_start(int idx) {
 void mng_create (int n) {
 	for (int i = 0; i < n; i++) {
 		pid_t pid = fork();
+
 		if (!pid) {
-			msn_start(i);
-		}
-		else
-		{
+			mng_start(i);
+		} else {
 			pids[i] = pid;
 		}
-		
 	}
 }
 
 /**
- * @brief Generates a report about the job executed
- * 
- * @param job The job executed
- */
-char * sch_create_report(Job * job) {
-	char * report = (char *) malloc(100);
-
-	sprintf(report, "job=%d, arquivo=%s, delay=%d segundo(s), makespan: %d segundo(s)", job->id, job->filename, job->delay, job->makespan);
-	return report;
-}
-
-/**
- * @brief Mark a job as done given an id
+ * @brief Mark a job as done given an id and generate a report about it
  * 
  * @param id The id of the job
+ * @param makespan The span of the job
  */
 void sch_mark_job_done (int id, int makespan) {
 	Node *curr = jobs->begin;
@@ -216,14 +202,14 @@ void sch_mark_job_done (int id, int makespan) {
 		if (aux != NULL && aux->id == id) {
 			aux->done = true;
 			aux->makespan = makespan;
-			 
-			strcpy(aux->report, sch_create_report(aux));
-			printf("\n*** Report ***\n%s\n\n", aux->report);
+
+			printf("\n> Job Report\n");
+			printf("Job=%d, Arquivo=%s, Delay=%ds, Makespan: %ds\n", aux->id, aux->filename, aux->delay, aux->makespan);
 		  	break;
 	  	}
 
 	  	curr = curr->nxt;
-  }
+	}
 }
 
 /**
@@ -288,7 +274,6 @@ void sch_check_and_run () {
 	if (nxt_job && topology_free) {
 		time_t now = time(NULL);
 
-
 		if (nxt_job->seconds <= now) { // Deactivate the alarm and execute if it was to execute now the file
 			printf("[SCHEDULER] Executing the Job %d...\n\n", nxt_job->id);
 			alarm(0);
@@ -308,10 +293,25 @@ void sch_check_and_run () {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
-	Job *job = job_create(msg.t, msg.s, msg.delay);
+	static int count = 0;
 
-	list_push_back(jobs, job);
-	sch_check_and_run();
+	if (strstr(msg.s, "finished") != NULL) {
+		if (count == N - 1) {
+			S("\n...Job finished... ");
+			// printf("\n=> Traces\n%s\n", msg.s);
+			int makespan = (int) time(NULL) - t_init;
+			sch_mark_job_done(job_executed, makespan);
+			topology_free = true;
+			sch_check_and_run();
+		} 
+
+		count = (count + 1) % N;
+	} else {
+		Job *job = job_create(msg.t, msg.s, msg.delay);
+
+		list_push_back(jobs, job);
+		sch_check_and_run();
+	}
 }
 
 /**
@@ -326,31 +326,11 @@ void sch_start () {
 		Msg msg;
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
 
-		if (strstr(msg.s, "finished") != NULL) {
-
-			strcat(traces, msg.s);
-			strcat(traces, " -> SCHEDULER\n");
-			strcpy(msg.s, traces);
-
-			if (cont == N - 1) {
-				S("\n...Job finished... ");
-				strcpy(traces, "");
-				// printf("\n=> Traces\n%s\n", msg.s);
-				int makespan = (int) time(NULL) - t_init;
-				sch_mark_job_done(job_executed, makespan);
-				topology_free = true;
-				sch_check_and_run();
-			} 
-
-			cont = (cont + 1) % N;
+		if (res < 0) {
+			sch_msg_error();
 		} else {
-			if (res < 0) {
-				sch_msg_error();
-			} else {
-				sch_msg_success(msg);
-			}
+			sch_msg_success(msg);
 		}
-	
 	}
 
 	destroy();
@@ -370,12 +350,16 @@ int main (int argc, char *argv[]) {
 	signal(SIGUSR1, shutdown);
 	S("Shutdown signal set");
 
-	queue_id = queue_create(KEY);
-	S("Queue set");
+	queue_id = msgget(KEY, IPC_CREAT | 0777);
+
+    if (queue_id < 0) {
+        E("Failed to get queue");
+    } else {
+		S("Queue set");
+	}
 
 	jobs = list_create();
 	S("List of jobs set");
-
 
 	if (argc != 2 || !try_cast_int(argv[1], &topology_type)) {
 		E("Not a valid topology");

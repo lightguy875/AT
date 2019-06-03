@@ -1,6 +1,5 @@
 #pragma once
 
-#include "util.h"
 #define MAX_STRING_SIZE 1000
 
 /*!
@@ -27,17 +26,3 @@ typedef struct msgbuf {
  *  \param msg a message.
  */
 void msg_print(Msg* msg);
-
-/*!
- *  \brief Create a queue.
- *  \param key the key to que queue.
- *  \return The queue id.
- */
-int queue_create(int key);
-
-/*!
- *  \brief Prints the content of message.
- *  \param key the key to que queue.
- *  \return The queue id.
- */
-int queue_retrieve(int key);
