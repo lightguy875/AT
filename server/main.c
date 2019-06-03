@@ -16,14 +16,43 @@ int queue_id;
 
 List* jobs;
 
+void shutdown() {
+	Node *node = jobs->begin;
+
+	while (node != NULL) {
+		Job *job = (Job*)node->value;
+
+		if(job->done) {
+			printf("\n Processo já executado \n");
+			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
+		} else{
+			printf(" \n O processo: %d não será executado \n", job->id);
+		}
+
+		node = node->nxt;
+	}
+	
+	kill(0,SIGTERM);
+}
+
 /**
- * @brief 
+ * @brief Destroy the list of jobs and the queue
+ */
+void destroy() {
+	list_destroy(jobs);
+
+	struct msqid_ds msg;
+	msgctl(queue_id, IPC_RMID, &msg);
+}
+
+/**
+ * @brief Execute a program
  * 
  * @param idx 
  * @param program 
  * @return Msg 
  */
-Msg execute_job(int idx, char *program) {
+Msg mng_execute(int idx, char *program) {
 	time_t start = time(NULL);
 
 	int pid_worker = fork();
@@ -51,30 +80,13 @@ Msg execute_job(int idx, char *program) {
 	};
 }
 
-void shutdown() {
-	Node *node = jobs->begin;
-
-	while (node != NULL) {
-		Job *job = (Job*)node->value;
-
-		if(job->done) {
-			printf("\n Processo já executado \n");
-			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
-		} else{
-			printf(" \n O processo: %d não será executado \n", job->id);
-		}
-
-		node = node->nxt;
-	}
-	
-	kill(0,SIGTERM);
-}
-
-void shutdown_setup() {
-	
-}
-
-void broadcast_down(int idx, Msg msg) {
+/**
+ * @brief Send message down the structure
+ * 
+ * @param idx The current index
+ * @param msg The message to be sent
+ */
+void mng_broadcast_down(int idx, Msg msg) {
 	int arr[4] = { -1, -1, -1, -1 };
 
 	switch (topology_type) {
@@ -99,7 +111,13 @@ void broadcast_down(int idx, Msg msg) {
 	}
 }
 
-void broadcast_up(int idx, Msg msg) {
+/**
+ * @brief Send message up the structure
+ * 
+ * @param idx The current index
+ * @param msg The message to be sent
+ */
+void mng_broadcast_up(int idx, Msg msg) {
 	switch (topology_type) {
 		case TREE:
 			msg.type = ft_up(idx);
@@ -116,12 +134,15 @@ void broadcast_up(int idx, Msg msg) {
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
-void to_manage(int idx) {
-	Msg msg;
-
+/**
+ * @brief Start a manager
+ */
+void msn_start(int idx) {
 	queue_id = queue_retrieve(KEY);
 
 	while (true) {
+		Msg msg;
+
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
 
 		if (res < 0) {
@@ -131,8 +152,8 @@ void to_manage(int idx) {
 			// TODO: identify what is this
 			//	if (strcmp(msg.s, "finished")) { // if ins't a new message
 			if (strstr (msg.s, "finished") == NULL) {
-				broadcast_down(idx, msg);
-				msg = execute_job(idx, msg.s);
+				mng_broadcast_down(idx, msg);
+				msg = mng_execute(idx, msg.s);
 			}
 			
 			char buffer[33];
@@ -140,7 +161,7 @@ void to_manage(int idx) {
 			sprintf(buffer, " -> %d", idx);
 			strcat(msg.s, buffer);
 
-			broadcast_up(idx, msg);
+			mng_broadcast_up(idx, msg);
 		}
 	}
 
@@ -153,21 +174,17 @@ void to_manage(int idx) {
 void mng_create (int n) {
 	for (int i = 0; i < n; i++) {
 		if (!fork()) {
-			to_manage(i);
+			msn_start(i);
 		}
 	}
 }
 
-// -------------- End of Managers
-
-void destroy() {
-  list_destroy(jobs);
-
-	struct msqid_ds msg;
-  msgctl(queue_id, IPC_RMID, &msg);
-}
-
-void remove_next_job (int id) {
+/**
+ * @brief Mark a job as done given an id
+ * 
+ * @param id The id of the job
+ */
+void sch_mark_job_done (int id) {
   Node *curr = jobs->begin;
 
   while (curr != NULL) {
@@ -182,7 +199,12 @@ void remove_next_job (int id) {
   }
 }
 
-Job* next_job () {
+/**
+ * @brief Retrieves the oldest job that wasn't executed
+ * 
+ * @return Job* a pointer to the next job
+ */
+Job* sch_get_next_job () {
 	Job *job = NULL;
 	Node *curr = jobs->begin;
 
@@ -199,61 +221,70 @@ Job* next_job () {
 	return (job != NULL && job->seconds <= time(NULL)) ? job : NULL;
 }
 
-void run (Job* job, int queue_id) {
-	// Send message to node 0 to start execution
+/**
+ * @brief Send message to node 0 to start execution
+ * 
+ * @param job The job to be executed
+ */
+void sch_execute (Job* job) {
 	Msg msg;
 
 	msg.t = 0;
-	msg.type = 1; // To send message to node 0
+	msg.type = 1;
 	strcpy(msg.s, job->filename);
 	
-	fflush(stdout);
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
 	// TODO: wait for message sent by node 0
 }
 
-void onError() {
-	if (errno == EINTR && alarm(0) == 0) {  // https://stackoverflow.com/questions/41474299/checking-if-errno-eintr-what-does-it-mean
-		// Checked if the interruption error was caused 
-		// by an alarm (deactivates the alarm in the process)
-		
-		Job *nxt_job = next_job();
-		run(nxt_job, queue_id);
-	} else {
-		// The interruption error was not caused by the alarm or 
-		// failed to receive (no interruption error)
-
+/**
+ * @brief Try to treat error that might be caused by alarm
+ */
+void sch_msg_error() {
+	if (errno == EINTR && alarm(0) == 0) { // Checked if the interruption error was caused by an alarm (deactivates the alarm in the process)
+		Job *nxt_job = sch_get_next_job();
+		sch_execute(nxt_job);
+	} else { // The interruption error was not caused by the alarm or failed to receive (no interruption error)
 		E("Failed to receive message");
 		exit(1);
 	}
 }
 
-void check_run () {
-	Job *nxt_job = next_job();
+/**
+ * @brief Check if should execute any program and if necessary, it will execute.
+ */
+void sch_check_and_run () {
+	Job *nxt_job = sch_get_next_job();
 	time_t now = time(NULL);
 
-	if (nxt_job->seconds <= now) {
-		// Deactivate the alarm and execute if it was
-		// to execute now the file
-
+	if (nxt_job->seconds <= now) { // Deactivate the alarm and execute if it was to execute now the file
+		// TODO: check what happens if we sent a program to execute during another execution
 		alarm(0);
-		remove_next_job(nxt_job->id);
-		run(nxt_job, queue_id);
+		sch_mark_job_done(nxt_job->id);
+		sch_execute(nxt_job);
 		// check_run(queue_id);
-	} else {
-		// Modify the alarm for the new job, since it is 
-		// closer to execute
+	} else { // Modify the alarm for the new job, since it is closer to execute
 		alarm(nxt_job->seconds - now);
 	}
 }
 
-void onSuccess(Msg msg) {
-	// msg_print(&msg);
-	list_push_back(jobs, job_create(msg.t, msg.s));
-	check_run();
+/**
+ * @brief Treat a successfull message coming
+ * 
+ * @param msg The message received
+ */
+void sch_msg_success(Msg msg) {
+	Job *job = job_create(msg.t, msg.s);
+
+	list_push_back(jobs, job);
+
+	sch_check_and_run();
 }
 
-void scheduler () {
+/**
+ * @brief Start a scheduler
+ */
+void sch_start () {
 	int cont = 0;
 	int virtual_id = N+1; //> the virtual queue id
 
@@ -277,9 +308,9 @@ void scheduler () {
 			cont = (cont + 1) % N;
 		} else {
 			if (res < 0) {
-				onError();
+				sch_msg_error();
 			} else {
-				onSuccess(msg);
+				sch_msg_success(msg);
 			}
 		}
 	}
@@ -287,7 +318,7 @@ void scheduler () {
 	destroy();
 }
 
-/*`*
+/**
  * @brief Setup everything, create the managers and start the scheduler
  * 
  * @param argc The number of arguments
@@ -332,7 +363,7 @@ int main (int argc, char *argv[]) {
 	mng_create(N);
 	S("Create Managers");
 
-	scheduler();
+	sch_start();
 
 	return 0;
 }
