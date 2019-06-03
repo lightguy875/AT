@@ -53,7 +53,26 @@ Msg execute_job(int idx, char *program) {
 		"finished"
 	};
 }
-
+void shutdown(List* jobs)
+{
+	int  i;
+	Job* Processo;
+	Node* job_list = jobs->begin;
+	for(job_list = jobs->begin,Processo = (Job * ) job_list->value; job_list->nxt == NULL; job_list = job_list->nxt,Processo = (Job * ) job_list->value)
+	{
+	 if(Processo->done)
+	 {
+		 printf("\n Processo já executado \n");
+		 printf("ID: %d Arquivo : %s Tempo de execução %d" ,Processo->id,Processo->filename,Processo->seconds);	 
+	 }
+	 else
+	 {
+		 printf(" \n O processo: %d não será executado \n",Processo->id);
+	 }
+	   
+	}
+	kill(0,SIGTERM);
+}
 void broadcast_down(int idx, Msg msg) {
 	int arr[4] = { -1, -1, -1, -1 };
 
@@ -94,7 +113,7 @@ void broadcast_up(int idx, Msg msg) {
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
-void manager(int idx) {
+void to_manage(int idx) {
 	Msg msg;
 
 	queue_id = queue_retrieve(KEY);
@@ -160,9 +179,7 @@ Job* next_job (List* jobs) {
 		curr = curr->nxt;
 	}
 
-	time_t now = time(NULL);
-
-	return (job != NULL && job->seconds <= now) ? job : NULL;
+	return (job != NULL && job->seconds <= time(NULL)) ? job : NULL;
 }
 
 void run (Job* job, int queue_id) {
@@ -184,10 +201,7 @@ void onError(List* jobs, int queue_id) {
 		// by an alarm (deactivates the alarm in the process)
 		
 		Job *nxt_job = next_job(jobs);
-
-		if (nxt_job != NULL) {
-			run(nxt_job, queue_id);
-		}
+		run(nxt_job, queue_id);
 	} else {
 		// The interruption error was not caused by the alarm or 
 		// failed to receive (no interruption error)
@@ -201,7 +215,7 @@ void check_run (List* jobs, int queue_id) {
 	Job *nxt_job = next_job(jobs);
 	time_t now = time(NULL);
 
-	if (nxt_job != NULL && nxt_job->seconds <= now) {
+	if (nxt_job->seconds <= now) {
 		// Deactivate the alarm and execute if it was
 		// to execute now the file
 
@@ -275,7 +289,7 @@ void create_managers () {
 		pid = fork();
 
 		if (pid == 0) {
-			manager(i);
+			to_manage(i);
 		} else {
 			pids[i] = pid;
 		}
