@@ -32,7 +32,6 @@ void shutdown() {
 		Job *job = (Job*)node->value;
 
 		if(job->done) {
-			printf("\n Processo já executado \n");
 			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
 		} else{
 			printf(" \n O processo: %d não será executado \n", job->id);
@@ -280,18 +279,17 @@ void sch_check_and_run () {
 	Job *nxt_job = sch_get_next_job();
 	if (nxt_job && topology_free) {
 		time_t now = time(NULL);
-		int delay = nxt_job->seconds - now;
-		
-		if (delay < 0)
-			delay = 0;
 
-		printf("[SCHEDULER] %d seconds to execute the Job %d...\n\n", delay, nxt_job->id);
 
 		if (nxt_job->seconds <= now) { // Deactivate the alarm and execute if it was to execute now the file
+			printf("[SCHEDULER] Executing the Job %d...\n\n", nxt_job->id);
 			alarm(0);
 			sch_execute(nxt_job);
 		} else { // Modify the alarm for the new job, since it is closer to execute
-			alarm(delay);
+			printf("[SCHEDULER] %ld seconds to execute the Job %d\n\n", nxt_job->seconds - now, nxt_job->id);
+			printf("ANTES...\n");
+			printf("ALARME: %d\n", alarm(nxt_job->seconds - now));
+			printf("DEPOIS...\n");
 		}
 	}
 }
@@ -318,8 +316,9 @@ void sch_start () {
 
 	while (true) {
 		Msg msg;
-
+		printf("claudio espera\n");
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
+		printf("claudio recebe\n");
 		if (strstr(msg.s, "finished") != NULL) {
 
 			strcat(traces, msg.s);

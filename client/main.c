@@ -43,7 +43,7 @@ bool try_cast_int (char *num, int *result) {
 void send (int seconds, char filename[]) {
 	
 	int key = KEY; // matricula truncada
-	int id = msgget(key, 0);
+	int id = msgget(key, 0 | 0777);
 
 	time_t t = time(NULL) + seconds;
 

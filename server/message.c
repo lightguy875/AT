@@ -5,7 +5,7 @@ void msg_print(Msg* msg) {
 }
 
 int queue_create(int key) {
-    int queue_id = msgget(key, IPC_CREAT);
+    int queue_id = msgget(key, IPC_CREAT | 0777);
 
     if (queue_id < 0) {
         E("Failed to get queue");
@@ -15,7 +15,7 @@ int queue_create(int key) {
 }
 
 int queue_retrieve(int key) {
-	int queue_id = msgget(key, MSG_FLAG);
+	int queue_id = msgget(key, MSG_FLAG | 0777);
 
 	if (queue_id < 0) {
 		E("Failed to get queue");
