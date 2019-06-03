@@ -11,6 +11,8 @@
 #include "hypercube.h"
 #include "torus.h"
 
+#define SCHEDULER 666
+
 int topology_type;
 
 int structure[N];
@@ -160,12 +162,13 @@ void mng_start(int idx) {
 			break;
 		}
 
-		if (strstr (msg.s, "finished") == NULL) {
+		if (msg.origin == SCHEDULER) {
 			mng_broadcast_down(idx, msg);
 			msg = mng_execute(idx, msg.s);
+			mng_broadcast_up(idx, msg);
+		} else {
+			mng_broadcast_up(idx, msg);
 		}
-
-		mng_broadcast_up(idx, msg);
 	}
 
 	exit(1);
@@ -252,12 +255,13 @@ Job* sch_get_next_job () {
  */
 void sch_execute (Job* job) {
 	topology_free = false;
-	printf("[SCHEDULER] Executing the Job %d...\n\n", job->id);
+	printf("[SCHEDULER] Executing the Job %d\n\n", job->id);
 
 	Msg msg;
 
 	msg.t = 0;
 	msg.type = 1;
+	msg.origin = SCHEDULER;
 	strcpy(msg.s, job->filename);
 
 	job_executed = job->id;
@@ -282,11 +286,12 @@ void sch_msg_error() {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
-	printf("\n\n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s\n\n", msg.type, msg.id, msg.t, msg.delay, msg.s);
+	printf("\n\n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s, origin: %d\n\n", msg.type, msg.id, msg.t, msg.delay, msg.s, msg.origin);
 
 	static int count = 0;
 
 	if (msg.origin < N) { // message from sons
+		printf("count=%d", count);
 		node_time[msg.origin] = msg.t;
 
 		if (count == N - 1) {
