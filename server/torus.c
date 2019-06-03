@@ -25,11 +25,12 @@ int tr_up (int idx) {
 }
 
 void tr_down(int idx, int* ans) {
-	if (idx < M - 1) { // first send to node 2, 3 and 4
-		ans[0] = idx + 1;
+	ans[0] = idx + M;
+
+	if (idx < M - 1) {
+		ans[1] = idx + 1;
 	}
 
-	if (idx < N + 1 - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
-		ans[1] = idx + M;
-	} 
+	ans[0] = ans[0] < N ? ans[0] : -1;
+	ans[1] = ans[1] < N ? ans[1] : -1;
 }
