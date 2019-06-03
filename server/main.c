@@ -275,7 +275,10 @@ void sch_msg_success(Msg msg) {
 		list_push_back(jobs, job);
 	}
 }
-
+/**
+ * @brief Verify if the topology is executing a job and then get the next job to execute
+ * 
+ */
 void sch_try_execute() {
 	if (topology_free) {
 		Job *nxt_job = sch_get_next_job();
