@@ -70,9 +70,10 @@ void broadcast_down(int idx, Msg msg) {
 	}
 
 	for (int i = 0; i < 4; i++) {
+		// printf("idx: %d - arr: %d\n", idx, arr[i]);
 		if (arr[i] != -1) {
-			msg.type = arr[i];
-			
+			msg.type = arr[i] + 1;
+			//printf("%d:%ld\n", idx + 1, msg.type);
 			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 		}
 	}
@@ -91,6 +92,7 @@ void broadcast_up(int idx, Msg msg) {
 			break;
 	}
 
+	msg.type++;
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
@@ -112,8 +114,11 @@ void manager(int idx) {
 				broadcast_down(idx, msg);
 				msg = execute_job(idx, msg.s);
 			}
-
-			sprintf(msg.s, "%s -> %d", msg.s, idx);
+			
+			char buffer[33];
+			
+			sprintf(buffer, " -> %d", idx);
+			strcat(msg.s, buffer);
 
 			broadcast_up(idx, msg);
 		}
@@ -266,12 +271,12 @@ void create_managers () {
 	// Setup pids
 	int total = topology_type == TREE ? N - 1 : N;
 
-	for (int i = 1; i <= total; i++) {
+	for (int i = 0; i < total; i++) {
 		pids[i] = 0;
 	}
 
 	// Create the processes to manage
-	for (int i = 1; i <= total; i++) {
+	for (int i = 0; i <total; i++) {
 		pid = fork();
 
 		if (pid == 0) {

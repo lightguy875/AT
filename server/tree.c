@@ -7,13 +7,18 @@ void ft_make(int *ft) {
 }
 
 int ft_up (int idx) {
-	return (idx - 1) / 2;
+  if (idx)
+	  return (idx - 1) / 2;
+  
+  return N;
 }
 
 void ft_down(int idx, int ans[]) {
-	int n = sizeof(*ans) / sizeof(int);
+	size_t n = sizeof(ans)/sizeof(ans[0]);
 
 	for (int i = 0; i < n; i++) {
 		ans[i] = (i < 2) ? 2 * idx + i + 1 : -1;
+		ans[i] = ans[i] > N ? -1 : ans[i];
+		printf("ansi: %d - i: %d - n: %ld\n", ans[i], i, n);
 	}
 }
