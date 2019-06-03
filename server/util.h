@@ -28,7 +28,7 @@
 #define E(x) printf("%s%s%s\n", RED, x, RESET); fflush(stdout);
 
 #define KEY 15003
-#define N 16
+#define N 15
 #define M 4
 
 #define PATH "../prog/"

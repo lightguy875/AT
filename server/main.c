@@ -12,13 +12,14 @@
 int pid;
 int topology_type;
 
-int pids[N+1];
-int structure[N+1];
+int pids[N];
+int structure[N];
 
 int cont = 0;
 int queue_id;
 
 char traces[1000];
+
 /**
  * @brief 
  * 
@@ -59,7 +60,7 @@ void broadcast_down(int idx, Msg msg) {
 
 	switch (topology_type) {
 		case TREE:
-			ft_down(idx, arr);
+			ft_down(idx, arr, N);
 			break;
 		case HYPERCUBE:
 			hc_down(idx, arr);
@@ -269,14 +270,12 @@ void schedule (List* jobs, int queue_id) {
 
 void create_managers () {
 	// Setup pids
-	int total = topology_type == TREE ? N - 1 : N;
-
-	for (int i = 0; i < total; i++) {
+	for (int i = 0; i < N; i++) {
 		pids[i] = 0;
 	}
 
 	// Create the processes to manage
-	for (int i = 0; i <total; i++) {
+	for (int i = 0; i < N; i++) {
 		pid = fork();
 
 		if (pid == 0) {
