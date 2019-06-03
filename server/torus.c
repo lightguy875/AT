@@ -13,9 +13,9 @@ void tr_make(int *tr) {
 0  1  2  3   // First line
 */
 int tr_up (int idx) {
-	if (idx > 1) { // if isn't the root node
+	if (idx) { // if isn't the root node
 		if(idx >= M * 3) {// if top line, send to first line
-			return (idx + M) % N; 
+			return idx % M; 
 		} else if (idx % M == 3) { // if last right column, send to first column
 			return (idx - M + 1); 
 		} else if (idx % M == 0) { // if first column, send to the below node
@@ -29,19 +29,11 @@ int tr_up (int idx) {
 }
 
 void tr_down(int idx, int* ans) {
-	int n = sizeof(*ans) / sizeof(int);
-
-	for (int i = 0; i < n; i++) {
-		if (i) {
-			ans[i] = -1;
-		} else {
-			if (idx < M - 1) { // first send to node 2, 3 and 4
-				ans[0] = idx + 1;
-			}
-
-			if (idx < N - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
-				ans[0] = idx + M;
-			}
-		}
+	if (idx < M - 1) { // first send to node 2, 3 and 4
+		ans[0] = idx + 1;
 	}
+
+	if (idx < N + 1 - M) { // nodes 1, 2, 3 and 4 sendo to above nodes
+		ans[1] = idx + M;
+	} 
 }

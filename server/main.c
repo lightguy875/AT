@@ -42,7 +42,7 @@ Msg execute_job(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
+	printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
 
 	return (Msg) { 
 		0, 
@@ -122,7 +122,7 @@ void to_manage(int idx) {
 	queue_id = queue_retrieve(KEY);
 
 	while (true) {
-		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx, 0);
+		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), idx + 1, 0);
 
 		if (res < 0) {
 			E("Failed to receive message. A process was killed...");
@@ -137,7 +137,7 @@ void to_manage(int idx) {
 			
 			char buffer[33];
 			
-			sprintf(buffer, " -> %d", idx);
+			sprintf(buffer, " -> %d", idx + 1);
 			strcat(msg.s, buffer);
 
 			broadcast_up(idx, msg);
@@ -268,8 +268,8 @@ void scheduler () {
 			strcat(traces, msg.s);
 			strcat(traces, " -> SCHEDULER\n");
 			strcpy(msg.s, traces);
-
-			if (cont == N) {
+	
+			if (cont == N - 1) {
 				S("...Job finished... ");
 				printf("\n=> Traces\n%s\n", msg.s);
 			} 
