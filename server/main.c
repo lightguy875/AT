@@ -23,6 +23,8 @@ int t_init;
 
 bool topology_free;
 
+int pids[N];
+
 List* jobs;
 
 void shutdown() {
@@ -35,7 +37,7 @@ void shutdown() {
 			printf("\n Processo já executado \n");
 			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
 		} else{
-			printf(" \n O processo: %d não será executado \n", job->id);
+			printf(" \n O processo: %d não será executado \n", job->id,job->filename, job->seconds);
 		}
 
 		node = node->nxt;
@@ -177,9 +179,15 @@ void msn_start(int idx) {
  */
 void mng_create (int n) {
 	for (int i = 0; i < n; i++) {
-		if (!fork()) {
+		pid_t pid = fork();
+		if (!pid) {
 			msn_start(i);
 		}
+		else
+		{
+			pids[i] = pid;
+		}
+		
 	}
 }
 
@@ -344,6 +352,7 @@ void sch_start () {
 				sch_msg_success(msg);
 			}
 		}
+	
 	}
 
 	destroy();
@@ -368,6 +377,7 @@ int main (int argc, char *argv[]) {
 
 	jobs = list_create();
 	S("List of jobs set");
+
 
 	if (argc != 2 || !try_cast_int(argv[1], &topology_type)) {
 		E("Not a valid topology");
@@ -395,7 +405,6 @@ int main (int argc, char *argv[]) {
 	
 	mng_create(N);
 	S("Create Managers");
-
 	sch_start();
 
 	return 0;
