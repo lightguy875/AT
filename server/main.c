@@ -263,7 +263,7 @@ void sch_execute (Job* job) {
 	job_executed = job->id;
 	t_init = time(NULL);
 
-	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 	topology_free = false;
 }
 
@@ -295,9 +295,9 @@ void sch_check_and_run () {
 			sch_execute(nxt_job);
 		} else { // Modify the alarm for the new job, since it is closer to execute
 			printf("[SCHEDULER] %ld seconds to execute the Job %d\n\n", nxt_job->seconds - now, nxt_job->id);
-			printf("ANTES...\n");
-			printf("ALARME: %d\n", alarm(nxt_job->seconds - now));
-			printf("DEPOIS...\n");
+			alarm(nxt_job->seconds - now);
+			signal(SIGALRM, *dummy);
+			S("Alarm signal set");
 		}
 	}
 }
@@ -324,9 +324,8 @@ void sch_start () {
 
 	while (true) {
 		Msg msg;
-		printf("claudio espera\n");
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_id, 0);
-		printf("claudio recebe\n");
+
 		if (strstr(msg.s, "finished") != NULL) {
 
 			strcat(traces, msg.s);
@@ -365,10 +364,10 @@ void sch_start () {
  * @return int If there was an error
  */
 int main (int argc, char *argv[]) {
-	signal(SIGALRM, *dummy);
+	signal(SIGALRM, dummy);
 	S("Alarm signal set");
 
-	signal(SIGUSR1,*shutdown);
+	signal(SIGUSR1, shutdown);
 	S("Shutdown signal set");
 
 	queue_id = queue_create(KEY);
