@@ -20,19 +20,10 @@ HEADERS = $(wildcard *.h)
 
 $(TARGET): $(OBJECTS)
 	$(CC) $(OBJECTS) -Wall -O2 -o $@	
-	-rm -f *.o
+	-clear
 
 run: default
-	- ./main 1
-
-run_tree: default
-	- ./main 1
-
-run_hypercube: default
-	- ./main 2
-
-run_torus: default
-	- ./main 3
+	- ./main
 
 clean:
 	-rm -f *.o

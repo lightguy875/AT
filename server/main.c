@@ -9,7 +9,8 @@
 #include "hypercube.h"
 #include "torus.h"
 
-#define SCHEDULER 666
+#define SCHEDULER 200
+#define SHUTDOWN 201
 
 int topology_type;
 
@@ -23,24 +24,6 @@ List* jobs;
 
 Job* curr_job;
 
-void shutdown() {	
-	Node *node = jobs->begin;
-
-	while (node != NULL) {
-		Job *job = (Job*)node->value;
-
-		if(job->done) {
-			printf("[DONE] job: %d, file: %s, submission: %d\n", job->id, job->filename, job->submission);
-		} else{
-			printf("[CANCELLED] job: %d, file: %s\n", job->id, job->filename);
-		}
-
-		node = node->nxt;
-	}
-	
-	kill(0,SIGTERM);
-}
-
 /**
  * @brief Destroy the list of jobs and the queue
  */
@@ -49,6 +32,8 @@ void destroy() {
 
 	struct msqid_ds msg;
 	msgctl(queue_id, IPC_RMID, &msg);
+
+	exit(0);
 }
 
 /**
@@ -141,13 +126,24 @@ void mng_broadcast_up(int idx, Msg msg) {
 	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 }
 
+void mng_shutdown() {
+	exit(0);
+}
+
 /**
  * @brief Start a manager
  */
 void mng_start(int idx) {
-	while (true) {
-		Msg msg;
+	signal(SIGUSR1, mng_shutdown);
 
+	Msg msg;
+
+	msg.type = SHUTDOWN;
+	msg.id = getpid();
+
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+
+	while (true) {
 		int virtual_queue = idx+1;
 		int res = msgrcv(queue_id, &msg, sizeof(Msg) - sizeof(long), virtual_queue, 0);
 		
@@ -179,6 +175,24 @@ void mng_create (int n) {
 			mng_start(i);
 		}
 	}
+}
+
+void sch_shutdown() {	
+	Node *node = jobs->begin;
+
+	while (node != NULL) {
+		Job *job = (Job*)node->value;
+
+		if(job->done) {
+			printf("[DONE] job: %d, file: %s, submission: %d\n", job->id, job->filename, job->submission);
+		} else{
+			printf("[CANCELLED] job: %d, file: %s\n", job->id, job->filename);
+		}
+
+		node = node->nxt;
+	}
+
+	destroy();
 }
 
 /**
@@ -280,6 +294,15 @@ void sch_try_execute() {
  * @brief Start a scheduler
  */
 void sch_start () {
+	signal(SIGUSR1, sch_shutdown);
+
+	Msg msg;
+
+	msg.type = SHUTDOWN;
+	msg.id = getpid();
+
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+
 	int cont = 0;
 	int virtual_id = N+1; //> the virtual queue id
 	char traces[1000];
@@ -310,9 +333,6 @@ void sch_start () {
  * @return int If there was an error
  */
 int main (int argc, char *argv[]) {
-	signal(SIGUSR1, shutdown);
-	S("Shutdown signal set");
-
 	queue_id = msgget(KEY, IPC_CREAT | 0777);
 
     if (queue_id < 0) {
