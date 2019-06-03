@@ -1,5 +1,10 @@
 #include "list.h"
-
+/**
+ * @brief Cria um novo elemento do no
+ * 
+ * @param value O valor
+ * @return Node* 
+ */
 Node* node_create(void* value) {
     Node *node = (Node*) malloc(sizeof(Node));
 
