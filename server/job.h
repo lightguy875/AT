@@ -21,7 +21,7 @@ typedef struct job {
     int id;
     int seconds;
     int delay;
-    char* filename;
+    char filename[1000];
     bool done;
     int submission;
     int start;

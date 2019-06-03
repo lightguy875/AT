@@ -137,10 +137,10 @@ void mng_start(int idx) {
 
 	Msg msg;
 
-	msg.type = SHUTDOWN;
-	msg.id = getpid();
+	// msg.type = SHUTDOWN;
+	// msg.id = getpid();
 
-	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	// msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 
 	while (true) {
 		int virtual_queue = idx+1;
@@ -273,6 +273,7 @@ void sch_msg_success(Msg msg) {
 		list_push_back(jobs, job);
 	}
 }
+
 /**
  * @brief Verify if the topology is executing a job and then get the next job to execute
  * 
@@ -297,10 +298,10 @@ void sch_start () {
 
 	Msg msg;
 
-	msg.type = SHUTDOWN;
-	msg.id = getpid();
+	// msg.type = SHUTDOWN;
+	// msg.id = getpid();
 
-	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
+	// msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 
 	int cont = 0;
 	int virtual_id = N+1; //> the virtual queue id
