@@ -29,7 +29,7 @@ List* jobs;
 
 void shutdown() {
     
-	int i;
+//	int i;
 	for (i = 0;i < N; i++)
 	 {
 		 sprintf(pidlength,"%d",pids[i]);
