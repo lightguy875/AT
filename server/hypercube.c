@@ -25,8 +25,6 @@ int hc_up (int idx) {
                         1110 -> 1111
 */
 void hc_down(int idx, int* ans) {
-	int n = sizeof(*ans) / sizeof(int);
-
 	for (int i = 0; i < 4; i++) {
 		if (idx & (1 << i)) {
 			ans[i] = idx | (1 << i);
