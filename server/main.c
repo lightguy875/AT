@@ -54,26 +54,26 @@ Msg execute_job(int idx, char *program) {
 		"finished"
 	};
 }
-void shutdown(List* jobs)
-{
-	int  i;
-	Job* Processo;
-	Node* job_list = jobs->begin;
-	for(job_list = jobs->begin,Processo = (Job * ) job_list->value; job_list->nxt == NULL; job_list = job_list->nxt,Processo = (Job * ) job_list->value)
-	{
-	 if(Processo->done)
-	 {
-		 printf("\n Processo já executado \n");
-		 printf("ID: %d Arquivo : %s Tempo de execução %d" ,Processo->id,Processo->filename,Processo->seconds);	 
-	 }
-	 else
-	 {
-		 printf(" \n O processo: %d não será executado \n",Processo->id);
-	 }
-	   
+
+void shutdown(List* jobs) {
+	Node *node = jobs->begin;
+
+	while (node != NULL) {
+		Job *job = (Job*)node->value;
+
+		if(job->done) {
+			printf("\n Processo já executado \n");
+			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
+		} else{
+			printf(" \n O processo: %d não será executado \n", job->id);
+		}
+
+		node = node->nxt;
 	}
+	
 	kill(0,SIGTERM);
 }
+
 void broadcast_down(int idx, Msg msg) {
 	int arr[4] = { -1, -1, -1, -1 };
 
