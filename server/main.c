@@ -72,8 +72,8 @@ void broadcast_down(int idx, Msg msg) {
 	for (int i = 0; i < 4; i++) {
 		// printf("idx: %d - arr: %d\n", idx, arr[i]);
 		if (arr[i] != -1) {
+			printf("%d:%ld\n", idx + 1, msg.type);
 			msg.type = arr[i] + 1;
-			//printf("%d:%ld\n", idx + 1, msg.type);
 			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
 		}
 	}

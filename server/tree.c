@@ -14,11 +14,9 @@ int ft_up (int idx) {
 }
 
 void ft_down(int idx, int *ans) {
-	int n = sizeof(ans) / sizeof(ans[0]);
-
-	for (int i = 0; i < n; i++) {
+	
+	for (int i = 0; i < 4; i++) {
 		ans[i] = (i < 2) ? 2 * idx + i + 1 : -1;
-		ans[i] = ans[i] > N ? -1 : ans[i];
-		printf("ansi: %d - i: %d - n: %ld\n", ans[i], i, n);
+		ans[i] = ans[i] > N - 1 ? -1 : ans[i];
 	}
 }
