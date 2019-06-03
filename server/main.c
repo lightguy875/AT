@@ -1,8 +1,7 @@
 //	TODO: shutdown, estatística, verificar pedido de múltiplos jobs
 
-
+#include <string.h>
 #include "util.h"
-
 #include "job.h"
 #include "list.h"
 #include "message.h"
@@ -12,7 +11,8 @@
 #include "torus.h"
 
 int topology_type;
-
+char process[300];
+char pidlength[20];
 int structure[N];
 
 int queue_id;
@@ -28,19 +28,25 @@ int pids[N];
 List* jobs;
 
 void shutdown() {
-	Node *node = jobs->begin;
+    
+	int i;
+	for (i = 0;i < N; i++)
+	 {
+		 sprintf(pidlength,"%d",pids[i]);
+		 strcat(process,pidlength);
+		 strcat(process," -o pid=pid,comm=arquivo_executavel,etimes=tempo_de_cpu,bsdstart=tempo_de_inicio \n");
+		 system(process);
+		 
+		//Job *job = (Job*)node->value;
 
-	while (node != NULL) {
-		Job *job = (Job*)node->value;
+		//if(job->done) {
+		//	printf("\n Processo já executado \n");
+		//	printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
+		//} else{
+		//	printf(" \n O processo: %d não será executado \n", job->id,job->filename, job->seconds);
+		//}
 
-		if(job->done) {
-			printf("\n Processo já executado \n");
-			printf("ID: %d Arquivo : %s Tempo de execução %d", job->id, job->filename, job->seconds);	 
-		} else{
-			printf(" \n O processo: %d não será executado \n", job->id,job->filename, job->seconds);
-		}
-
-		node = node->nxt;
+		//node = node->nxt;
 	}
 	
 	kill(0,SIGTERM);
@@ -368,9 +374,10 @@ void sch_start () {
 int main (int argc, char *argv[]) {
 	signal(SIGALRM, *dummy);
 	S("Alarm signal set");
-
+	strcpy(process,"ps -p ");
 	signal(SIGUSR1,*shutdown);
 	S("Shutdown signal set");
+
 
 	queue_id = queue_create(KEY);
 	S("Queue set");
@@ -402,9 +409,9 @@ int main (int argc, char *argv[]) {
 	S("Topology set");
 
 	topology_free = true;
-	
 	mng_create(N);
 	S("Create Managers");
+	kill(getpid(),SIGUSR1);
 	sch_start();
 
 	return 0;
