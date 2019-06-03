@@ -71,7 +71,7 @@ Msg mng_execute(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-	// printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
+	printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
 
 	return (Msg) { 
 		0, 
@@ -102,7 +102,6 @@ void mng_broadcast_down(int idx, Msg msg) {
 	}
 
 	for (int i = 0; i < 4; i++) {
-		printf("idx: %d - arr: %d\n", idx, arr[i]);
 		if (arr[i] != -1) {
 			msg.type = arr[i] + 1;
 			msgsnd(queue_id, &msg,  sizeof(Msg) - sizeof(long), IPC_NOWAIT);
@@ -160,7 +159,7 @@ void msn_start(int idx) {
 			sprintf(buffer, " -> %d", idx + 1);
 			strcat(msg.s, buffer);
 
-			// mng_broadcast_up(idx, msg);
+			mng_broadcast_up(idx, msg);
 		}
 	}
 
