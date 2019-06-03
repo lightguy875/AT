@@ -48,9 +48,9 @@ void destroy() {
 /**
  * @brief Execute a program
  * 
- * @param idx 
- * @param program 
- * @return Msg 
+ * @param idx The current index
+ * @param program The name of the program
+ * @return Msg Message with the elapsed time
  */
 Msg mng_execute(int idx, char *program) {
 	time_t start = time(NULL);
@@ -71,7 +71,7 @@ Msg mng_execute(int idx, char *program) {
 	wait(&status);
 
 	time_t elapsed = time(NULL) - start;
-	printf("Process %d: job done in %d sec.\n", idx, (int) elapsed);
+	printf("Process %d: job done in %d sec.\n", idx + 1, (int) elapsed);
 
 	return (Msg) { 
 		0, 
@@ -158,7 +158,7 @@ void msn_start(int idx) {
 			
 			char buffer[33];
 			
-			sprintf(buffer, " -> %d", idx);
+			sprintf(buffer, " -> %d", idx + 1);
 			strcat(msg.s, buffer);
 
 			mng_broadcast_up(idx, msg);
@@ -299,8 +299,8 @@ void sch_start () {
 			strcat(traces, msg.s);
 			strcat(traces, " -> SCHEDULER\n");
 			strcpy(msg.s, traces);
-
-			if (cont == N) {
+	
+			if (cont == N - 1) {
 				S("...Job finished... ");
 				printf("\n=> Traces\n%s\n", msg.s);
 			} 
