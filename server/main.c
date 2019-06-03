@@ -1,6 +1,5 @@
 //	TODO: shutdown, estatística, verificar pedido de múltiplos jobs
 
-#include <string.h>
 #include "util.h"
 #include "job.h"
 #include "list.h"
@@ -10,6 +9,8 @@
 #include "hypercube.h"
 #include "torus.h"
 
+#define SCHEDULER 666
+
 int topology_type;
 char process[300];
 char pidlength[20];
@@ -17,15 +18,13 @@ int structure[N];
 
 int queue_id;
 
-int job_executed;
-
-int t_init;
-
 bool topology_free;
 
 int pids[N];
 
 List* jobs;
+
+Job* curr_job;
 
 void shutdown() {
     
@@ -91,14 +90,16 @@ Msg mng_execute(int idx, char *program) {
 	wait(&status);
 	time_t elapsed = time(NULL) - start;
 
-	return (Msg) {
-		0, 
-		0,
-		elapsed,
-		0,
-		idx,
-		"finished"
-	};
+	Msg msg;
+
+	msg.type = 0;
+	msg.id = getpid();
+	msg.t = elapsed;
+	msg.delay = 0;
+	msg.origin = idx;
+	strcpy(msg.s, "finished");
+
+	return msg;
 }
 
 /**
@@ -168,12 +169,13 @@ void mng_start(int idx) {
 			break;
 		}
 
-		if (strstr (msg.s, "finished") == NULL) {
+		if (msg.origin == SCHEDULER) {
 			mng_broadcast_down(idx, msg);
 			msg = mng_execute(idx, msg.s);
+			mng_broadcast_up(idx, msg);
+		} else {
+			mng_broadcast_up(idx, msg);
 		}
-
-		mng_broadcast_up(idx, msg);
 	}
 
 	exit(1);
@@ -191,31 +193,6 @@ void mng_create (int n) {
 		} else {
 			pids[i] = pid;
 		}
-	}
-}
-
-/**
- * @brief Mark a job as done given an id and generate a report about it
- * 
- * @param id The id of the job
- */
-void sch_mark_job_done (int id) {
-	topology_free = true;
-
-	Node *curr = jobs->begin;
-
-  	while (curr != NULL) {
-		Job *aux = (Job*) curr->value;
-
-		if (aux != NULL && aux->id == id) {
-			aux->done = true;
-			aux->makespan = (int) time(NULL) - t_init;
-
-			printf("\n> Job=%d Arquivo=%s Delay=%ds Makespan: %ds\n", aux->id, aux->filename, aux->delay, aux->makespan);
-		  	break;
-	  	}
-
-	  	curr = curr->nxt;
 	}
 }
 
@@ -243,23 +220,23 @@ Job* sch_get_next_job () {
 
 /**
  * @brief Send message to node 0 to start execution
- * 
- * @param job The job to be executed
  */
-void sch_execute (Job* job) {
-	printf("[SCHEDULER] Executing the Job %d...\n\n", job->id);
+void sch_execute () {
+	printf("[SCHEDULER] Executing the Job %d\n\n", curr_job->id);
+	
+	topology_free = false;
+	curr_job->start = time(NULL);
 
 	Msg msg;
 
-	msg.t = 0;
 	msg.type = 1;
-	strcpy(msg.s, job->filename);
+	msg.id = 0;
+	msg.t = 0;
+	msg.delay = 0;
+	msg.origin = SCHEDULER;
+	strcpy(msg.s, curr_job->filename);
 
-	job_executed = job->id;
-	t_init = time(NULL);
-
-	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), IPC_NOWAIT);
-	topology_free = false;
+	msgsnd(queue_id, &msg, sizeof(Msg) - sizeof(long), 0);
 }
 
 /**
@@ -278,15 +255,20 @@ void sch_msg_error() {
  * @param msg The message received
  */
 void sch_msg_success(Msg msg) {
-	static int count = 0;
+	printf("\n\n> type: %ld, id: %ld, seconds: %d(Since 70's), delay: %ds, message: %s, origin: %d\n\n", msg.type, msg.id, msg.t, msg.delay, msg.s, msg.origin);
 
 	if (msg.origin < N) { // message from sons
+		curr_job->node_pid[msg.origin] = msg.id;
+		curr_job->node_time[msg.origin] = msg.t;
+		curr_job->completed++;
 
-		if (count == N - 1) {
-			sch_mark_job_done(job_executed);
-		} 
-
-		count = (count + 1) % N;
+		if (curr_job->completed == N) { // finished the job
+			topology_free = true;
+			curr_job->done = true;
+			curr_job->finish = time(NULL);
+			
+			printf("\n> job=%d, arquivo=%s, delay=%ds, makespan: %ds\n", curr_job->id, curr_job->filename, curr_job->delay, curr_job->finish - curr_job->start);
+		}
 	} else { // message from clients
 		Job *job = job_create(msg.id, msg.t, msg.s, msg.delay);
 
@@ -300,7 +282,8 @@ void sch_try_execute() {
 		time_t now = time(NULL);
 
 		if (nxt_job && nxt_job->seconds <= now) {
-			sch_execute(nxt_job);
+			curr_job = nxt_job;
+			sch_execute();
 		}
 	}
 }
